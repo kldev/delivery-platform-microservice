@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/payment-service/">
+    <Project Path="payment-service/Delivery.Platform.PaymentService.csproj" />
+  </Folder>
+</Solution>
