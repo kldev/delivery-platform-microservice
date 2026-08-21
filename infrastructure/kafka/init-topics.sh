@@ -20,7 +20,8 @@ create_topic() {
         --replication-factor 1
 }
 
-create_topic delivery.created 3
+create_topic delivery.events 3
+create_topic delivery.confirmed 3
 create_topic settlement.created 3
 create_topic payment.created 3
 create_topic payment.completed 3

@@ -1,0 +1,12 @@
+package com.pl.platform.svc.delivery.application.event
+
+import java.math.BigDecimal
+import java.util.UUID
+
+
+data class DeliveryCreatedEvent(
+    val deliveryId: UUID,
+    var price: BigDecimal
+) : DeliveryEvent(
+    aggregateId = deliveryId,
+    eventType = DeliveryEventType.CREATED.value)
