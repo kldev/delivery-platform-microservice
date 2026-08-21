@@ -14,4 +14,6 @@ interface DriverRepository {
     fun update(driver: Driver)
 
     fun existsByPhoneNumber(phoneNumber: String): Boolean
+
+    fun getAll(): List<Driver>
 }

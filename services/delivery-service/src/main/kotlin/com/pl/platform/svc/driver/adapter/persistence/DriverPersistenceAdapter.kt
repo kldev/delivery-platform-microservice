@@ -34,4 +34,8 @@ class DriverPersistenceAdapter(
     override fun existsByPhoneNumber(phoneNumber: String): Boolean {
         return repository.existsByPhoneNumber(phoneNumber)
     }
+
+    override fun getAll(): List<Driver> {
+        return repository.findAll().map(DriverJpaEntity::toDomain)
+    }
 }

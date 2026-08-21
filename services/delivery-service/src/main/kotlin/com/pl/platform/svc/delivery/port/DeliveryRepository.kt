@@ -11,5 +11,5 @@ interface DeliveryRepository {
 
     fun update(delivery: Delivery)
 
-    fun existsByPhoneNumber(phoneNumber: String): Boolean
+    fun getAll(): List<Delivery>
 }

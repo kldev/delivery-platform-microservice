@@ -1,4 +1,4 @@
-package com.pl.platform.svc.driver
+package com.pl.platform.svc.driver.rest
 
 import com.pl.platform.common.rest.ApiValidationError
 import com.pl.platform.svc.BaseRestIntegrationTest

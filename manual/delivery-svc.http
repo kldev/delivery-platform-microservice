@@ -1,0 +1,44 @@
+### create driver
+POST http://localhost:8081/api/drivers
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "phoneNumber": "+48123456784"
+}
+
+> {%
+    client.global.set("driverId", response.body.id);
+%}
+
+### get drivers
+GET http://localhost:8081/api/drivers
+
+> {%
+    client.global.set("driverId", response.body[0].id);
+%}
+
+
+### create delivery
+POST http://localhost:8081/api/deliveries
+Content-Type: application/json
+
+{
+  "deliveryAddress": "Test A",
+  "distance": 200.50,
+  "pickupAddress": "Test B"
+}
+
+> {%
+    client.global.set("deliveryId", response.body.id);
+%}
+
+### confirm delivery
+PUT http://localhost:8081/api/deliveries/{{deliveryId}}/confirm
+Content-Type: application/json
+
+
+### cancel delivery
+PUT http://localhost:8081/api/deliveries/{{deliveryId}}/cancel
+Content-Type: application/json

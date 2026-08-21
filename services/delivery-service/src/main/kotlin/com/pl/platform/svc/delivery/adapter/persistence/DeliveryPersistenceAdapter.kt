@@ -33,7 +33,7 @@ class DeliveryPersistenceAdapter(
         repository.save(entity)
     }
 
-    override fun existsByPhoneNumber(phoneNumber: String): Boolean {
-        TODO("Not yet implemented")
+    override fun getAll(): List<Delivery> {
+        return repository.findAll().map(DeliveryJpaEntity::toDomain)
     }
 }
