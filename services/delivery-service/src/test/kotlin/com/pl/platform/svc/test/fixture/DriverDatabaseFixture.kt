@@ -8,7 +8,8 @@ import java.util.UUID
 
 @Component
 class DriverDatabaseFixture(
-    private val driverRepository: SpringDataDriverRepository, private val random: SecureRandom
+    private val driverRepository: SpringDataDriverRepository,
+    private val random: SecureRandom = SecureRandom()
 ) {
 
     fun create(

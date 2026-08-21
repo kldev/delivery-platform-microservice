@@ -2,10 +2,12 @@ package com.pl.platform.svc
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootApplication
-class DriverApplication
+@EnableScheduling
+class DeliveryApplication
 
 fun main(args: Array<String>) {
-	runApplication<DriverApplication>(*args)
+	runApplication<DeliveryApplication>(*args)
 }
