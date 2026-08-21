@@ -53,7 +53,10 @@ services:
       KAFKA_SHARE_COORDINATOR_STATE_TOPIC_MIN_ISR: 1
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
     healthcheck:
-      test: ["CMD-SHELL", "kafka-broker-api-versions.sh --bootstrap-server localhost:9092 || exit 1"]
+      test: 
+        [
+          "CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092"
+        ]
       interval: 15s
       timeout: 10s
       retries: 10
@@ -65,11 +68,25 @@ services:
     ports:
       - '8080:8080'
     depends_on:
-      - broker 
+      broker:
+        condition: service_healthy
     environment:
       DYNAMIC_CONFIG_ENABLED: 'true'
       KAFKA_CLUSTERS_0_NAME: 'local'
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker:19092'
+  kafka-init:
+    image: apache/kafka:4.3.1
+    container_name: platform-kafka-init
+    networks:
+      - inner-cluster-communication
+    depends_on:
+      broker:
+        condition: service_healthy
+    volumes:
+      - ./kafka/init-topics.sh:/init-topics.sh
+    entrypoint:
+      - /bin/bash
+      - /init-topics.sh      
 
 networks:
   inner-cluster-communication:
