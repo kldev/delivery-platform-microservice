@@ -1,7 +1,6 @@
-﻿using Delivery.Platform.PaymentService.Events;
-using Delivery.Platform.PaymentService.Messaging;
+﻿using Delivery.Platform.PaymentService.Messaging;
 
-namespace Delivery.Platform.PaymentService.Handlers;
+namespace Delivery.Platform.PaymentService.Events.Handlers;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed class SettlementCreatedHandler

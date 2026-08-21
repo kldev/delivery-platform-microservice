@@ -1,8 +1,10 @@
 ﻿namespace Delivery.Platform.PaymentService.Events;
 
-public interface IDeliveryEvent
+public interface IEvent
 {
     Guid EventId { get; }
-    Guid DeliveryId { get; }
     DateTimeOffset OccurredAt { get; }
+    Guid AggregateId { get; }
+    String Module { get; }
+    String EventType { get; }
 }

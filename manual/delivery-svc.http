@@ -42,3 +42,6 @@ Content-Type: application/json
 ### cancel delivery
 PUT http://localhost:8081/api/deliveries/{{deliveryId}}/cancel
 Content-Type: application/json
+
+### get deliveries
+GET http://localhost:8081/api/deliveries
