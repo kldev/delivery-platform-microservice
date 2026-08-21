@@ -26,6 +26,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-flyway")
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.kafka:spring-kafka")
+	implementation("org.springframework.boot:spring-boot-starter-kafka")
+
 	implementation("org.flywaydb:flyway-database-postgresql")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("tools.jackson.module:jackson-module-kotlin")
@@ -46,6 +49,8 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter:1.21.4")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.awaitility:awaitility")
+
+	testImplementation("io.mockk:mockk:1.14.11")
 }
 
 kotlin {

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component
 class EventToTopic {
     fun map(eventType: String, module: String): String {
         return when (eventType) {
-            DeliveryEventType.CREATED.value -> DeliveryEventType.CREATED.value
             DeliveryEventType.CONFIRMED.value -> DeliveryEventType.CONFIRMED.value
             else -> "$module.events"
         }

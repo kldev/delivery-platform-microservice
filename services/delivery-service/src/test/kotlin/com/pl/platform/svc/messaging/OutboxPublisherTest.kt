@@ -1,4 +1,4 @@
-package com.pl.platform.svc.delivery.application
+package com.pl.platform.svc.messaging
 
 
 import com.pl.platform.common.messaging.OutboxMessage

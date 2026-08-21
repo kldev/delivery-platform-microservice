@@ -1,17 +1,15 @@
-package com.pl.platform.svc.delivery.adapter.persistence
+package com.pl.platform.svc.messaging
+
 
 import com.pl.platform.common.messaging.OutboxStatus
 import com.pl.platform.common.messaging.port.OutboxRepository
 import com.pl.platform.svc.BaseIntegrationTest
-import com.pl.platform.svc.delivery.application.event.DeliveryCreatedEvent
 import com.pl.platform.svc.messaging.adapter.persistence.SpringDataOutboxRepository
-
-
+import com.pl.platform.svc.settlement.application.event.SettlementCompletedEvent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.math.BigDecimal
-import java.util.UUID
+import java.util.*
 
 class OutboxPersistenceTest : BaseIntegrationTest() {
 
@@ -25,9 +23,8 @@ class OutboxPersistenceTest : BaseIntegrationTest() {
     fun `should persist outbox message`() {
 
         val event =
-            DeliveryCreatedEvent(
-                deliveryId = UUID.randomUUID(),
-                price = BigDecimal("200.99")
+            SettlementCompletedEvent(
+                id = UUID.randomUUID()
             )
 
         outboxRepository.save(event)
@@ -37,17 +34,17 @@ class OutboxPersistenceTest : BaseIntegrationTest() {
                 ?: throw IllegalArgumentException("Event with id ${event.eventId} not found")
 
         assertThat(entity.module)
-            .isEqualTo("delivery")
+            .isEqualTo("settlement")
 
         assertThat(entity.aggregateId)
-            .isEqualTo(event.deliveryId)
+            .isEqualTo(event.id)
 
         assertThat(entity.eventType)
-            .isEqualTo("delivery.created")
+            .isEqualTo(event.eventType)
 
 
         assertThat(entity.payload)
-            .contains(event.deliveryId.toString())
+            .contains(event.id.toString())
 
         assertThat(entity.status)
             .isEqualTo(OutboxStatus.PENDING)
