@@ -1,7 +1,7 @@
 package com.pl.platform.svc.delivery.adapter.rest
 
 import com.pl.platform.svc.delivery.adapter.rest.request.CreateDeliveryRequest
-import com.pl.platform.svc.delivery.adapter.rest.response.DeliveryResponse
+import com.pl.platform.svc.delivery.adapter.rest.response.DeliveryCreateResponse
 import com.pl.platform.svc.delivery.application.handler.CreateDeliveryHandler
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -21,10 +21,10 @@ class DeliveryController(
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @Valid @RequestBody request: CreateDeliveryRequest
-    ): DeliveryResponse =
-        DeliveryResponse.from(
-            createDeliveryHandler.handle(
-                request.toCommand()
-            )
+    ): DeliveryCreateResponse =
+
+        createDeliveryHandler.handle(
+            request.toCommand()
         )
+
 }

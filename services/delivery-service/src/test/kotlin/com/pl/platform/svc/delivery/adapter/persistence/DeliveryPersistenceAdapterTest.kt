@@ -5,23 +5,24 @@ package com.pl.platform.svc.delivery.adapter.persistence
 import com.pl.platform.svc.BaseIntegrationTest
 import com.pl.platform.svc.delivery.domain.Delivery
 import com.pl.platform.svc.delivery.domain.DeliveryStatus
+import com.pl.platform.svc.delivery.port.DeliveryRepository
 import com.pl.platform.svc.test.fixture.DriverDatabaseFixture
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.math.BigDecimal
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 @SpringBootTest
 class DeliveryPersistenceAdapterTest : BaseIntegrationTest() {
 
-    @Autowired
-    private lateinit var driverFixture: DriverDatabaseFixture;
-
-    @Autowired
+     @Autowired
     private lateinit var deliveryRepository: DeliveryPersistenceAdapter
 
+    @Autowired
+    private lateinit var driverDatabaseFixture: DriverDatabaseFixture
 
     @Autowired
     private lateinit var springDataRepository: SpringDataDeliveryRepository
@@ -33,12 +34,11 @@ class DeliveryPersistenceAdapterTest : BaseIntegrationTest() {
 
     @Test
     fun `should create and load delivery`() {
-        val driverId = driverFixture.create(phoneNumber = "1234567890");
 
         val delivery = Delivery.create(
-            driverId =  driverId,
             pickupAddress = "Opole",
-            deliveryAddress = "Wrocław"
+            deliveryAddress = "Wrocław",
+            price = BigDecimal("200.00")
         )
 
         deliveryRepository.create(delivery)
@@ -65,16 +65,17 @@ class DeliveryPersistenceAdapterTest : BaseIntegrationTest() {
 
     @Test
     fun `should update delivery status`() {
-        val driverId = driverFixture.create(phoneNumber = "1234567891");
         val delivery = Delivery.create(
-            driverId = driverId,
             pickupAddress = "Opole",
-            deliveryAddress = "Wrocław"
+            deliveryAddress = "Wrocław",
+            price = BigDecimal("200.00")
         )
 
         deliveryRepository.create(delivery)
 
-        delivery.assign()
+        val driverId = driverDatabaseFixture.create();
+
+        delivery.assign(driverId)
         deliveryRepository.update(delivery)
 
         val loaded =

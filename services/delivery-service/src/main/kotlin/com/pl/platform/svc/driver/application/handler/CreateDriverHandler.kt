@@ -4,11 +4,13 @@ import com.pl.platform.svc.driver.application.command.CreateDriverCommand
 import com.pl.platform.svc.driver.domain.Driver
 import com.pl.platform.svc.driver.port.DriverRepository
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class CreateDriverHandler(
     private val driverRepository: DriverRepository
 ) {
+    @Transactional
     fun handle(command: CreateDriverCommand): DriverResponse {
         val driver = Driver.create(
             firstName = command.firstName.trim(),

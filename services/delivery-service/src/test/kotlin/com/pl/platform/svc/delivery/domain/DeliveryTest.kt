@@ -1,7 +1,9 @@
 package com.pl.platform.svc.delivery.domain
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.math.BigDecimal
 import java.util.UUID
 import kotlin.test.assertEquals
 
@@ -12,12 +14,12 @@ class DeliveryTest {
     @Test
     fun `should create delivery with CREATED status`() {
         val delivery = Delivery.create(
-            driverId = driverId,
             pickupAddress = "Opole",
-            deliveryAddress = "Wrocław"
+            deliveryAddress = "Wrocław",
+            price = BigDecimal("200.99")
         )
 
-        assertEquals(driverId, delivery.driverId)
+        assertThat(delivery.driverId).isNull();
         assertEquals("Opole", delivery.pickupAddress)
         assertEquals("Wrocław", delivery.deliveryAddress)
         assertEquals(DeliveryStatus.CREATED, delivery.status)
@@ -27,11 +29,16 @@ class DeliveryTest {
     fun `should move delivery through complete lifecycle`() {
         val delivery = createDelivery()
 
-        delivery.assign()
+        delivery.assign(driverId)
 
         assertEquals(
             DeliveryStatus.ASSIGNED,
             delivery.status
+        )
+
+        assertEquals(
+            driverId,
+            delivery.driverId
         )
 
         delivery.pickup()
@@ -72,7 +79,7 @@ class DeliveryTest {
     fun `should cancel delivery from ASSIGNED`() {
         val delivery = createDelivery()
 
-        delivery.assign()
+        delivery.assign(driverId)
         delivery.cancel()
 
         assertEquals(
@@ -85,10 +92,10 @@ class DeliveryTest {
     fun `should not assign delivery twice`() {
         val delivery = createDelivery()
 
-        delivery.assign()
+        delivery.assign(driverId)
 
         assertThrows<IllegalArgumentException> {
-            delivery.assign()
+            delivery.assign(driverId)
         }
     }
 
@@ -105,7 +112,7 @@ class DeliveryTest {
     fun `should not start transit before pickup`() {
         val delivery = createDelivery()
 
-        delivery.assign()
+        delivery.assign(driverId)
 
         assertThrows<IllegalArgumentException> {
             delivery.startTransit()
@@ -116,7 +123,7 @@ class DeliveryTest {
     fun `should not deliver before transit`() {
         val delivery = createDelivery()
 
-        delivery.assign()
+        delivery.assign(driverId)
         delivery.pickup()
 
         assertThrows<IllegalArgumentException> {
@@ -128,7 +135,7 @@ class DeliveryTest {
     fun `should not cancel delivered delivery`() {
         val delivery = createDelivery()
 
-        delivery.assign()
+        delivery.assign(driverId)
         delivery.pickup()
         delivery.startTransit()
         delivery.deliver()
@@ -153,9 +160,9 @@ class DeliveryTest {
     fun `should reject blank pickup address`() {
         assertThrows<IllegalArgumentException> {
             Delivery.create(
-                driverId = driverId,
                 pickupAddress = " ",
-                deliveryAddress = "Wrocław"
+                deliveryAddress = "Wrocław",
+                price = BigDecimal("200.99")
             )
         }
     }
@@ -164,17 +171,17 @@ class DeliveryTest {
     fun `should reject blank delivery address`() {
         assertThrows<IllegalArgumentException> {
             Delivery.create(
-                driverId = driverId,
                 pickupAddress = "Opole",
-                deliveryAddress = " "
+                deliveryAddress = " ",
+                price = BigDecimal("200.99")
             )
         }
     }
 
     private fun createDelivery(): Delivery =
         Delivery.create(
-            driverId = driverId,
             pickupAddress = "Opole",
-            deliveryAddress = "Wrocław"
+            deliveryAddress = "Wrocław",
+            price = BigDecimal("200.99")
         )
 }

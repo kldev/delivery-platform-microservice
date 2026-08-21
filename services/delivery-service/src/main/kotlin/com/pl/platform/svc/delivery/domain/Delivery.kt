@@ -1,12 +1,14 @@
 package com.pl.platform.svc.delivery.domain
 
+import java.math.BigDecimal
 import java.util.UUID
 
 class Delivery private constructor(
     val id: DeliveryId,
-    val driverId: UUID,
+    var driverId: UUID?,
     val pickupAddress: String,
     val deliveryAddress: String,
+    val price: BigDecimal,
     private var currentStatus: DeliveryStatus
 ) {
 
@@ -16,9 +18,9 @@ class Delivery private constructor(
     companion object {
 
         fun create(
-            driverId: UUID,
             pickupAddress: String,
-            deliveryAddress: String
+            deliveryAddress: String,
+            price: BigDecimal,
         ): Delivery {
             require(pickupAddress.isNotBlank()) {
                 "Pickup address must not be blank"
@@ -30,34 +32,38 @@ class Delivery private constructor(
 
             return Delivery(
                 id = DeliveryId.new(),
-                driverId = driverId,
+                driverId = null,
                 pickupAddress = pickupAddress,
                 deliveryAddress = deliveryAddress,
-                currentStatus = DeliveryStatus.CREATED
+                currentStatus = DeliveryStatus.CREATED,
+                price = price,
             )
         }
 
         fun reconstitute(
             id: DeliveryId,
-            driverId: UUID,
+            driverId: UUID?,
             pickupAddress: String,
             deliveryAddress: String,
-            status: DeliveryStatus
+            status: DeliveryStatus,
+            price: BigDecimal,
         ): Delivery =
             Delivery(
                 id = id,
                 driverId = driverId,
                 pickupAddress = pickupAddress,
                 deliveryAddress = deliveryAddress,
-                currentStatus = status
+                currentStatus = status,
+                price = price,
             )
     }
 
-    fun assign() {
+    fun assign(driverId: UUID) {
         require(currentStatus == DeliveryStatus.CREATED) {
             "Delivery can only be assigned from CREATED status"
         }
 
+        this.driverId = driverId
         currentStatus = DeliveryStatus.ASSIGNED
     }
 

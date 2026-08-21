@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.PreUpdate
 import jakarta.persistence.Table
+import java.math.BigDecimal
 import java.time.Instant
 import java.util.UUID
 
@@ -20,13 +21,16 @@ class DeliveryJpaEntity(
     var id: UUID,
 
     @Column(name = "driver_id", nullable = false)
-    var driverId: UUID,
+    var driverId: UUID?,
 
     @Column(name = "pickup_address", nullable = false, length = 500)
     var pickupAddress: String,
 
     @Column(name = "delivery_address", nullable = false, length = 500)
     var deliveryAddress: String,
+
+    @Column(name = "price", nullable = false)
+    var price: BigDecimal,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
@@ -45,7 +49,8 @@ class DeliveryJpaEntity(
             driverId = driverId,
             pickupAddress = pickupAddress,
             deliveryAddress = deliveryAddress,
-            status = status.toDomain()
+            status = status.toDomain(),
+            price = price
         )
 
     fun updateFrom(delivery: Delivery) {
@@ -72,7 +77,8 @@ class DeliveryJpaEntity(
                 deliveryAddress = delivery.deliveryAddress,
                 status = DeliveryStatusJpa.from(delivery.status),
                 createdAt = now,
-                updatedAt = now
+                updatedAt = now,
+                price = delivery.price
             )
         }
     }
