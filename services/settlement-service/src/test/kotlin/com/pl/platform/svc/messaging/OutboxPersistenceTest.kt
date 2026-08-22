@@ -2,10 +2,10 @@ package com.pl.platform.svc.messaging
 
 
 import com.pl.platform.common.messaging.OutboxStatus
+import com.pl.platform.common.messaging.event.TestEvent
 import com.pl.platform.common.messaging.port.OutboxRepository
 import com.pl.platform.svc.BaseIntegrationTest
 import com.pl.platform.svc.messaging.adapter.persistence.SpringDataOutboxRepository
-import com.pl.platform.svc.settlement.application.event.SettlementCompletedEvent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,8 +23,10 @@ class OutboxPersistenceTest : BaseIntegrationTest() {
     fun `should persist outbox message`() {
 
         val event =
-            SettlementCompletedEvent(
-                id = UUID.randomUUID()
+            TestEvent(
+                eventId = UUID.randomUUID(),
+                aggregateId = UUID.randomUUID(),
+                module = "test"
             )
 
         outboxRepository.save(event)
@@ -34,17 +36,17 @@ class OutboxPersistenceTest : BaseIntegrationTest() {
                 ?: throw IllegalArgumentException("Event with id ${event.eventId} not found")
 
         assertThat(entity.module)
-            .isEqualTo("settlement")
+            .isEqualTo("test")
 
         assertThat(entity.aggregateId)
-            .isEqualTo(event.id)
+            .isEqualTo(event.aggregateId)
 
         assertThat(entity.eventType)
             .isEqualTo(event.eventType)
 
 
         assertThat(entity.payload)
-            .contains(event.id.toString())
+            .contains(event.eventId.toString())
 
         assertThat(entity.status)
             .isEqualTo(OutboxStatus.PENDING)

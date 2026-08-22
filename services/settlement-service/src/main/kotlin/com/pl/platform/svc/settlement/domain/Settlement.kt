@@ -20,4 +20,40 @@ class Settlement(
     val distanceKm: BigDecimal,
     val completedAt: Instant,
     val createdAt: Instant,
-)
+) {
+    companion object {
+
+        fun create(
+            deliveryId: UUID,
+            driverId: UUID,
+            driverFullName: String,
+            deliveryAmount: BigDecimal,
+            currency: String,
+            basePercentage: BigDecimal,
+            nightPercentage: BigDecimal,
+            weekendPercentage: BigDecimal,
+            distancePercentage: BigDecimal,
+            totalPercentage: BigDecimal,
+            driverAmount: BigDecimal,
+            distanceKm: BigDecimal,
+            completedAt: Instant,
+        ): Settlement =
+            Settlement(
+                id = SettlementId(UUID.randomUUID()),
+                deliveryId = deliveryId,
+                driverId = driverId,
+                driverFullName = driverFullName,
+                deliveryAmount = deliveryAmount,
+                currency = currency,
+                basePercentage = basePercentage,
+                nightPercentage = nightPercentage,
+                weekendPercentage = weekendPercentage,
+                distancePercentage = distancePercentage,
+                totalPercentage = totalPercentage,
+                driverAmount = driverAmount,
+                distanceKm = distanceKm,
+                completedAt = completedAt,
+                createdAt = Instant.now(),
+            )
+    }
+}
