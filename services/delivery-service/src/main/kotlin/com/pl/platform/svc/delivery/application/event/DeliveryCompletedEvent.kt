@@ -9,5 +9,6 @@ data class DeliveryCompletedEvent(
     val driverFullName: String,
     val distanceKm: BigDecimal,
     val price: BigDecimal,
+    val currency: String = "PLN",
 ) : DeliveryEvent(aggregateId = deliveryId,
     eventType = DeliveryEventType.COMPLETED.value)

@@ -20,6 +20,8 @@ create_topic() {
         --replication-factor 1
 }
 
+create_topic driver.settlement.completed 3
+create_topic delivery.completed 3
 create_topic delivery.confirmed 3
 create_topic delivery.events 3
 create_topic settlement.events 3

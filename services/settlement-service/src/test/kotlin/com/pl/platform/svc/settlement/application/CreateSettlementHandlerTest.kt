@@ -4,6 +4,7 @@ import com.pl.platform.common.messaging.port.OutboxRepository
 import com.pl.platform.svc.settlement.application.create_settlement.CreateSettlementCommand
 import com.pl.platform.svc.settlement.application.create_settlement.CreateSettlementHandler
 import com.pl.platform.svc.settlement.application.create_settlement.SettlementCalculator
+import com.pl.platform.svc.settlement.application.event.DriverSettlementCompletedEvent
 import com.pl.platform.svc.settlement.application.event.SettlementCreatedEvent
 import com.pl.platform.svc.settlement.domain.Settlement
 import com.pl.platform.svc.settlement.domain.SettlementRate
@@ -112,7 +113,7 @@ class CreateSettlementHandlerTest {
             settlementRepository.create(settlement)
         }
 
-        verify(exactly = 1) {
+        verify(exactly = 2) {
             outboxRepository.save(any())
         }
     }
@@ -165,8 +166,16 @@ class CreateSettlementHandlerTest {
         val eventSlot =
             slot<SettlementCreatedEvent>()
 
+        val eventSlot2 =
+            slot<DriverSettlementCompletedEvent>()
+
+
         every {
             outboxRepository.save(capture(eventSlot))
+        } just Runs
+
+        every {
+            outboxRepository.save(capture(eventSlot2))
         } just Runs
 
         val result = handler.handle(command)
@@ -174,12 +183,15 @@ class CreateSettlementHandlerTest {
         assertThat(result)
             .isSameAs(settlement)
 
-        verify(exactly = 1) {
+        verify(exactly = 2) {
             outboxRepository.save(any())
         }
 
         assertThat(eventSlot.captured)
             .isInstanceOf(SettlementCreatedEvent::class.java)
+
+        assertThat(eventSlot2.captured)
+            .isInstanceOf(DriverSettlementCompletedEvent::class.java)
 
         assertThat(eventSlot.captured.deliveryId)
             .isEqualTo(command.deliveryId)
