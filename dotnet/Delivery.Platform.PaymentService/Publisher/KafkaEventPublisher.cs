@@ -84,24 +84,9 @@ public sealed class KafkaEventPublisher(
                 Headers = new Headers
                 {
                     {
-                        "event-id",
-                        Encoding.UTF8.GetBytes(
-                            message.EventId.ToString())
-                    },
-                    {
-                        "event-type",
-                        Encoding.UTF8.GetBytes(
-                            message.EventType)
-                    },
-                    {
                         "event-version",
-                        Encoding.UTF8.GetBytes("1")
+                        [.. "1"u8]
                     },
-                    {
-                        "occurred-at",
-                        Encoding.UTF8.GetBytes(
-                            message.OccurredAt.ToString("O"))
-                    }
                 }
             };
 

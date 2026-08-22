@@ -20,10 +20,7 @@ class KafkaEventPublisher(
 ) : EventPublisher {
 
     companion object {
-        const val HEADER_EVENT_ID = "event-id"
-        const val HEADER_EVENT_TYPE = "event-type"
         const val HEADER_EVENT_VERSION = "event-version"
-        const val HEADER_OCCURRED_AT = "occurred-at"
     }
 
     override fun publish(event: OutboxMessage) {
@@ -35,23 +32,8 @@ class KafkaEventPublisher(
         )
 
         record.headers().add(
-            HEADER_EVENT_ID,
-            event.id.value.toString().toByteArray()
-        )
-
-        record.headers().add(
-            HEADER_EVENT_TYPE,
-            event.eventType.toByteArray()
-        )
-
-        record.headers().add(
             HEADER_EVENT_VERSION,
             "1".toByteArray()
-        )
-
-        record.headers().add(
-            HEADER_OCCURRED_AT,
-            event.occurredAt.toString().toByteArray()
         )
 
         kafkaTemplate.send(record).get()

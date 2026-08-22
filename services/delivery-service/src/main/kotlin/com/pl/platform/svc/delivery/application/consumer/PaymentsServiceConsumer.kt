@@ -1,9 +1,8 @@
 package com.pl.platform.svc.delivery.application.consumer
+
+import com.pl.platform.common.messaging.event.payments.PaymentDeclinedEvent
 import com.pl.platform.common.messaging.event.payments.PaymentPaidEvent
-import com.pl.platform.svc.delivery.application.command.AssignDriverCommand
-import com.pl.platform.svc.delivery.application.handler.AssignDriverHandler
-import com.pl.platform.svc.delivery.domain.DeliveryId
-import com.pl.platform.svc.messaging.adapter.publisher.KafkaEventPublisher
+
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
@@ -13,27 +12,58 @@ import tools.jackson.databind.json.JsonMapper
 @Component
 class PaymentsServiceConsumer(
     private val jsonMapper: JsonMapper,
-    private val assignDriverHandler: AssignDriverHandler
+    private val paymentPaidProcessor: PaymentPaidProcessor,
+    private val paymentDeclinedProcessor: PaymentDeclinedProcessor,
 ) {
 
-    @KafkaListener(topics = ["payment.paid"], groupId = "delivery-service")
-    fun process(message: ConsumerRecord<String, String>) {
-        val eventType = String(message.headers().lastHeader(KafkaEventPublisher.HEADER_EVENT_TYPE).value(), Charsets.UTF_8);
-        logger.info("Delivery payment accepted/paid: {}", eventType )
+    @KafkaListener(
+        topics = ["payment.paid"],
+        groupId = "delivery-service",
+    )
+    fun processPaid(
+        message: ConsumerRecord<String, String>,
+    ) {
+        val event =
+            jsonMapper.readValue(
+                message.value(),
+                PaymentPaidEvent::class.java,
+            )
 
-        // TODO: procesed events maybe
-        val event =  jsonMapper.readValue(message.value(), PaymentPaidEvent::class.java)
+        logger.info(
+            "Received payment paid event {} for delivery {}",
+            event.eventId,
+            event.deliveryId,
+        )
 
-        logger.info("Delivery id: {}", event.deliveryId )
+        paymentPaidProcessor.process(event)
+    }
 
-        assignDriverHandler.handle(AssignDriverCommand(
-            deliveryId = DeliveryId(event.deliveryId),
-            driverId = null
-        ))
+    @KafkaListener(
+        topics = ["payment.declined"],
+        groupId = "delivery-service",
+    )
+    fun processDeclined(
+        message: ConsumerRecord<String, String>,
+    ) {
+        val event =
+            jsonMapper.readValue(
+                message.value(),
+                PaymentDeclinedEvent::class.java,
+            )
+
+        logger.info(
+            "Received payment declined event {} for delivery {}",
+            event.eventId,
+            event.deliveryId,
+        )
+
+        paymentDeclinedProcessor.process(event)
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger(PaymentsServiceConsumer::class.java)
+        private val logger =
+            LoggerFactory.getLogger(
+                PaymentsServiceConsumer::class.java,
+            )
     }
-
 }

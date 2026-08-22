@@ -26,7 +26,7 @@ Content-Type: application/json
 
 {
   "deliveryAddress": "Test A",
-  "distance": 200.50,
+  "distance": 230.50,
   "pickupAddress": "Test B"
 }
 

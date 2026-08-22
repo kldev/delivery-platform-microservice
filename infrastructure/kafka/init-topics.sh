@@ -24,7 +24,7 @@ create_topic delivery.confirmed 3
 create_topic delivery.events 3
 create_topic settlement.events 3
 create_topic payment.paid 3
-create_topic payment.decline 3
+create_topic payment.declined 3
 create_topic payment.events 3
 
 echo "Kafka topics:"

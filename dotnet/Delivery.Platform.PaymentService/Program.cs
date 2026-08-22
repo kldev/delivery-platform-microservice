@@ -1,4 +1,5 @@
 using Delivery.Platform.Infrastructure;
+using Delivery.Platform.PaymentService;
 using Delivery.Platform.PaymentService.Application;
 using Delivery.Platform.PaymentService.Endpoints;
 using Delivery.Platform.PaymentService.Events;
@@ -16,6 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddEventHandlers();
     builder.Services.AddApplication();
     builder.Services.AddPublisher(builder.Configuration);
+    builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+    builder.Services.AddProblemDetails();
 }
 
 var app = builder.Build();
@@ -29,6 +32,8 @@ var app = builder.Build();
             .WithTitle("Payment Service API")
             .WithTheme(ScalarTheme.Default);
     });
+    
+    app.UseExceptionHandler();
 
 //    app.UseHttpsRedirection();
 

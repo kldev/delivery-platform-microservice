@@ -36,12 +36,24 @@ public class Payment
 
     public void MarkAsPaid()
     {
+        if (Status != PaymentStatus.Pending)
+        {
+            throw new InvalidOperationException(
+                $"Payment '{Id}' cannot be marked as paid from status '{Status}'.");
+        }
+        
         Status = PaymentStatus.Paid;
         PaidAt = DateTimeOffset.UtcNow;
     }
 
     public void MarkAsFailed()
     {
+        if (Status != PaymentStatus.Pending)
+        {
+            throw new InvalidOperationException(
+                $"Payment '{Id}' cannot be marked as failed from status '{Status}'.");
+        }
+        
         Status = PaymentStatus.Failed;
     }
 }
