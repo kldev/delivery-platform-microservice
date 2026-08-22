@@ -3,6 +3,7 @@ using Delivery.Platform.PaymentService.Application;
 using Delivery.Platform.PaymentService.Endpoints;
 using Delivery.Platform.PaymentService.Events;
 using Delivery.Platform.PaymentService.Messaging;
+using Delivery.Platform.PaymentService.Publisher;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddEventHandlers();
     builder.Services.AddApplication();
+    builder.Services.AddPublisher(builder.Configuration);
 }
 
 var app = builder.Build();

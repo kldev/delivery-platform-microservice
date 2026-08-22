@@ -1,4 +1,6 @@
-﻿using Delivery.Platform.PaymentService.Application.Payments.Commands.AcceptPayment;
+﻿using Delivery.Platform.Domain.Payments;
+using Delivery.Platform.PaymentService.Application.Payments.Commands.AcceptPayment;
+using Delivery.Platform.PaymentService.Application.Payments.Commands.DeclinePayment;
 using Delivery.Platform.PaymentService.Application.Payments.Queries.GetAllPayments;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,20 +12,24 @@ public static class Endpoint
     {
         var group = app.MapGroup("/api/payments");
 
-        group.MapPut("/{id}/accept", async (Guid id, [FromServices] AcceptPaymentHandler handler, CancellationToken ct) =>
-        {
-            await handler.Handle(new AcceptPaymentCommand(id), ct);
-            return Results.NoContent();
-        });
-        
-        group.MapPut("/{id}/decline", async (Guid id, [FromServices] AcceptPaymentHandler handler, CancellationToken ct) =>
-        {
-            await handler.Handle(new AcceptPaymentCommand(id), ct);
-            return Results.NoContent();
-        });
+        group.MapPut("/{id}/accept",
+            async (Guid id, [FromServices] AcceptPaymentHandler handler, CancellationToken ct) =>
+            {
+                await handler.Handle(new AcceptPaymentCommand(id), ct);
+                return Results.NoContent();
+            });
+
+        group.MapPut("/{id}/decline",
+            async (Guid id, [FromServices] DeclinePaymentHandler handler, CancellationToken ct) =>
+            {
+                await handler.Handle(new DeclinePaymentCommand(id), ct);
+                return Results.NoContent();
+            });
 
         group.MapGet("",
-            async ([FromServices] GetAllPaymentsHandler handler, CancellationToken ct) =>
-            TypedResults.Ok(await handler.Handle(ct)));
+            async ([FromServices] GetAllPaymentsHandler handler, [FromQuery] PaymentStatus? status,
+                    CancellationToken ct) =>
+                TypedResults.Ok(await handler.Handle(new GetAllPaymentsQuery(status), ct)));
+
     }
 }

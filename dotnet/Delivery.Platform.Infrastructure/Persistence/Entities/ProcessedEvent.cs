@@ -1,6 +1,6 @@
 ﻿namespace Delivery.Platform.Infrastructure.Persistence;
 
-public class ProcessedEvent
+public sealed class ProcessedEvent
 {
     private ProcessedEvent()
     {

@@ -1,4 +1,5 @@
 ﻿using Delivery.Platform.Domain.Payments;
+using Delivery.Platform.Infrastructure.Persistence.Outbox;
 using Delivery.Platform.PaymentService.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,8 @@ public class PaymentDbContext(
 {
     public DbSet<Payment> Payments => Set<Payment>();
     public DbSet<ProcessedEvent> ProcessedEvents => Set<ProcessedEvent>();
+
+    public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

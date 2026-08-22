@@ -1,9 +1,11 @@
-﻿using Delivery.Platform.Infrastructure.Persistence;
-using Delivery.Platform.PaymentService.Infrastructure.Persistence;
+﻿using System.Text.Json;
+using Delivery.Platform.Infrastructure.Persistence;
+using Delivery.Platform.Infrastructure.Persistence.Outbox;
+using Delivery.Platform.PaymentService.Events.Contracts;
 
 namespace Delivery.Platform.PaymentService.Application.Payments.Commands.DeclinePayment;
 
-public sealed class DeclinePaymentHandler(PaymentDbContext dbContext)
+public sealed class DeclinePaymentHandler(PaymentDbContext dbContext, JsonSerializerOptions jsonOptions)
 {
     public async Task Handle(
         DeclinePaymentCommand command,
@@ -17,7 +19,18 @@ public sealed class DeclinePaymentHandler(PaymentDbContext dbContext)
                 $"Payment '{command.PaymentId}' was not found.");
 
         payment.MarkAsFailed();
+        
+        
+        var @event = new PaymentDeclinedEvent(
+            EventId: Guid.NewGuid(),
+            DeliveryId: payment.DeliveryId,
+            OccurredAt: DateTimeOffset.Now,
+            AggregateId: payment.Id);
 
+        var outbox = OutboxMessage.Create(@event, 
+            JsonSerializer.Serialize(@event, jsonOptions));
+        await dbContext.OutboxMessages.AddAsync(outbox, cancellationToken);
+        
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 }

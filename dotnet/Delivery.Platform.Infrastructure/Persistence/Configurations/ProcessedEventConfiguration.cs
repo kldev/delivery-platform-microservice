@@ -1,8 +1,7 @@
-﻿using Delivery.Platform.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Delivery.Platform.PaymentService.Infrastructure.Persistence.Configurations;
+namespace Delivery.Platform.Infrastructure.Persistence.Configurations;
 
 public sealed class ProcessedEventConfiguration
     : IEntityTypeConfiguration<ProcessedEvent>

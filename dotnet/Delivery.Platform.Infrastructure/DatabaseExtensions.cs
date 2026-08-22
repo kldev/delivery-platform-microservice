@@ -1,4 +1,7 @@
 ﻿using Delivery.Platform.Infrastructure.Persistence;
+using Delivery.Platform.Infrastructure.Persistence.Adapter;
+using Delivery.Platform.Infrastructure.Port;
+using Delivery.Platform.PaymentService.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +21,9 @@ public static class DatabaseExtensions
 
         services.AddDbContext<PaymentDbContext>(options =>
             options.UseNpgsql(connectionString));
-
+        
+        services.AddScoped<IOutboxRepository, OutboxRepository>();
+        
         return services;
     }
     public static async Task MigrateDatabaseAsync(

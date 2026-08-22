@@ -1,4 +1,4 @@
-﻿namespace Delivery.Platform.PaymentService.Events;
+﻿namespace Delivery.Platform.PaymentService.Events.Contracts;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed record DeliveryConfirmed(

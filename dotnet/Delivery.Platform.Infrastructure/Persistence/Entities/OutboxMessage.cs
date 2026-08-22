@@ -1,4 +1,6 @@
-﻿namespace Delivery.Platform.Infrastructure.Persistence.Outbox;
+﻿using Delivery.Platform.Domain.Events;
+
+namespace Delivery.Platform.Infrastructure.Persistence.Outbox;
 
 public sealed class OutboxMessage
 {
@@ -60,32 +62,17 @@ public sealed class OutboxMessage
 
     public DateTimeOffset? LockedUntil { get; private set; }
 
-    public void MarkPublished(DateTimeOffset publishedAt)
-    {
-        Status = OutboxMessageStatus.Published;
-        PublishedAt = publishedAt;
-        LockedUntil = null;
-    }
-
-    public void MarkFailed(
-        string error,
-        int maxAttempts,
-        DateTimeOffset nextAttemptAt)
-    {
-        Attempts++;
-
-        LastError = error;
-        NextAttemptAt = nextAttemptAt;
-        LockedUntil = null;
-
-        if (Attempts >= maxAttempts)
-        {
-            Status = OutboxMessageStatus.Dead;
-        }
-    }
-
-    public void Lock(DateTimeOffset lockedUntil)
-    {
-        LockedUntil = lockedUntil;
-    }
+    public static OutboxMessage Create(IEvent @event, string payload) => new (
+        id: Guid.NewGuid(),
+        aggregateId: @event.AggregateId,
+        module: @event.Module,
+        eventId: @event.EventId,
+        eventType: @event.EventType,
+        status: OutboxMessageStatus.Pending,
+        payload: payload,
+        attempts: 0,
+        nextAttemptAt: DateTimeOffset.UtcNow,
+        occurredAt: DateTimeOffset.UtcNow,
+        createdAt: DateTimeOffset.UtcNow);
+    
 }

@@ -45,3 +45,19 @@ Content-Type: application/json
 
 ### get deliveries
 GET http://localhost:8081/api/deliveries
+
+### get payments
+GET http://localhost:9080/api/payments
+
+### get payments
+GET http://localhost:9080/api/payments?status=Pending
+
+> {%
+    client.global.set("paymentId", response.body[0].id);
+%}
+
+### accept/paid payments
+PUT http://localhost:9080/api/payments/{{paymentId}}/accept
+
+### decline payments
+PUT http://localhost:9080/api/payments/{{paymentId}}/decline

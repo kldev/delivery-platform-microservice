@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Confluent.Kafka;
+using Delivery.Platform.PaymentService.Exceptions;
 
 namespace Delivery.Platform.PaymentService.Messaging;
 
@@ -108,6 +109,20 @@ public sealed class KafkaListener<TEvent>(
                     when (stoppingToken.IsCancellationRequested)
                 {
                     throw;
+                }
+                catch (ValidationException vex)
+                {
+                    logger.LogError(
+                        vex,
+                        "Error processing Kafka event {EventType}. " +
+                        "Topic: {Topic}, Partition: {Partition}, Offset: {Offset}. " +
+                        "Offset will be committed.",
+                        typeof(TEvent).Name,
+                        result.Topic,
+                        result.Partition,
+                        result.Offset);
+                    
+                    consumer.Commit(result);
                 }
                 catch (Exception ex)
                 {

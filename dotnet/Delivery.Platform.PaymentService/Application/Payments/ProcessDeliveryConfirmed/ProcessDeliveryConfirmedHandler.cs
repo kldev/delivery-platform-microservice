@@ -1,6 +1,8 @@
 ﻿using Delivery.Platform.Domain.Payments;
 using Delivery.Platform.Infrastructure.Persistence;
 using Delivery.Platform.PaymentService.Events;
+using Delivery.Platform.PaymentService.Events.Contracts;
+using Delivery.Platform.PaymentService.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Delivery.Platform.PaymentService.Application.Payments.ProcessDeliveryConfirmed;
@@ -19,6 +21,24 @@ public sealed class ProcessDeliveryConfirmedHandler(
             @event.EventId,
             @event.DeliveryId);
 
+        var errors = new List<String>();
+
+        if (string.IsNullOrEmpty(@event.Currency))
+        {
+            logger.LogError("Invalid currency {Currency}", @event.Currency);
+            errors.Add($"Invalid currency {@event.Currency}");
+        }
+        
+        if (@event.DeliveryId == Guid.Empty)
+        {
+            logger.LogError("Invalid delivery {DeliveryId}", @event.DeliveryId);
+            errors.Add($"Invalid delivery {@event.DeliveryId}");
+        }
+
+        if (errors.Count != 0)
+        {
+            throw new ValidationException(string.Join(",", errors));
+        }
         await using var transaction =
             await dbContext.Database.BeginTransactionAsync(
                 cancellationToken);

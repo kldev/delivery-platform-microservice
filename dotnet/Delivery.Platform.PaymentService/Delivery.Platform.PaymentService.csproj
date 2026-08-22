@@ -23,8 +23,4 @@
     <ProjectReference Include="..\Delivery.Platform.Infrastructure\Delivery.Platform.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Infrastructure\" />
-  </ItemGroup>
-
 </Project>

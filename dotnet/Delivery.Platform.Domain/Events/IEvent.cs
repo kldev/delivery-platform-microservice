@@ -1,4 +1,4 @@
-﻿namespace Delivery.Platform.PaymentService.Events;
+﻿namespace Delivery.Platform.Domain.Events;
 
 public interface IEvent
 {

@@ -20,11 +20,12 @@ create_topic() {
         --replication-factor 1
 }
 
-create_topic delivery.events 3
 create_topic delivery.confirmed 3
-create_topic settlement.created 3
-create_topic payment.created 3
-create_topic payment.completed 3
+create_topic delivery.events 3
+create_topic settlement.events 3
+create_topic payment.paid 3
+create_topic payment.decline 3
+create_topic payment.events 3
 
 echo "Kafka topics:"
 "$KAFKA_TOPICS"  \
