@@ -5,6 +5,7 @@ CREATE TABLE deliveries
     pickup_address   VARCHAR(500) NOT NULL,
     delivery_address VARCHAR(500) NOT NULL,
     price            NUMERIC(12, 2) NOT NULL,
+    distance_km      numeric(12,4) NOT NULL,
     status           VARCHAR(30)  NOT NULL,
     created_at       TIMESTAMPTZ  NOT NULL,
     updated_at       TIMESTAMPTZ  NULL,

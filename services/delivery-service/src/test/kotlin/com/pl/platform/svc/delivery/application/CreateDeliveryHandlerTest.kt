@@ -5,7 +5,7 @@ import com.pl.platform.svc.delivery.application.command.CreateDeliveryCommand
 import com.pl.platform.svc.delivery.application.event.DeliveryCreatedEvent
 import com.pl.platform.svc.delivery.application.handler.CreateDeliveryHandler
 import com.pl.platform.svc.delivery.port.DeliveryRepository
-import com.pl.platform.svc.pricing.service.PricingService
+import com.pl.platform.svc.pricing.service.DeliveryPricingService
 
 import io.mockk.*
 import org.assertj.core.api.Assertions.assertThat
@@ -16,7 +16,7 @@ class CreateDeliveryHandlerTest {
 
     private val deliveryRepository = mockk<DeliveryRepository>()
     private val outboxRepository = mockk<OutboxRepository>()
-    private val pricingService = PricingService();
+    private val pricingService = DeliveryPricingService();
 
     private val handler = CreateDeliveryHandler(
         deliveryRepository,
@@ -38,7 +38,7 @@ class CreateDeliveryHandlerTest {
             CreateDeliveryCommand(
                 pickupAddress = "Test 1",
                 deliveryAddress = "Test 2",
-                distance = BigDecimal("120.55"),
+                distanceKm = BigDecimal("120.55"),
             )
         )
 

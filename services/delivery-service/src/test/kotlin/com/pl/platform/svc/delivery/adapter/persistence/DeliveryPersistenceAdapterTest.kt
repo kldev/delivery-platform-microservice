@@ -38,7 +38,8 @@ class DeliveryPersistenceAdapterTest : BaseIntegrationTest() {
         val delivery = Delivery.create(
             pickupAddress = "Opole",
             deliveryAddress = "Wrocław",
-            price = BigDecimal("200.00")
+            price = BigDecimal("200.00"),
+            distanceKm = BigDecimal("50")
         )
 
         deliveryRepository.create(delivery)
@@ -68,7 +69,8 @@ class DeliveryPersistenceAdapterTest : BaseIntegrationTest() {
         val delivery = Delivery.create(
             pickupAddress = "Opole",
             deliveryAddress = "Wrocław",
-            price = BigDecimal("200.00")
+            price = BigDecimal("200.00"),
+            distanceKm = BigDecimal("50")
         )
 
         deliveryRepository.create(delivery)

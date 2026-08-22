@@ -44,7 +44,7 @@ class CreateDeliveryRestTest : BaseRestIntegrationTest() {
         val request = CreateDeliveryRequest(
             pickupAddress = "Opole, Krakowska 10",
             deliveryAddress = "Wrocław, Rynek 1",
-            distance = BigDecimal("100.00")
+            distanceKm = BigDecimal("100.00")
         )
 
         val response =
@@ -77,7 +77,7 @@ class CreateDeliveryRestTest : BaseRestIntegrationTest() {
         val request = CreateDeliveryRequest(
             pickupAddress = "",
             deliveryAddress = "Wrocław, Rynek 1",
-            distance = BigDecimal("200.99")
+            distanceKm = BigDecimal("200.99")
         )
 
         restTestClient
@@ -94,7 +94,7 @@ class CreateDeliveryRestTest : BaseRestIntegrationTest() {
         val request = CreateDeliveryRequest(
             pickupAddress = "Opole, Krakowska 10",
             deliveryAddress = "",
-            distance = BigDecimal("100.00")
+            distanceKm = BigDecimal("100.00")
         )
 
         restTestClient
@@ -112,7 +112,7 @@ class CreateDeliveryRestTest : BaseRestIntegrationTest() {
         val request = CreateDeliveryRequest(
             pickupAddress = "Opole, Krakowska 10",
             deliveryAddress = "Brzeg, Długa 10",
-            distance = BigDecimal("100.00")
+            distanceKm = BigDecimal("100.00")
         )
 
         restTestClient

@@ -13,6 +13,7 @@ object DeliveryTestFactory {
         Delivery.create(
             pickupAddress = pickupAddress,
             deliveryAddress = deliveryAddress,
-            price = price
+            price = price,
+            distanceKm = BigDecimal("50")
         )
 }

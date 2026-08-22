@@ -38,6 +38,8 @@ class Driver private constructor(
         status = DriverStatus.SUSPENDED
     }
 
+    fun fullName() : String = "$firstName $lastName"
+
     companion object {
 
         fun create(

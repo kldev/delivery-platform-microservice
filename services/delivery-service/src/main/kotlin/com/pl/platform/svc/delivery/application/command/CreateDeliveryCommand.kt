@@ -6,5 +6,5 @@ import java.util.UUID
 data class CreateDeliveryCommand(
     val pickupAddress: String,
     val deliveryAddress: String,
-    var distance: BigDecimal = BigDecimal.ZERO,
+    var distanceKm: BigDecimal = BigDecimal.ZERO,
 )

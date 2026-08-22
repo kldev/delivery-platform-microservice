@@ -16,7 +16,8 @@ class DeliveryTest {
         val delivery = Delivery.create(
             pickupAddress = "Opole",
             deliveryAddress = "Wrocław",
-            price = BigDecimal("200.99")
+            price = BigDecimal("200.99"),
+            distanceKm = BigDecimal("50")
         )
 
         assertThat(delivery.driverId).isNull();
@@ -166,7 +167,8 @@ class DeliveryTest {
             Delivery.create(
                 pickupAddress = " ",
                 deliveryAddress = "Wrocław",
-                price = BigDecimal("200.99")
+                price = BigDecimal("200.99"),
+                distanceKm = BigDecimal("50")
             )
         }
     }
@@ -177,7 +179,8 @@ class DeliveryTest {
             Delivery.create(
                 pickupAddress = "Opole",
                 deliveryAddress = " ",
-                price = BigDecimal("200.99")
+                price = BigDecimal("200.99"),
+                distanceKm = BigDecimal("50")
             )
         }
     }
@@ -186,6 +189,7 @@ class DeliveryTest {
         Delivery.create(
             pickupAddress = "Opole",
             deliveryAddress = "Wrocław",
-            price = BigDecimal("200.99")
+            price = BigDecimal("200.99"),
+            distanceKm = BigDecimal("50")
         )
 }

@@ -32,6 +32,9 @@ class DeliveryJpaEntity(
     @Column(name = "price", nullable = false)
     var price: BigDecimal,
 
+    @Column(name = "distance_km", nullable = false)
+    var distanceKm: BigDecimal,
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     var status: DeliveryStatusJpa,
@@ -50,7 +53,8 @@ class DeliveryJpaEntity(
             pickupAddress = pickupAddress,
             deliveryAddress = deliveryAddress,
             status = status.toDomain(),
-            price = price
+            price = price,
+            distanceKm = distanceKm,
         )
 
     fun updateFrom(delivery: Delivery) {
@@ -78,7 +82,8 @@ class DeliveryJpaEntity(
                 status = DeliveryStatusJpa.from(delivery.status),
                 createdAt = now,
                 updatedAt = now,
-                price = delivery.price
+                price = delivery.price,
+                distanceKm = delivery.distanceKm,
             )
         }
     }

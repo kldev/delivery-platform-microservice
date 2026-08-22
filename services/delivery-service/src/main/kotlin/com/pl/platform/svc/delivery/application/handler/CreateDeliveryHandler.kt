@@ -6,7 +6,7 @@ import com.pl.platform.svc.delivery.application.command.CreateDeliveryCommand
 import com.pl.platform.svc.delivery.application.event.DeliveryCreatedEvent
 import com.pl.platform.svc.delivery.domain.Delivery
 import com.pl.platform.svc.delivery.port.DeliveryRepository
-import com.pl.platform.svc.pricing.service.PricingService
+import com.pl.platform.svc.pricing.service.DeliveryPricingService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 class CreateDeliveryHandler(
     private val deliveryRepository: DeliveryRepository,
     private val outboxRepository: OutboxRepository,
-    private val pricingService: PricingService
+    private val pricingService: DeliveryPricingService
 ) {
 
     @Transactional
@@ -24,7 +24,8 @@ class CreateDeliveryHandler(
         val delivery = Delivery.create(
             pickupAddress = command.pickupAddress.trim(),
             deliveryAddress = command.deliveryAddress.trim(),
-            price = pricingService.calculatePricing(command.distance),
+            price = pricingService.calculate(command.distanceKm),
+            distanceKm = command.distanceKm,
         )
 
         deliveryRepository.create(delivery)

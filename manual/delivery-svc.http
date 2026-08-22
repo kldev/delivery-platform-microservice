@@ -26,7 +26,7 @@ Content-Type: application/json
 
 {
   "deliveryAddress": "Test A",
-  "distance": 230.50,
+  "distanceKm": 50.0,
   "pickupAddress": "Test B"
 }
 
@@ -61,3 +61,11 @@ PUT http://localhost:9080/api/payments/{{paymentId}}/accept
 
 ### decline payments
 PUT http://localhost:9080/api/payments/{{paymentId}}/decline
+
+### pickup delivery
+PUT http://localhost:8081/api/deliveries/{{deliveryId}}/pickup
+Content-Type: application/json
+
+### start delivery
+PUT http://localhost:8081/api/deliveries/{{deliveryId}}/start
+Content-Type: application/json

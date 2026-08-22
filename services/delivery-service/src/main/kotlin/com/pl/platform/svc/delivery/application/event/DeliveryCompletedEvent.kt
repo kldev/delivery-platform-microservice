@@ -1,10 +1,13 @@
 package com.pl.platform.svc.delivery.application.event
 
-import java.time.Instant
-import java.util.UUID
+import java.math.BigDecimal
+import java.util.*
 
 data class DeliveryCompletedEvent(
     val deliveryId: UUID,
-    override val occurredAt: Instant
+    val driverId: UUID,
+    val driverFullName: String,
+    val distanceKm: BigDecimal,
+    val price: BigDecimal,
 ) : DeliveryEvent(aggregateId = deliveryId,
     eventType = DeliveryEventType.COMPLETED.value)
