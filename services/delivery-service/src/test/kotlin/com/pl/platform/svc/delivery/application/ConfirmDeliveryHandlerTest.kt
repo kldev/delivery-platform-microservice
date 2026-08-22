@@ -1,49 +1,49 @@
 package com.pl.platform.svc.delivery.application
 
 import com.pl.platform.common.messaging.port.OutboxRepository
-import com.pl.platform.svc.delivery.application.command.CreateDeliveryCommand
-import com.pl.platform.svc.delivery.application.event.DeliveryCreatedEvent
-import com.pl.platform.svc.delivery.application.handler.CreateDeliveryHandler
+import com.pl.platform.svc.delivery.application.command.ConfirmDeliveryCommand
+import com.pl.platform.svc.delivery.application.event.DeliveryConfirmedEvent
+import com.pl.platform.svc.delivery.application.handler.ConfirmDeliveryHandler
 import com.pl.platform.svc.delivery.port.DeliveryRepository
-import com.pl.platform.svc.pricing.service.PricingService
-
+import com.pl.platform.svc.test.fixture.DeliveryTestFactory
 import io.mockk.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
-class CreateDeliveryHandlerTest {
-
+class ConfirmDeliveryHandlerTest {
     private val deliveryRepository = mockk<DeliveryRepository>()
     private val outboxRepository = mockk<OutboxRepository>()
-    private val pricingService = PricingService();
 
-    private val handler = CreateDeliveryHandler(
+    private val handler = ConfirmDeliveryHandler(
         deliveryRepository,
-        outboxRepository,
-        pricingService = pricingService
+        outboxRepository
     )
 
     @Test
-    fun `should create delivery and outbox event`() {
+    fun `should confirm delivery and outbox event`() {
         every {
-            deliveryRepository.create(any())
+            deliveryRepository.update(any())
         } just Runs
+
+        val delivery = DeliveryTestFactory.create();
+
+        every {
+            deliveryRepository.findById(delivery.id)
+        } returns delivery
 
         every {
             outboxRepository.save(any())
         } just Runs
 
         handler.handle(
-            CreateDeliveryCommand(
-                pickupAddress = "Test 1",
-                deliveryAddress = "Test 2",
-                distance = BigDecimal("120.55"),
+            ConfirmDeliveryCommand(
+                deliveryId = delivery.id,
             )
         )
 
         verify(exactly = 1) {
-            deliveryRepository.create(any())
+            deliveryRepository.update(any())
         }
 
         val eventSlot = slot<com.pl.platform.svc.delivery.application.event.DeliveryEvent>()
@@ -53,10 +53,10 @@ class CreateDeliveryHandlerTest {
         }
 
         assertThat(eventSlot.captured)
-            .isInstanceOf(DeliveryCreatedEvent::class.java)
+            .isInstanceOf(DeliveryConfirmedEvent::class.java)
 
         val event =
-            eventSlot.captured as DeliveryCreatedEvent
+            eventSlot.captured as DeliveryConfirmedEvent
 
         assertThat(event.price)
             .isGreaterThan(BigDecimal.ZERO)

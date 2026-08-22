@@ -58,9 +58,17 @@ class Delivery private constructor(
             )
     }
 
-    fun assign(driverId: UUID) {
+    fun confirm() {
         require(currentStatus == DeliveryStatus.CREATED) {
-            "Delivery can only be assigned from CREATED status"
+            "Delivery can only be confirmed from CREATED status"
+        }
+
+        currentStatus = DeliveryStatus.CONFIRMED
+    }
+
+    fun assign(driverId: UUID) {
+        require(currentStatus == DeliveryStatus.CONFIRMED) {
+            "Delivery can only be assigned from CONFIRMED status"
         }
 
         this.driverId = driverId

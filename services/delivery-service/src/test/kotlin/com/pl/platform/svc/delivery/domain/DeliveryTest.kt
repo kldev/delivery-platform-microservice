@@ -29,6 +29,7 @@ class DeliveryTest {
     fun `should move delivery through complete lifecycle`() {
         val delivery = createDelivery()
 
+        delivery.confirm()
         delivery.assign(driverId)
 
         assertEquals(
@@ -79,6 +80,7 @@ class DeliveryTest {
     fun `should cancel delivery from ASSIGNED`() {
         val delivery = createDelivery()
 
+        delivery.confirm()
         delivery.assign(driverId)
         delivery.cancel()
 
@@ -91,7 +93,7 @@ class DeliveryTest {
     @Test
     fun `should not assign delivery twice`() {
         val delivery = createDelivery()
-
+        delivery.confirm()
         delivery.assign(driverId)
 
         assertThrows<IllegalArgumentException> {
@@ -111,7 +113,7 @@ class DeliveryTest {
     @Test
     fun `should not start transit before pickup`() {
         val delivery = createDelivery()
-
+        delivery.confirm()
         delivery.assign(driverId)
 
         assertThrows<IllegalArgumentException> {
@@ -123,6 +125,7 @@ class DeliveryTest {
     fun `should not deliver before transit`() {
         val delivery = createDelivery()
 
+        delivery.confirm()
         delivery.assign(driverId)
         delivery.pickup()
 
@@ -135,6 +138,7 @@ class DeliveryTest {
     fun `should not cancel delivered delivery`() {
         val delivery = createDelivery()
 
+        delivery.confirm()
         delivery.assign(driverId)
         delivery.pickup()
         delivery.startTransit()

@@ -75,6 +75,7 @@ class DeliveryPersistenceAdapterTest : BaseIntegrationTest() {
 
         val driverId = driverDatabaseFixture.create();
 
+        delivery.confirm()
         delivery.assign(driverId)
         deliveryRepository.update(delivery)
 

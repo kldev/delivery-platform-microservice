@@ -5,6 +5,7 @@ import com.pl.platform.svc.delivery.domain.DeliveryStatus
 
 enum class DeliveryStatusJpa {
     CREATED,
+    CONFIRMED,
     ASSIGNED,
     PICKED_UP,
     IN_TRANSIT,
