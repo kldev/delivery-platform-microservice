@@ -1,4 +1,4 @@
-package com.pl.platform.svc.ledger.event
+package com.pl.platform.svc.integration.event
 
 import com.pl.platform.common.messaging.event.Event
 import java.math.BigDecimal

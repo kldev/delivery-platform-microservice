@@ -1,4 +1,5 @@
 package com.pl.platform.svc.settlement.application.consumer
+import com.pl.platform.svc.integration.event.DeliveryCompletedEvent
 import com.pl.platform.svc.messaging.adapter.persistence.ProcessedEventJpaEntity
 import com.pl.platform.svc.messaging.adapter.persistence.SpringDataProcessedEventRepository
 import com.pl.platform.svc.settlement.application.create_settlement.CreateSettlementCommand
