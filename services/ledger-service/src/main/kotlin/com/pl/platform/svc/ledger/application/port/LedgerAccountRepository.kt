@@ -13,4 +13,7 @@ interface LedgerAccountRepository {
     ): LedgerAccount?
 
     fun save(account: LedgerAccount): LedgerAccount
+
+    fun getAll(): List<LedgerAccount>
+    fun getById(id: UUID): LedgerAccount?
 }

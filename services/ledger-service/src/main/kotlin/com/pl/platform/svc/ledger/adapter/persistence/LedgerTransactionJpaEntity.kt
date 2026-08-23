@@ -27,26 +27,26 @@ import java.util.UUID
 class LedgerTransactionJpaEntity(
 
     @Id
-    val id: UUID,
+    var id: UUID,
 
     @Column(name = "type", nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
-    val type: LedgerTransactionType,
+    var type: LedgerTransactionType,
 
     @Column(name = "reference_type", nullable = false, length = 50)
-    val referenceType: String,
+    var referenceType: String,
 
     @Column(name = "reference_id", nullable = false)
-    val referenceId: UUID,
+    var referenceId: UUID,
 
     @Column(name = "currency", nullable = false, length = 3)
-    val currency: String,
+    var currency: String,
 
     @Column(name = "occurred_at", nullable = false)
-    val occurredAt: Instant,
+    var occurredAt: Instant,
 
     @Column(name = "created_at", nullable = false)
-    val createdAt: Instant = Instant.now(),
+    var createdAt: Instant = Instant.now(),
 )
 {
     @OneToMany(

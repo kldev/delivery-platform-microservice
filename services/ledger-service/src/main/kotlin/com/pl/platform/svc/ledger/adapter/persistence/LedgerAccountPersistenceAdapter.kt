@@ -30,4 +30,12 @@ class LedgerAccountPersistenceAdapter(
         repository
             .save(account.toJpaEntity())
             .toDomain()
+
+    override fun getAll(): List<LedgerAccount> {
+        return repository.findAll().map { it.toDomain() }
+    }
+
+    override fun getById(id: UUID): LedgerAccount? {
+        return repository.findById(id).map { it.toDomain() }.orElse(null)
+    }
 }
