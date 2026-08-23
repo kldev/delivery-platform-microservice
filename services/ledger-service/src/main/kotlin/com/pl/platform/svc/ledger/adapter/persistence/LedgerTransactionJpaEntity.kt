@@ -47,11 +47,12 @@ class LedgerTransactionJpaEntity(
 
     @Column(name = "created_at", nullable = false)
     val createdAt: Instant = Instant.now(),
-
+)
+{
     @OneToMany(
+        mappedBy = "transaction",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
     )
-    @JoinColumn(name = "transaction_id")
-    val entries: MutableList<LedgerEntryJpaEntity> = mutableListOf()
-)
+    var entries: MutableList<LedgerEntryJpaEntity> = mutableListOf()
+}

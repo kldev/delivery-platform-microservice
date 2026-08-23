@@ -24,13 +24,14 @@ fun LedgerTransaction.toJpaEntity(): LedgerTransactionJpaEntity {
     )
 
     entity.entries.addAll(
-        entries.map {
+        entries.map { it ->
             LedgerEntryJpaEntity(
                 id = it.id,
-                transactionId = id,
                 accountId = it.accountId,
                 amount = it.amount,
-            )
+            ).also {
+                it.transaction = entity
+            }
         }
     )
 

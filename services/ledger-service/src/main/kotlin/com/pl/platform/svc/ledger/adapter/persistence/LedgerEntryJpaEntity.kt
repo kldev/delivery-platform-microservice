@@ -2,7 +2,10 @@ package com.pl.platform.svc.ledger.adapter.persistence
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.math.BigDecimal
 import java.time.Instant
@@ -14,9 +17,6 @@ class LedgerEntryJpaEntity(
 
     @Id
     var id: UUID,
-
-    @Column(name = "transaction_id", nullable = false)
-    var transactionId: UUID,
 
     @Column(name = "account_id", nullable = false)
     var accountId: UUID,
@@ -31,4 +31,13 @@ class LedgerEntryJpaEntity(
 
     @Column(name = "created_at", nullable = false)
     var createdAt: Instant = Instant.now(),
-)
+
+    ) {
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+        name = "transaction_id",
+        nullable = false,
+    )
+    lateinit var transaction: LedgerTransactionJpaEntity
+}
