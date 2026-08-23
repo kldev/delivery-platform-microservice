@@ -2,10 +2,16 @@ package com.pl.platform.svc.ledger.application.consumer
 import com.pl.platform.svc.integration.event.DriverSettlementCompletedEvent
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 import tools.jackson.databind.json.JsonMapper
 
+@ConditionalOnProperty(
+    prefix = "delivery",
+    name = ["event-bus"],
+    havingValue = "kafka"
+)
 @Component
 class SettlementServiceConsumer(
     private val jsonMapper: JsonMapper,

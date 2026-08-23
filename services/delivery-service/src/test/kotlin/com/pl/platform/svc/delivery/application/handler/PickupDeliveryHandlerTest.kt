@@ -1,41 +1,34 @@
-package com.pl.platform.svc.delivery.application
+package com.pl.platform.svc.delivery.application.handler
 
 import com.pl.platform.common.messaging.port.OutboxRepository
-import com.pl.platform.svc.delivery.application.command.StartDeliveryCommand
+import com.pl.platform.svc.delivery.application.command.PickupDeliveryCommand
 import com.pl.platform.svc.delivery.application.event.DeliveryEvent
-import com.pl.platform.svc.delivery.application.event.DeliveryStartedEvent
-import com.pl.platform.svc.delivery.application.handler.StartDeliveryHandler
+import com.pl.platform.svc.delivery.application.event.DeliveryPickedUpEvent
 import com.pl.platform.svc.delivery.port.DeliveryRepository
 import com.pl.platform.svc.test.fixture.DeliveryTestFactory
-import io.mockk.Runs
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.slot
-import io.mockk.verify
+import io.mockk.*
 import org.assertj.core.api.Assertions.assertThat
-import java.util.UUID
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
+import java.util.*
 
-class StartDeliveryHandlerTest {
+class PickupDeliveryHandlerTest {
     private val deliveryRepository = mockk<DeliveryRepository>()
     private val outboxRepository = mockk<OutboxRepository>()
 
-    private val handler = StartDeliveryHandler(
+    private val handler = PickupDeliveryHandler(
         deliveryRepository,
         outboxRepository
     )
 
     @Test
-    fun `should start delivery and outbox event`() {
+    fun `should confirm delivery and outbox event`() {
         every {
             deliveryRepository.update(any())
         } just Runs
 
-        val delivery = DeliveryTestFactory.create()
+        val delivery = DeliveryTestFactory.create();
         delivery.confirm()
         delivery.assign(UUID.randomUUID())
-        delivery.pickup()
 
         every {
             deliveryRepository.findById(delivery.id)
@@ -46,7 +39,7 @@ class StartDeliveryHandlerTest {
         } just Runs
 
         handler.handle(
-            StartDeliveryCommand(
+            PickupDeliveryCommand(
                 deliveryId = delivery.id,
             )
         )
@@ -62,12 +55,14 @@ class StartDeliveryHandlerTest {
         }
 
         assertThat(eventSlot.captured)
-            .isInstanceOf(DeliveryStartedEvent::class.java)
+            .isInstanceOf(DeliveryPickedUpEvent::class.java)
 
         val event =
-            eventSlot.captured as DeliveryStartedEvent
+            eventSlot.captured as DeliveryPickedUpEvent
 
         assertThat(event.deliveryId)
+            .isEqualTo(delivery.id.value)
+        assertThat(event.aggregateId)
             .isEqualTo(delivery.id.value)
     }
 }

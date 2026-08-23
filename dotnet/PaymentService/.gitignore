@@ -480,17 +480,3 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
-
-**/bin/
-**/obj/
-
-.vs/
-.idea/
-
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-
-TestResults/
-artifacts/

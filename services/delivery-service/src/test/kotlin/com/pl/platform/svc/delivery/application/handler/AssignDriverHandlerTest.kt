@@ -1,9 +1,9 @@
-package com.pl.platform.svc.delivery.application
+package com.pl.platform.svc.delivery.application.handler
 
 import com.pl.platform.common.messaging.port.OutboxRepository
 import com.pl.platform.svc.delivery.application.command.AssignDriverCommand
 import com.pl.platform.svc.delivery.application.event.DeliveryAssignedEvent
-import com.pl.platform.svc.delivery.application.handler.AssignDriverHandler
+import com.pl.platform.svc.delivery.application.event.DeliveryEvent
 import com.pl.platform.svc.delivery.port.DeliveryRepository
 import com.pl.platform.svc.driver.port.DriverRepository
 import com.pl.platform.svc.test.fixture.DeliveryTestFactory
@@ -57,7 +57,7 @@ class AssignDriverHandlerTest {
             deliveryRepository.update(any())
         }
 
-        val eventSlot = slot<com.pl.platform.svc.delivery.application.event.DeliveryEvent>()
+        val eventSlot = slot<DeliveryEvent>()
 
         verify(exactly = 1) {
             outboxRepository.save(capture(eventSlot))
@@ -105,7 +105,7 @@ class AssignDriverHandlerTest {
             deliveryRepository.update(any())
         }
 
-        val eventSlot = slot<com.pl.platform.svc.delivery.application.event.DeliveryEvent>()
+        val eventSlot = slot<DeliveryEvent>()
 
         verify(exactly = 1) {
             outboxRepository.save(capture(eventSlot))

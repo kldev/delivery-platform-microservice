@@ -4,6 +4,7 @@ import com.pl.platform.svc.settlement.adapter.persistence.SettlementJpaEntity
 import com.pl.platform.svc.settlement.adapter.persistence.SettlementSpecifications
 import com.pl.platform.svc.settlement.domain.Settlement
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Component
 
@@ -17,7 +18,7 @@ class GetSettlementsListHandler(
     ): SliceResponse<Settlement> {
 
         return repository.search(query,
-            PageRequest.of(query.page, query.size))
+            PageRequest.of(query.page, query.size,  Sort.by(Sort.Direction.DESC, "createdAt")))
 
     }
 }

@@ -10,7 +10,8 @@ data class DeliveryItemResponse(   val id: UUID,
                                    val pickupAddress: String,
                                    val deliveryAddress: String,
                                    val price: BigDecimal,
-                                   val status: DeliveryStatus)
+                                   val status: DeliveryStatus,
+                                   val distanceKm: BigDecimal,)
 {
     companion object {
         fun from(deliver: Delivery): DeliveryItemResponse {
@@ -19,7 +20,8 @@ data class DeliveryItemResponse(   val id: UUID,
                 pickupAddress = deliver.pickupAddress,
                 deliveryAddress = deliver.deliveryAddress,
                 price = deliver.price,
-                status = deliver.status)
+                status = deliver.status,
+                distanceKm = deliver.distanceKm)
         }
     }
 }

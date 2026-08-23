@@ -82,7 +82,7 @@ class Delivery private constructor(
 
     fun pickup() {
         require(currentStatus == DeliveryStatus.ASSIGNED) {
-            "Delivery can only be picked up from ASSIGNED status"
+            "Delivery ${id.value} can only be picked up from ASSIGNED status. Curerent status = ${status.name}"
         }
 
         currentStatus = DeliveryStatus.PICKED_UP
@@ -90,7 +90,7 @@ class Delivery private constructor(
 
     fun startTransit() {
         require(currentStatus == DeliveryStatus.PICKED_UP) {
-            "Delivery can only start transit from PICKED_UP status"
+            "Delivery ${id.value} can only start transit from PICKED_UP status"
         }
 
         currentStatus = DeliveryStatus.IN_TRANSIT
@@ -98,7 +98,7 @@ class Delivery private constructor(
 
     fun deliver() {
         require(currentStatus == DeliveryStatus.IN_TRANSIT) {
-            "Delivery can only be delivered from IN_TRANSIT status"
+            "Delivery ${id.value} can only be delivered from IN_TRANSIT status"
         }
 
         currentStatus = DeliveryStatus.DELIVERED

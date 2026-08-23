@@ -28,11 +28,15 @@ class DeliveryDatabaseFixture(
         return delivery.id.value
     }
 
-    fun changeStatus(id: UUID, status: DeliveryStatusJpa) {
+    fun changeStatus(id: UUID, status: DeliveryStatusJpa,
+                     driverId: UUID? = null) {
         val delivery = deliveryRepository.findById(id)
             .orElseThrow()
 
         delivery.status = status
+        if (driverId != null) {
+            delivery.driverId = driverId
+        }
 
         deliveryRepository.saveAndFlush(delivery)
 

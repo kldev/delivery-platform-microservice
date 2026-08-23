@@ -43,7 +43,6 @@ class PostDriverSettlementHandlerIntegrationTest : BaseIntegrationTest() {
         cleanDatabase()
     }
 
-    @Transactional
     private fun cleanDatabase() {
         jdbcTemplate.execute(
             """

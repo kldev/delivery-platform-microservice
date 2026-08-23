@@ -101,7 +101,7 @@ services:
       SPRING_PROFILES_ACTIVE: dev
       KAFKA_SERVERS: broker:19092
       PG_HOST: postgres   
-      PORT: 8081    
+      PORT: 8080   
     depends_on:
       broker:
         condition: service_healthy
@@ -109,8 +109,6 @@ services:
         condition: service_healthy         
     networks:
       - inner-cluster-communication         
-    ports:
-      - "8081:8081"
 
   settlement-svc:
     build:
@@ -124,15 +122,12 @@ services:
       SPRING_PROFILES_ACTIVE: docker
       KAFKA_SERVERS: broker:19092
       PG_HOST: postgres
-      PORT: 8084
+      PORT: 8080
     depends_on:
       broker:
         condition: service_healthy
       postgres:
         condition: service_healthy         
-    ports:
-      - "8084:8084"
-
 
   ledger-svc:
     build:
@@ -145,14 +140,12 @@ services:
       SPRING_PROFILES_ACTIVE: docker
       KAFKA_SERVERS: broker:19092
       PG_HOST: postgres
-      PORT: 8082
+      PORT: 8080
     depends_on:
       broker:
         condition: service_healthy
       postgres:
-        condition: service_healthy         
-    ports:
-      - "8082:8082"        
+        condition: service_healthy                 
 
   reconciliation-svc:
     build:
@@ -165,19 +158,17 @@ services:
       SPRING_PROFILES_ACTIVE: docker
       KAFKA_SERVERS: broker:19092
       PG_HOST: postgres
-      PORT: 8083
+      PORT: 8080
     depends_on:
       broker:
         condition: service_healthy
       postgres:
-        condition: service_healthy         
-    ports:
-      - "8083:8083"    
+        condition: service_healthy            
 
   payment-svc:
     build:
-      context: ./
-      dockerfile: ./dotnet/Dockerfile
+      context: ./dotnet/PaymentService
+      dockerfile: ./Dockerfile
     container_name: payment
     networks:
       - inner-cluster-communication     
@@ -189,9 +180,19 @@ services:
       broker:
         condition: service_healthy
       postgres:
-        condition: service_healthy                     
+        condition: service_healthy                            
+
+  gateway:
+    build:
+      context: dotnet/Gateway
+      dockerfile: ./Dockerfile
+    container_name: gateway
+    networks:
+      - inner-cluster-communication     
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker            
     ports:
-    - "9080:8080"        
+    - "5000:8080"            
 
 networks:
   inner-cluster-communication:

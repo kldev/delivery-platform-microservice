@@ -1,9 +1,9 @@
-package com.pl.platform.svc.delivery.application
+package com.pl.platform.svc.delivery.application.handler
 
 import com.pl.platform.common.messaging.port.OutboxRepository
 import com.pl.platform.svc.delivery.application.command.CreateDeliveryCommand
 import com.pl.platform.svc.delivery.application.event.DeliveryCreatedEvent
-import com.pl.platform.svc.delivery.application.handler.CreateDeliveryHandler
+import com.pl.platform.svc.delivery.application.event.DeliveryEvent
 import com.pl.platform.svc.delivery.port.DeliveryRepository
 import com.pl.platform.svc.pricing.service.DeliveryPricingService
 
@@ -46,7 +46,7 @@ class CreateDeliveryHandlerTest {
             deliveryRepository.create(any())
         }
 
-        val eventSlot = slot<com.pl.platform.svc.delivery.application.event.DeliveryEvent>()
+        val eventSlot = slot<DeliveryEvent>()
 
         verify(exactly = 1) {
             outboxRepository.save(capture(eventSlot))

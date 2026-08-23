@@ -1,34 +1,40 @@
-package com.pl.platform.svc.delivery.application
+package com.pl.platform.svc.delivery.application.handler
 
 import com.pl.platform.common.messaging.port.OutboxRepository
-import com.pl.platform.svc.delivery.application.command.PickupDeliveryCommand
-import com.pl.platform.svc.delivery.application.event.DeliveryPickedUpEvent
-import com.pl.platform.svc.delivery.application.handler.PickupDeliveryHandler
+import com.pl.platform.svc.delivery.application.command.StartDeliveryCommand
+import com.pl.platform.svc.delivery.application.event.DeliveryEvent
+import com.pl.platform.svc.delivery.application.event.DeliveryStartedEvent
 import com.pl.platform.svc.delivery.port.DeliveryRepository
 import com.pl.platform.svc.test.fixture.DeliveryTestFactory
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.UUID
+import kotlin.test.Test
 
-class PickupDeliveryHandlerTest {
+class StartDeliveryHandlerTest {
     private val deliveryRepository = mockk<DeliveryRepository>()
     private val outboxRepository = mockk<OutboxRepository>()
 
-    private val handler = PickupDeliveryHandler(
+    private val handler = StartDeliveryHandler(
         deliveryRepository,
         outboxRepository
     )
 
     @Test
-    fun `should confirm delivery and outbox event`() {
+    fun `should start delivery and outbox event`() {
         every {
             deliveryRepository.update(any())
         } just Runs
 
-        val delivery = DeliveryTestFactory.create();
+        val delivery = DeliveryTestFactory.create()
         delivery.confirm()
         delivery.assign(UUID.randomUUID())
+        delivery.pickup()
 
         every {
             deliveryRepository.findById(delivery.id)
@@ -39,7 +45,7 @@ class PickupDeliveryHandlerTest {
         } just Runs
 
         handler.handle(
-            PickupDeliveryCommand(
+            StartDeliveryCommand(
                 deliveryId = delivery.id,
             )
         )
@@ -48,21 +54,19 @@ class PickupDeliveryHandlerTest {
             deliveryRepository.update(any())
         }
 
-        val eventSlot = slot<com.pl.platform.svc.delivery.application.event.DeliveryEvent>()
+        val eventSlot = slot<DeliveryEvent>()
 
         verify(exactly = 1) {
             outboxRepository.save(capture(eventSlot))
         }
 
         assertThat(eventSlot.captured)
-            .isInstanceOf(DeliveryPickedUpEvent::class.java)
+            .isInstanceOf(DeliveryStartedEvent::class.java)
 
         val event =
-            eventSlot.captured as DeliveryPickedUpEvent
+            eventSlot.captured as DeliveryStartedEvent
 
         assertThat(event.deliveryId)
-            .isEqualTo(delivery.id.value)
-        assertThat(event.aggregateId)
             .isEqualTo(delivery.id.value)
     }
 }

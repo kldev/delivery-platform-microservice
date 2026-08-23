@@ -1,50 +1,36 @@
 package com.pl.platform.svc.delivery.adapter.rest
 
+import com.pl.platform.common.rest.SliceResponse
 import com.pl.platform.svc.delivery.adapter.rest.request.CreateDeliveryRequest
 import com.pl.platform.svc.delivery.adapter.rest.response.DeliveryCreateResponse
 import com.pl.platform.svc.delivery.adapter.rest.response.DeliveryItemResponse
-import com.pl.platform.svc.delivery.application.command.AssignDriverCommand
-import com.pl.platform.svc.delivery.application.command.CancelDeliveryCommand
-import com.pl.platform.svc.delivery.application.command.CompleteDeliveryCommand
-import com.pl.platform.svc.delivery.application.command.ConfirmDeliveryCommand
-import com.pl.platform.svc.delivery.application.command.PickupDeliveryCommand
-import com.pl.platform.svc.delivery.application.command.StartDeliveryCommand
-import com.pl.platform.svc.delivery.application.handler.AssignDriverHandler
-import com.pl.platform.svc.delivery.application.handler.CancelDeliveryHandler
-import com.pl.platform.svc.delivery.application.handler.CompleteDeliveryHandler
-import com.pl.platform.svc.delivery.application.handler.ConfirmDeliveryHandler
-import com.pl.platform.svc.delivery.application.handler.CreateDeliveryHandler
-import com.pl.platform.svc.delivery.application.handler.GetAllDeliveryHandler
-import com.pl.platform.svc.delivery.application.handler.PickupDeliveryHandler
-import com.pl.platform.svc.delivery.application.handler.StartDeliveryHandler
-import com.pl.platform.svc.delivery.domain.Delivery
+import com.pl.platform.svc.delivery.application.command.*
+import com.pl.platform.svc.delivery.application.handler.*
+import com.pl.platform.svc.delivery.application.query.DeliveryQueryRepository
+import com.pl.platform.svc.delivery.application.query.GetDeliveryQuery
 import com.pl.platform.svc.delivery.domain.DeliveryId
+import com.pl.platform.svc.delivery.domain.DeliveryStatus
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
+import jakarta.validation.constraints.Max
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
+import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/api/deliveries")
 @Tag(name = "Deliveries")
 class DeliveryController(
     private val createDeliveryHandler: CreateDeliveryHandler,
-    private val getAllDeliveryHandler: GetAllDeliveryHandler,
     private val confirmDeliveryHandler: ConfirmDeliveryHandler,
     private val assignDriverHandler: AssignDriverHandler,
     private val cancelDeliveryHandler: CancelDeliveryHandler,
     private val pickupDeliveryHandler: PickupDeliveryHandler,
     private val startDeliveryHandler: StartDeliveryHandler,
-    private val completeDeliveryHandler: CompleteDeliveryHandler
+    private val completeDeliveryHandler: CompleteDeliveryHandler,
+    private val deliveryQueryRepository: DeliveryQueryRepository
 ) {
 
     @PostMapping
@@ -57,8 +43,26 @@ class DeliveryController(
         )
 
     @GetMapping
-    fun getAll(): List<DeliveryItemResponse> =
-        getAllDeliveryHandler.handle()
+    fun getAll(@RequestParam(required = false) status: DeliveryStatus?,
+               @RequestParam(required = false) deliveryId: UUID?,
+               @RequestParam(required = false, defaultValue = "100")@Max(500) size: Int,
+               @RequestParam(required = false, defaultValue = "0") page: Int,): SliceResponse<DeliveryItemResponse> {
+
+        val result = deliveryQueryRepository.search(
+            GetDeliveryQuery(status, deliveryId), PageRequest.of(
+                page, size,
+                Sort.by(Sort.Direction.DESC, "createdAt")
+            )
+        );
+
+        val response = SliceResponse(
+            content = result.content.map(DeliveryItemResponse::from).toList(),
+            hasNext = result.hasNext
+        )
+
+        return response
+
+    }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{deliveryId}/confirm")
