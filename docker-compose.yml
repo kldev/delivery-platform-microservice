@@ -12,6 +12,8 @@ services:
       POSTGRES_DB: platform
       POSTGRES_USER: platform
       POSTGRES_PASSWORD: platform
+    networks:
+      - inner-cluster-communication       
     command: 
       - postgres 
       - -c 
@@ -87,7 +89,109 @@ services:
       - ./infrastructure/kafka/init-topics.sh:/init-topics.sh
     entrypoint:
       - /bin/bash
-      - /init-topics.sh      
+      - /init-topics.sh     
+
+  delivery-svc:
+    build:
+      context: .
+      dockerfile: services/delivery-service/Dockerfile
+    container_name: delivery
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/deliverydb
+      SPRING_PROFILES_ACTIVE: dev
+      KAFKA_SERVERS: broker:19092
+      PG_HOST: postgres   
+      PORT: 8081    
+    depends_on:
+      broker:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy         
+    networks:
+      - inner-cluster-communication         
+    ports:
+      - "8081:8081"
+
+  settlement-svc:
+    build:
+      context:  .
+      dockerfile: services/settlement-service/Dockerfile
+    container_name: settlement
+    networks:
+      - inner-cluster-communication 
+    
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      KAFKA_SERVERS: broker:19092
+      PG_HOST: postgres
+      PORT: 8084
+    depends_on:
+      broker:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy         
+    ports:
+      - "8084:8084"
+
+
+  ledger-svc:
+    build:
+      context: .
+      dockerfile: services/ledger-service/Dockerfile
+    container_name: ledger
+    networks:
+      - inner-cluster-communication     
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      KAFKA_SERVERS: broker:19092
+      PG_HOST: postgres
+      PORT: 8082
+    depends_on:
+      broker:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy         
+    ports:
+      - "8082:8082"        
+
+  reconciliation-svc:
+    build:
+      context: .
+      dockerfile: services/reconciliation-service/Dockerfile
+    container_name: reconciliation
+    networks:
+      - inner-cluster-communication     
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      KAFKA_SERVERS: broker:19092
+      PG_HOST: postgres
+      PORT: 8083
+    depends_on:
+      broker:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy         
+    ports:
+      - "8083:8083"    
+
+  payment-svc:
+    build:
+      context: ./
+      dockerfile: ./dotnet/Dockerfile
+    container_name: payment
+    networks:
+      - inner-cluster-communication     
+    environment:
+      ASPNETCORE_ENVIRONMENT: docker
+      ConnectionStrings__Database: "Host=postgres;Port=5432;Database=paymentsdb;Username=platform;Password=platform"
+      Kafka__BootstrapServers: broker:19092
+    depends_on:
+      broker:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy                     
+    ports:
+    - "9080:8080"        
 
 networks:
   inner-cluster-communication:

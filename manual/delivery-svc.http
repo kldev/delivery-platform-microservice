@@ -12,6 +12,20 @@ Content-Type: application/json
     client.global.set("driverId", response.body.id);
 %}
 
+### create driver
+POST http://localhost:8081/api/drivers
+Content-Type: application/json
+
+{
+  "firstName": "Anna",
+  "lastName": "Haris",
+  "phoneNumber": "+48134456784"
+}
+
+> {%
+    client.global.set("driverId", response.body.id);
+%}
+
 ### get drivers
 GET http://localhost:8081/api/drivers
 

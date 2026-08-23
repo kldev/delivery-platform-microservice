@@ -5,14 +5,18 @@ import com.pl.platform.svc.delivery.adapter.rest.response.DeliveryCreateResponse
 import com.pl.platform.svc.delivery.adapter.rest.response.DeliveryItemResponse
 import com.pl.platform.svc.delivery.application.command.AssignDriverCommand
 import com.pl.platform.svc.delivery.application.command.CancelDeliveryCommand
+import com.pl.platform.svc.delivery.application.command.CompleteDeliveryCommand
 import com.pl.platform.svc.delivery.application.command.ConfirmDeliveryCommand
 import com.pl.platform.svc.delivery.application.command.PickupDeliveryCommand
+import com.pl.platform.svc.delivery.application.command.StartDeliveryCommand
 import com.pl.platform.svc.delivery.application.handler.AssignDriverHandler
 import com.pl.platform.svc.delivery.application.handler.CancelDeliveryHandler
+import com.pl.platform.svc.delivery.application.handler.CompleteDeliveryHandler
 import com.pl.platform.svc.delivery.application.handler.ConfirmDeliveryHandler
 import com.pl.platform.svc.delivery.application.handler.CreateDeliveryHandler
 import com.pl.platform.svc.delivery.application.handler.GetAllDeliveryHandler
 import com.pl.platform.svc.delivery.application.handler.PickupDeliveryHandler
+import com.pl.platform.svc.delivery.application.handler.StartDeliveryHandler
 import com.pl.platform.svc.delivery.domain.Delivery
 import com.pl.platform.svc.delivery.domain.DeliveryId
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -38,7 +42,9 @@ class DeliveryController(
     private val confirmDeliveryHandler: ConfirmDeliveryHandler,
     private val assignDriverHandler: AssignDriverHandler,
     private val cancelDeliveryHandler: CancelDeliveryHandler,
-    private val pickupDeliveryHandler: PickupDeliveryHandler
+    private val pickupDeliveryHandler: PickupDeliveryHandler,
+    private val startDeliveryHandler: StartDeliveryHandler,
+    private val completeDeliveryHandler: CompleteDeliveryHandler
 ) {
 
     @PostMapping
@@ -80,5 +86,18 @@ class DeliveryController(
     fun pickUpDelivery(@PathVariable deliveryId: UUID) = pickupDeliveryHandler.handle(
         PickupDeliveryCommand(deliveryId = DeliveryId(deliveryId))
     )
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{deliveryId}/start")
+    fun startDelivery(@PathVariable deliveryId: UUID) = startDeliveryHandler.handle(
+        StartDeliveryCommand(deliveryId = DeliveryId(deliveryId))
+    )
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{deliveryId}/complete")
+    fun completeDelivery(@PathVariable deliveryId: UUID) = completeDeliveryHandler.handle(
+        CompleteDeliveryCommand(deliveryId = DeliveryId(deliveryId))
+    )
+
 
 }
