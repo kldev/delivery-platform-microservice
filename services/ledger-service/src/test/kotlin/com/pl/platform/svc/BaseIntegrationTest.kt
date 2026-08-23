@@ -21,9 +21,9 @@ abstract class BaseIntegrationTest {
         @JvmStatic
         protected val postgres =
             PostgreSQLContainer("postgres:17")
-                .withDatabaseName("delivery")
-                .withUsername("delivery")
-                .withPassword("delivery")
+                .withDatabaseName("ledger")
+                .withUsername("ledger")
+                .withPassword("ledger")
 
         @BeforeAll
         @JvmStatic
