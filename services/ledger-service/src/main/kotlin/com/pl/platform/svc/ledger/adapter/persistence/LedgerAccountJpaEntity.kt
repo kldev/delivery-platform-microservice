@@ -37,7 +37,7 @@ class LedgerAccountJpaEntity(
     var currency: String,
 
     @Column(name = "created_at", nullable = false)
-    var createdAt: Instant,
+    var createdAt: Instant = Instant.now(),
 
     @Column(name = "name", nullable = false, length = 200)
     var name: String,

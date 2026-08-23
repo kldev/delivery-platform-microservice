@@ -31,7 +31,8 @@ class CreateSettlementHandler(
         val driverSettlementEvent = DriverSettlementCompletedEvent(currency = settlement.currency,
             amount = settlement.deliveryAmount,
             settlementId = settlement.id.value,
-            driverId = settlement.driverId,)
+            driverId = settlement.driverId,
+            driverFullName = settlement.driverFullName)
 
         outboxRepository.save(driverSettlementEvent)
 

@@ -1,11 +1,14 @@
 package com.pl.platform.svc.ledger.adapter.persistence
 
 import com.pl.platform.svc.ledger.domain.LedgerTransactionType
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
 import java.time.Instant
@@ -43,5 +46,12 @@ class LedgerTransactionJpaEntity(
     val occurredAt: Instant,
 
     @Column(name = "created_at", nullable = false)
-    val createdAt: Instant,
+    val createdAt: Instant = Instant.now(),
+
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+    )
+    @JoinColumn(name = "transaction_id")
+    val entries: MutableList<LedgerEntryJpaEntity> = mutableListOf()
 )

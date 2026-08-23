@@ -10,4 +10,9 @@ interface SpringDataLedgerTransactionRepository :
         referenceType: String,
         referenceId: UUID,
     ): LedgerTransactionJpaEntity?
+
+    fun existsByReferenceTypeAndReferenceId(
+        referenceType: String,
+        referenceId: UUID,
+    ): Boolean
 }

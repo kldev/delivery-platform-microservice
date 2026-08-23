@@ -30,5 +30,5 @@ class LedgerEntryJpaEntity(
     var amount: BigDecimal,
 
     @Column(name = "created_at", nullable = false)
-    var createdAt: Instant,
+    var createdAt: Instant = Instant.now(),
 )
