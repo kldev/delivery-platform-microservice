@@ -13,7 +13,16 @@ INSERT INTO ledger_account_balances (
 SELECT
     a.id,
     a.currency,
-    COALESCE(SUM(e.amount), 0),
+    COALESCE(
+            SUM(
+                    CASE
+                        WHEN e.type = 'CREDIT' THEN e.amount
+                        WHEN e.type = 'DEBIT' THEN -e.amount
+                        ELSE 0
+                        END
+            ),
+            0
+    ),
     CURRENT_TIMESTAMP
 FROM ledger_accounts a
          LEFT JOIN ledger_entries e

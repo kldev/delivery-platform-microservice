@@ -122,7 +122,7 @@ class PostDriverSettlementHandlerIntegrationTest : BaseIntegrationTest() {
             }
 
         assertAmount(
-            BigDecimal("-125.50"),
+            BigDecimal("125.50"),
             platformEntry.amount,
         )
 
@@ -134,7 +134,7 @@ class PostDriverSettlementHandlerIntegrationTest : BaseIntegrationTest() {
         assertEquals(
             0,
             transaction.entries
-                .sumOf { it.amount }
+                .sumOf { it.signedAmount() }
                 .compareTo(BigDecimal.ZERO),
         )
     }
@@ -319,14 +319,14 @@ class PostDriverSettlementHandlerIntegrationTest : BaseIntegrationTest() {
         assertEquals(
             0,
             firstTransaction.entries
-                .sumOf { it.amount }
+                .sumOf { it.signedAmount() }
                 .compareTo(BigDecimal.ZERO),
         )
 
         assertEquals(
             0,
             secondTransaction.entries
-                .sumOf { it.amount }
+                .sumOf { it.signedAmount() }
                 .compareTo(BigDecimal.ZERO),
         )
     }

@@ -1,15 +1,10 @@
 package com.pl.platform.svc.ledger.adapter.persistence
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
+import com.pl.platform.svc.ledger.domain.LedgerEntryType
+import jakarta.persistence.*
 import java.math.BigDecimal
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Table(name = "ledger_entries")
@@ -29,6 +24,13 @@ class LedgerEntryJpaEntity(
     )
     var amount: BigDecimal,
 
+    @Enumerated(EnumType.STRING)
+    @Column(
+        name = "type",
+        length = 30
+    )
+    var type: LedgerEntryType,
+
     @Column(name = "created_at", nullable = false)
     var createdAt: Instant = Instant.now(),
 
@@ -40,4 +42,10 @@ class LedgerEntryJpaEntity(
         nullable = false,
     )
     lateinit var transaction: LedgerTransactionJpaEntity
+
+    fun signedAmount(): BigDecimal =
+        when (type) {
+            LedgerEntryType.DEBIT -> amount.negate()
+            LedgerEntryType.CREDIT -> amount
+        }
 }

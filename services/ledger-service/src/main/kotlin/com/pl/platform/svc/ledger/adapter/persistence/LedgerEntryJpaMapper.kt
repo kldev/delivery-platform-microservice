@@ -7,4 +7,5 @@ fun LedgerEntryJpaEntity.toDomain(): LedgerEntry =
         id = id,
         accountId = accountId,
         amount = amount,
+        type = type
     )

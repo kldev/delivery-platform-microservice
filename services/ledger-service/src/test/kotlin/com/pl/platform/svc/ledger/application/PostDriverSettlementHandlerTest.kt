@@ -131,7 +131,7 @@ class PostDriverSettlementHandlerTest {
         )
 
         assertEquals(
-            BigDecimal("-125.50"),
+            BigDecimal("125.50"),
             transaction.entries
                 .first { it.accountId == platformAccount.id }
                 .amount,
@@ -145,7 +145,7 @@ class PostDriverSettlementHandlerTest {
         )
 
         assertTrue(
-            transaction.entries.sumOf { it.amount }.compareTo(BigDecimal.ZERO) == 0,
+            transaction.entries.sumOf { it.signedAmount() }.compareTo(BigDecimal.ZERO) == 0,
         )
 
         verify(exactly = 0) {
@@ -241,7 +241,7 @@ class PostDriverSettlementHandlerTest {
         )
 
         assertTrue(
-            transaction.entries.sumOf { it.amount }.compareTo(BigDecimal.ZERO) == 0,
+            transaction.entries.sumOf { it.signedAmount() }.compareTo(BigDecimal.ZERO) == 0,
         )
 
         verify(exactly = 1) {
@@ -346,7 +346,7 @@ class PostDriverSettlementHandlerTest {
             }
 
         assertEquals(
-            BigDecimal("-250.75"),
+            BigDecimal("250.75"),
             platformEntry.amount,
         )
 
@@ -356,7 +356,7 @@ class PostDriverSettlementHandlerTest {
         )
 
         assertTrue(
-            transaction.entries.sumOf { it.amount }.compareTo(BigDecimal.ZERO) == 0,
+            transaction.entries.sumOf { it.signedAmount() }.compareTo(BigDecimal.ZERO) == 0,
         )
     }
 

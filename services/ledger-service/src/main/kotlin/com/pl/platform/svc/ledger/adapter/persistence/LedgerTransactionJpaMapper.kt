@@ -29,6 +29,7 @@ fun LedgerTransaction.toJpaEntity(): LedgerTransactionJpaEntity {
                 id = it.id,
                 accountId = it.accountId,
                 amount = it.amount,
+                type = it.type,
             ).also {
                 it.transaction = entity
             }

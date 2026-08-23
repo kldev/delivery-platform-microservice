@@ -27,7 +27,7 @@ class LedgerTransaction private constructor(
             "Ledger transaction must contain at least one entry"
         }
 
-        require(entries.sumOf { it.amount }.compareTo(BigDecimal.ZERO) == 0) {
+        require(entries.sumOf { it.signedAmount() }.compareTo(BigDecimal.ZERO) == 0) {
             "Ledger transaction must be balanced"
         }
 
@@ -82,12 +82,14 @@ class LedgerTransaction private constructor(
                     LedgerEntry(
                         id = UUID.randomUUID(),
                         accountId = platformAccountId,
-                        amount = amount.negate(),
+                        amount = amount.abs(),
+                        type = LedgerEntryType.CREDIT
                     ),
                     LedgerEntry(
                         id = UUID.randomUUID(),
                         accountId = driverAccountId,
-                        amount = amount,
+                        amount = amount.abs(),
+                        type = LedgerEntryType.DEBIT
                     ),
                 ),
             )

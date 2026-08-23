@@ -3,6 +3,7 @@ CREATE TABLE ledger_entries (
             transaction_id UUID NOT NULL,
             account_id UUID NOT NULL,
             amount NUMERIC(19, 4) NOT NULL,
+            type VARCHAR(30) NOT NULL, --
             created_at TIMESTAMP WITH TIME ZONE NOT NULL,
 
             CONSTRAINT fk_ledger_entries_transaction
@@ -14,7 +15,13 @@ CREATE TABLE ledger_entries (
                     REFERENCES ledger_accounts (id),
 
             CONSTRAINT chk_ledger_entries_amount
-                CHECK (amount <> 0)
+                CHECK (amount <> 0),
+
+            CONSTRAINT ledger_entries_type
+                CHECK (type IN (
+                                'DEBIT',
+                                'CREDIT'
+                    ))
 );
 
 CREATE INDEX ix_ledger_entries_transaction_id

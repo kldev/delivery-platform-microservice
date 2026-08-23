@@ -8,6 +8,7 @@ class LedgerEntry(
     val id: UUID,
     val accountId: UUID,
     val amount: BigDecimal,
+    var type: LedgerEntryType
 ) {
 
     init {
@@ -15,4 +16,10 @@ class LedgerEntry(
             "Ledger entry amount must not be zero"
         }
     }
+
+    fun signedAmount(): BigDecimal =
+        when (type) {
+            LedgerEntryType.DEBIT -> amount.negate()
+            LedgerEntryType.CREDIT -> amount
+        }
 }

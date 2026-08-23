@@ -55,4 +55,6 @@ class LedgerTransactionJpaEntity(
         orphanRemoval = true,
     )
     var entries: MutableList<LedgerEntryJpaEntity> = mutableListOf()
+
+
 }
