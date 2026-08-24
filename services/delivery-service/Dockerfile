@@ -6,6 +6,7 @@ COPY ./services ./services
 COPY ./libraries ./libraries
 COPY build.gradle.kts .
 COPY settings.gradle.kts .
+RUN gradle dependencies
 
 RUN gradle clean :services:delivery-service:bootJar --no-daemon
 

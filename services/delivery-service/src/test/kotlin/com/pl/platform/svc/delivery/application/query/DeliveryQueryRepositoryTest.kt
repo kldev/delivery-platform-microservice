@@ -2,7 +2,6 @@ package com.pl.platform.svc.delivery.application.query
 
 import com.pl.platform.svc.BaseIntegrationTest
 import com.pl.platform.svc.delivery.adapter.persistence.DeliveryStatusJpa
-import com.pl.platform.svc.delivery.adapter.persistence.SpringDataDeliveryRepository
 import com.pl.platform.svc.delivery.domain.DeliveryStatus
 import com.pl.platform.svc.test.fixture.DeliveryDatabaseFixture
 import com.pl.platform.svc.test.fixture.DriverDatabaseFixture
@@ -10,8 +9,6 @@ import jakarta.transaction.Transactional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.PageRequest
-import org.springframework.jdbc.core.JdbcTemplate
 import kotlin.test.Test
 
 class DeliveryQueryRepositoryTest : BaseIntegrationTest() {
@@ -25,25 +22,11 @@ class DeliveryQueryRepositoryTest : BaseIntegrationTest() {
     @Autowired
     lateinit var driverDatabaseFixture: DriverDatabaseFixture
 
-    @Autowired
-    lateinit var jdbcTemplate: JdbcTemplate;
-
     @Transactional
     @BeforeEach
     fun cleanUp() {
         cleanDatabase()
         seedTest()
-    }
-
-    fun cleanDatabase() {
-        jdbcTemplate.execute(
-            """
-        TRUNCATE TABLE
-            drivers,
-            deliveries
-        CASCADE
-        """.trimIndent())
-
     }
 
     @Transactional

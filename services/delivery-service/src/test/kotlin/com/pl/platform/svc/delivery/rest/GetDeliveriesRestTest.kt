@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 
-class GetAllDeliveryRestTest : BaseRestIntegrationTest() {
+class GetDeliveriesRestTest : BaseRestIntegrationTest() {
 
     @Autowired
     lateinit var deliveryRepository: SpringDataDeliveryRepository
@@ -35,8 +35,8 @@ class GetAllDeliveryRestTest : BaseRestIntegrationTest() {
             .expectStatus()
             .isOk
             .expectBody()
-            .jsonPath("$").isArray
-            .jsonPath("$.length()").isEqualTo(2)
+            .jsonPath("$.content").isArray
+            .jsonPath("$.content.length()").isEqualTo(2)
     }
 
     @Test
@@ -49,7 +49,7 @@ class GetAllDeliveryRestTest : BaseRestIntegrationTest() {
             .expectStatus()
             .isOk
             .expectBody()
-            .jsonPath("$").isArray
-            .jsonPath("$.length()").isEqualTo(0)
+            .jsonPath("$.content").isArray
+            .jsonPath("$.content.length()").isEqualTo(0)
     }
 }

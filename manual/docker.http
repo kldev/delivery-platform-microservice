@@ -91,5 +91,8 @@ Content-Type: application/json
 ### get ledger entries
 GET http://localhost:5000/api/ledger/ledger-entires
 
-### get payments
+### get ledger transations
 http://localhost:5000/api/ledger/ledger-transations
+
+### get deliveries status duration
+GET http://localhost:5000/api/delivery/deliveries/status-duration?deliveryId={{deliveryId}}

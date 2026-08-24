@@ -60,6 +60,15 @@ Content-Type: application/json
 ### get deliveries
 GET http://localhost:8081/api/deliveries
 
+### get deliveries
+GET http://localhost:8081/api/deliveries?status=CREATED
+
+> {%
+
+    client.global.set("deliveryId", response.body.content[0].id);
+%}
+
+
 ### get payments
 GET http://localhost:9080/api/payments
 
@@ -68,6 +77,7 @@ GET http://localhost:9080/api/payments?status=Pending
 
 > {%
     client.global.set("paymentId", response.body[0].id);
+    client.global.set("deliveryId", response.body[0].deliveryId);
 %}
 
 ### accept/paid payments
@@ -83,3 +93,10 @@ Content-Type: application/json
 ### start delivery
 PUT http://localhost:8081/api/deliveries/{{deliveryId}}/start
 Content-Type: application/json
+
+### complete delivery
+PUT http://localhost:8081/api/deliveries/{{deliveryId}}/complete
+Content-Type: application/json
+
+### get deliveries status duration
+GET http://localhost:8081/api/deliveries/status-duration?deliveryId={{deliveryId}}

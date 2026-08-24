@@ -1,5 +1,6 @@
 package com.pl.platform.svc.delivery.adapter.rest.response
 
+import com.pl.platform.svc.delivery.adapter.persistence.DeliveryJpaEntity
 import com.pl.platform.svc.delivery.domain.Delivery
 import com.pl.platform.svc.delivery.domain.DeliveryStatus
 import java.math.BigDecimal
@@ -21,6 +22,16 @@ data class DeliveryItemResponse(   val id: UUID,
                 deliveryAddress = deliver.deliveryAddress,
                 price = deliver.price,
                 status = deliver.status,
+                distanceKm = deliver.distanceKm)
+        }
+
+        fun from(deliver: DeliveryJpaEntity): DeliveryItemResponse {
+            return DeliveryItemResponse( id = deliver.id,
+                driverId = deliver.driverId,
+                pickupAddress = deliver.pickupAddress,
+                deliveryAddress = deliver.deliveryAddress,
+                price = deliver.price,
+                status = deliver.status.toDomain(),
                 distanceKm = deliver.distanceKm)
         }
     }

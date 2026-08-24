@@ -2,7 +2,7 @@ package com.pl.platform.svc.delivery.application.query
 import com.pl.platform.svc.common.AbstractJpaSliceQueryRepository
 import com.pl.platform.svc.delivery.adapter.persistence.DeliveryJpaEntity
 import com.pl.platform.svc.delivery.adapter.persistence.DeliverySpecifications
-import com.pl.platform.svc.delivery.domain.Delivery
+import com.pl.platform.svc.delivery.adapter.rest.response.DeliveryItemResponse
 import jakarta.persistence.EntityManager
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Component
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 class DeliveryQueryRepository(entityManager: EntityManager) : AbstractJpaSliceQueryRepository<
         DeliveryJpaEntity,
         GetDeliveryQuery,
-        Delivery
+        DeliveryItemResponse
         >(entityManager) {
     override fun entityType(): Class<DeliveryJpaEntity>  =
         DeliveryJpaEntity::class.java
@@ -19,5 +19,6 @@ class DeliveryQueryRepository(entityManager: EntityManager) : AbstractJpaSliceQu
     override fun specification(query: GetDeliveryQuery): Specification<DeliveryJpaEntity>
         = DeliverySpecifications.buildSpecifications(query)
 
-    override fun from(entity: DeliveryJpaEntity): Delivery = entity.toDomain()
+    override fun from(entity: DeliveryJpaEntity): DeliveryItemResponse
+    = DeliveryItemResponse.from(entity)
 }
