@@ -8,6 +8,8 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.test.context.ActiveProfiles
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Testcontainers
+import java.math.BigDecimal
+import kotlin.test.assertEquals
 
 
 @Testcontainers
@@ -32,5 +34,16 @@ abstract class BaseIntegrationTest {
         fun startContainer() {
             postgres.start()
         }
+    }
+
+    protected fun assertAmount(
+        expected: BigDecimal,
+        actual: BigDecimal?,
+    ) {
+        assertEquals(
+            0,
+            expected.compareTo(actual ?: BigDecimal.ZERO),
+            "Expected amount $expected but was $actual",
+        )
     }
 }

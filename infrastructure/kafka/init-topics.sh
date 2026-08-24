@@ -25,6 +25,8 @@ create_topic delivery.completed 3
 create_topic delivery.confirmed 3
 create_topic delivery.events 3
 create_topic settlement.events 3
+create_topic settlement.created 3
+create_topic payment.completed 3 # external payment proccessing
 create_topic payment.paid 3
 create_topic payment.declined 3
 create_topic payment.events 3
