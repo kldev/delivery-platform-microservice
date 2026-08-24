@@ -38,12 +38,12 @@ The platform consists of several independent services:
                               └──────────────────────────┘
 
 
-                         ┌───────────────────────────────┐
-                         │             Kafka              │
-                         │        Event Backbone          │
-                         └──────┬──────┬──────┬──────┬───┘
-                                ▲      ▲      ▲      ▲
-                                │      │      │      │
+                         ┌────────────────────────────────────┐
+                         │             Kafka                  │
+                         │        Event Backbone              │
+                         └──────┬──────┬──────┬──────┬────┬───┘
+                                ▲      ▲      ▲      ▲    ▲
+                                │      │      │      │    │
                          ┌──────┴──┐ ┌─┴─────┐ ┌┴──────┐ ┌┴──────────┐
                          │Delivery │ │Payment│ │Ledger │ │Settlement │
                          │ Events  │ │Events │ │Events │ │  Events   │

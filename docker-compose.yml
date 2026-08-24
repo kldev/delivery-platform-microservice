@@ -8,6 +8,7 @@ services:
     shm_size: 256mb
     container_name: platform-postgres
     restart: unless-stopped
+    mem_limit: 768m 
     environment:
       POSTGRES_DB: platform
       POSTGRES_USER: platform
@@ -33,6 +34,7 @@ services:
   broker:
     image: apache/kafka:4.3.1
     container_name: broker
+    mem_limit: 768m 
     ports:
       - 9092:9092
     networks:
@@ -70,6 +72,7 @@ services:
       - inner-cluster-communication
     ports:
       - '8080:8080'
+    mem_limit: 768m 
     depends_on:
       broker:
         condition: service_healthy
@@ -96,12 +99,14 @@ services:
       context: .
       dockerfile: services/delivery-service/Dockerfile
     container_name: delivery
+    mem_limit: 768m
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/deliverydb
       SPRING_PROFILES_ACTIVE: dev
       KAFKA_SERVERS: broker:19092
       PG_HOST: postgres   
       PORT: 8080   
+      JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=60 -XX:InitialRAMPercentage=15"              
     depends_on:
       broker:
         condition: service_healthy
@@ -115,14 +120,15 @@ services:
       context:  .
       dockerfile: services/settlement-service/Dockerfile
     container_name: settlement
+    mem_limit: 768m
     networks:
-      - inner-cluster-communication 
-    
+      - inner-cluster-communication     
     environment:
       SPRING_PROFILES_ACTIVE: docker
       KAFKA_SERVERS: broker:19092
       PG_HOST: postgres
       PORT: 8080
+      JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=60 -XX:InitialRAMPercentage=15"  
     depends_on:
       broker:
         condition: service_healthy
@@ -134,6 +140,7 @@ services:
       context: .
       dockerfile: services/ledger-service/Dockerfile
     container_name: ledger
+    mem_limit: 768m
     networks:
       - inner-cluster-communication     
     environment:
@@ -141,6 +148,7 @@ services:
       KAFKA_SERVERS: broker:19092
       PG_HOST: postgres
       PORT: 8080
+      JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=60 -XX:InitialRAMPercentage=15"  
     depends_on:
       broker:
         condition: service_healthy
@@ -152,6 +160,7 @@ services:
       context: .
       dockerfile: services/reconciliation-service/Dockerfile
     container_name: reconciliation
+    mem_limit: 768m
     networks:
       - inner-cluster-communication     
     environment:
@@ -159,6 +168,7 @@ services:
       KAFKA_SERVERS: broker:19092
       PG_HOST: postgres
       PORT: 8080
+      JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=60 -XX:InitialRAMPercentage=15"  
     depends_on:
       broker:
         condition: service_healthy
@@ -170,6 +180,7 @@ services:
       context: ./dotnet/PaymentService
       dockerfile: ./Dockerfile
     container_name: payment
+    mem_limit: 768m
     networks:
       - inner-cluster-communication     
     environment:
@@ -187,6 +198,7 @@ services:
       context: dotnet/Gateway
       dockerfile: ./Dockerfile
     container_name: gateway
+    mem_limit: 768m 
     networks:
       - inner-cluster-communication     
     environment:
