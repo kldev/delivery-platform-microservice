@@ -12,7 +12,7 @@ public static class PaymentExternalEndpointExtensions
         group.MapGet(
             "/external",
             async (
-                    GetExternalTransactionHandler handler,
+                    [FromServices] GetExternalTransactionHandler handler,
                     [FromQuery] Guid? paymentId,
                     [FromQuery] Guid? deliveryId,
                     [FromQuery] string? transactionId,
@@ -28,7 +28,7 @@ public static class PaymentExternalEndpointExtensions
         group.MapPost(
             "/external",
             async (
-                    CreateExternalHandler handler,
+                    [FromServices] CreateExternalHandler handler,
                     CreateExternalCommand command,
                     CancellationToken ct) =>
                 await handler.Handle(command, ct));

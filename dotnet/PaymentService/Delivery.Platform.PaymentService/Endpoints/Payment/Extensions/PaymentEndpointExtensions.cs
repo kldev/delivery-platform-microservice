@@ -1,4 +1,5 @@
 ﻿using Delivery.Platform.PaymentService.Application.Payments;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.Platform.PaymentService.Endpoints.Payment.Extensions;
 
@@ -10,9 +11,9 @@ public static class PaymentEndpointExtensions
         group.MapPut(
             "/{id}/{action}",
             async (
+                [FromServices]PaymentActionService service,
                 Guid id,
                 PaymentAction action,
-                PaymentActionService service,
                 CancellationToken ct) =>
             {
                 await service.Execute(id, action, ct);

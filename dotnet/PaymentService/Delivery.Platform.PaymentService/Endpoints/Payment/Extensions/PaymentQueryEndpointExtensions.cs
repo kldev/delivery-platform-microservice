@@ -12,7 +12,7 @@ public static class PaymentQueryEndpointExtensions
         group.MapGet(
             "",
             async (
-                    GetPaymentsHandler handler,
+                    [FromServices] GetPaymentsHandler handler,
                     [FromQuery] PaymentStatus? status,
                     [FromQuery] Guid? deliveryId,
                     CancellationToken ct) =>

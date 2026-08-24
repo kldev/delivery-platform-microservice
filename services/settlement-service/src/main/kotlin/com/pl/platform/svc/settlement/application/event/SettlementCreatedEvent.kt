@@ -12,6 +12,7 @@ data class SettlementCreatedEvent(
     override val module: String = "settlement",
     override val eventType: String = "settlement.created",
 
+    val settlementId: UUID,
     val deliveryId: UUID,
     val driverId: UUID,
     val driverFullName: String,

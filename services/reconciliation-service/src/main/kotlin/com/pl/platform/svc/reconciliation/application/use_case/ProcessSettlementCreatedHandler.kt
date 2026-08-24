@@ -39,7 +39,7 @@ class ProcessSettlementCreatedHandler(
         if (existing != null) {
             val updated = existing.applySettlement(
                 settlementId = event.settlementId,
-                amount =  event.amount,
+                amount =  event.driverAmount,
                 currency = event.currency)
             reconciliationRepository.update(updated);
 
@@ -51,7 +51,7 @@ class ProcessSettlementCreatedHandler(
         val reconciliation = Reconciliation(
             settlementId = event.settlementId,
             deliveryId = event.deliveryId,
-            expectedAmount = event.amount,
+            expectedAmount = event.driverAmount,
             currency = event.currency
         )
 

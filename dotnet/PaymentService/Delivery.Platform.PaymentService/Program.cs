@@ -15,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
     {
         options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+
+    builder.Services.AddOpenApi();
     
     builder.Services.AddDatabase(builder.Configuration);
     builder.Services.AddKafka(

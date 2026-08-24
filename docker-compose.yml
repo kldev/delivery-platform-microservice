@@ -17,7 +17,7 @@ services:
     command: 
       - postgres 
       - -c 
-      - max_connections=100
+      - max_connections=250
       - -c 
       - shared_preload_libraries=pg_stat_statements     
     ports:
@@ -174,7 +174,7 @@ services:
       - inner-cluster-communication     
     environment:
       ASPNETCORE_ENVIRONMENT: docker
-      ConnectionStrings__Database: "Host=postgres;Port=5432;Database=paymentsdb;Username=platform;Password=platform"
+      ConnectionStrings__Database: "Host=postgres;Port=5432;Database=paymentsdb;Username=platform;Password=platform;Maximum Pool Size=50"
       Kafka__BootstrapServers: broker:19092
     depends_on:
       broker:

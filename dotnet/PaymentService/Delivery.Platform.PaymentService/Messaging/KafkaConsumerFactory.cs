@@ -5,7 +5,7 @@ namespace Delivery.Platform.PaymentService.Messaging;
 internal static class KafkaConsumerFactory
 {
     public static IConsumer<string, string> Create(
-        KafkaOptions options)
+        KafkaOptions options, ILogger logger)
     {
         var config = new ConsumerConfig
         {
@@ -17,10 +17,19 @@ internal static class KafkaConsumerFactory
                     options.AutoOffsetReset,
                     ignoreCase: true),
 
-            EnablePartitionEof = false
+            EnablePartitionEof = false,
         };
 
         return new ConsumerBuilder<string, string>(config)
+            .SetLogHandler((_, message) =>
+            {
+                if (message.Level <= SyslogLevel.Error)
+                {
+                    logger.LogError(
+                        "Kafka: {Message}",
+                        message.Message);
+                }
+            })
             .Build();
     }
 }

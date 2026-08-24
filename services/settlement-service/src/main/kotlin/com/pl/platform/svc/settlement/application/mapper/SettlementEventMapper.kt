@@ -23,4 +23,5 @@ fun Settlement.toCreatedEvent(): SettlementCreatedEvent =
         driverAmount = driverAmount,
         distanceKm = distanceKm,
         completedAt = completedAt,
+        settlementId = id.value
     )

@@ -55,6 +55,7 @@ var app = builder.Build();
     app.MapReverseProxy();
     
     app.MapGet("/", () => "UP");
+    app.MapGet("/docs", () => Results.Redirect("/scalar"));
     
     app.MapSwaggerEndpoints();
     app.Run();

@@ -41,9 +41,15 @@ public static class KafkaExtensions
                     .GetRequiredService<
                         IOptions<KafkaOptions>>()
                     .Value;
+            
+            var logger =
+                provider
+                    .GetRequiredService<
+                      ILogger<KafkaListener<TEvent>>>();
+            
 
             var consumer =
-                KafkaConsumerFactory.Create(options);
+                KafkaConsumerFactory.Create(options, logger);
 
             var jsonOptions =
                 provider.GetRequiredService<
@@ -52,11 +58,6 @@ public static class KafkaExtensions
             var scopeFactory =
                 provider.GetRequiredService<
                     IServiceScopeFactory>();
-
-            var logger =
-                provider
-                    .GetRequiredService<
-                        ILogger<KafkaListener<TEvent>>>();
 
             return new KafkaListener<TEvent>(
                 scopeFactory, consumer, topic, jsonOptions, logger);

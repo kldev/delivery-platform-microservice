@@ -73,6 +73,10 @@ function waitForPayment(deliveryId, timeout = 30000) {
     while (Date.now() - start < timeout) {
         const payments = getPendingPayment(deliveryId);
 
+        if (!payments) {
+            console.error("No payments")
+            return null;
+        }
 
        const payment = payments.find(
             item => item.deliveryId === deliveryId,
@@ -165,6 +169,25 @@ function getLedgerEntries() {
 
     check(response, {
         'get ledger entries - status 200': r =>
+            r.status === 200,
+    });
+
+    return response;
+}
+
+// ---------------------------------------------------------
+// RECONCOLIATION
+// ---------------------------------------------------------
+
+
+function getReconciliationEntries() {
+       const response = request(
+        'GET',
+        '/api/reconciliation/reconciliations',
+    );
+
+    check(response, {
+        'get reconciliation entries - status 200': r =>
             r.status === 200,
     });
 
@@ -491,6 +514,48 @@ export default function () {
         flowFailure.add(1);
         return;
     }
+
+    // ---------------------------------------------------------
+    // 12. Complete PAYMENT
+    // ---------------------------------------------------------
+
+    const completePaymenttResponse = request(
+        'POST',
+        `/api/payment/payments/external`,
+        JSON.stringify(
+        {
+            paymentId: payment.id,
+            transactionId: `TXT-` + payment.id,
+            amount: (Math.random() < 0.5)  ? 7.0000 : 9.000,
+            provider: "K6-TEST"
+        })
+    );
+
+    const paymentComplete = check(
+        completePaymenttResponse,
+        {
+            'complete payment - status 200': r =>
+                r.status === 200,
+        },
+    );
+
+    if (!paymentComplete) {
+        console.error(completePaymenttResponse);
+        flowFailure.add(1);
+        return;
+    }
+
+    // ---------------------------------------------------------
+    // 13. GET Reconciliations
+    // ---------------------------------------------------------
+
+    const reconciliationResponse = getReconciliationEntries();
+
+    if (reconciliationResponse.status !== 200) {
+        flowFailure.add(1);
+        return;
+    }
+
 
     // ---------------------------------------------------------
     // FLOW COMPLETED
