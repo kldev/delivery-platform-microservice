@@ -50,7 +50,7 @@ class ProcessSettlementCreatedHandlerIntegrationTest :
         )
 
         assertAmount(
-            event.amount,
+            event.driverAmount,
             reconciliation.expectedAmount ?: BigDecimal.ZERO
         )
 
@@ -195,7 +195,8 @@ class ProcessSettlementCreatedHandlerIntegrationTest :
         eventId = eventId,
         settlementId = settlementId,
         deliveryId = deliveryId,
-        amount = amount,
+        deliveryAmount = amount,
+        driverAmount = amount.multiply(BigDecimal("0.8")),
         currency = currency,
         driverId = UUID.randomUUID(),
     )

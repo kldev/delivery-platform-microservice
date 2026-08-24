@@ -109,7 +109,7 @@ class ProcessSettlementCreatedHandlerTest {
                 match {
                     it.deliveryId == event.deliveryId &&
                             it.settlementId == event.settlementId &&
-                            it.expectedAmount == event.amount &&
+                            it.expectedAmount == event.driverAmount &&
                             it.currency == event.currency &&
                             it.status == ReconciliationStatus.PENDING
                 }
@@ -184,7 +184,7 @@ class ProcessSettlementCreatedHandlerTest {
         )
 
         assertEquals(
-            event.amount,
+            event.driverAmount,
             existing.expectedAmount
         )
 
@@ -237,7 +237,8 @@ class ProcessSettlementCreatedHandlerTest {
         settlementId = settlementId,
         driverId = UUID.randomUUID(),
         deliveryId = deliveryId,
-        amount = amount,
+        driverAmount = amount.multiply(BigDecimal("0.8")),
+        deliveryAmount = amount,
         currency = currency
     )
 }
