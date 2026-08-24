@@ -1,3 +1,5 @@
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Delivery.Platform.Infrastructure;
 using Delivery.Platform.PaymentService;
 using Delivery.Platform.PaymentService.Application;
@@ -9,7 +11,11 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    builder.Services.AddOpenApi();
+    builder.Services.ConfigureHttpJsonOptions(options =>
+    {
+        options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+    
     builder.Services.AddDatabase(builder.Configuration);
     builder.Services.AddKafka(
         builder.Configuration);

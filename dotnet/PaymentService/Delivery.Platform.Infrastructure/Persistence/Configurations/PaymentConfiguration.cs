@@ -41,5 +41,9 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
 
         builder.Property(x => x.PaidAt)
             .HasColumnName("paid_at");
+        
+        builder.HasMany(z=>z.ExternalTransactions)
+            .WithOne(z=>z.Payment)
+            .HasForeignKey(z=>z.PaymentId);
     }
 }

@@ -10,6 +10,8 @@ public class PaymentDbContext(
     : DbContext(options)
 {
     public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<PaymentExternalTransaction> External => Set<PaymentExternalTransaction>();
+    
     public DbSet<ProcessedEvent> ProcessedEvents => Set<ProcessedEvent>();
 
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();

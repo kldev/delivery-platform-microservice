@@ -33,6 +33,9 @@ public class Payment
     public DateTimeOffset CreatedAt { get; private set; }
 
     public DateTimeOffset? PaidAt { get; private set; }
+    
+    public ICollection<PaymentExternalTransaction> ExternalTransactions { get; private set; }
+        = new List<PaymentExternalTransaction>();
 
     public void MarkAsPaid()
     {
