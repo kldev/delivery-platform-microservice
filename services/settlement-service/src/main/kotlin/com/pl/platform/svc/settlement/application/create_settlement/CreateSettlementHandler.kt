@@ -32,7 +32,8 @@ class CreateSettlementHandler(
             amount = settlement.deliveryAmount,
             settlementId = settlement.id.value,
             driverId = settlement.driverId,
-            driverFullName = settlement.driverFullName)
+            driverFullName = settlement.driverFullName,
+            deliveryId = settlement.deliveryId)
 
         outboxRepository.save(driverSettlementEvent)
 

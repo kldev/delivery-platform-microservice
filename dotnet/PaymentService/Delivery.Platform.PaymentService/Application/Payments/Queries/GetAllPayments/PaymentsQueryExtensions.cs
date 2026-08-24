@@ -13,4 +13,14 @@ public  static class PaymentsQueryExtensions
 
         return queryable;
     } 
+    
+    public static IQueryable<Payment> WithDeliveryId(this IQueryable<Payment> queryable, Guid? deliveryId)
+    {
+        if (deliveryId.HasValue)
+        {
+            queryable = queryable.Where(q=>q.DeliveryId == deliveryId.Value);
+        }
+
+        return queryable;
+    } 
 }

@@ -27,9 +27,9 @@ public static class Endpoint
             });
 
         group.MapGet("",
-            async ([FromServices] GetAllPaymentsHandler handler, [FromQuery] PaymentStatus? status,
+            async ([FromServices] GetPaymentsHandler handler, [FromQuery] PaymentStatus? status, [FromQuery] Guid? deliveryId,
                     CancellationToken ct) =>
-                TypedResults.Ok(await handler.Handle(new GetAllPaymentsQuery(status), ct)));
+                TypedResults.Ok(await handler.Handle(new GetPaymentsQuery(status, deliveryId), ct)));
 
     }
 }

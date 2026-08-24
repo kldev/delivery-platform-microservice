@@ -1,5 +1,5 @@
 ### create driver
-POST http://localhost:8081/api/drivers
+POST http://localhost:5000/api/delivery/drivers
 Content-Type: application/json
 
 {
@@ -13,7 +13,7 @@ Content-Type: application/json
 %}
 
 ### create driver
-POST http://localhost:8081/api/drivers
+POST http://localhost:5000/api/delivery/drivers
 Content-Type: application/json
 
 {
@@ -27,7 +27,7 @@ Content-Type: application/json
 %}
 
 ### get drivers
-GET http://localhost:8081/api/drivers
+GET http://localhost:5000/api/delivery/drivers
 
 > {%
     client.global.set("driverId", response.body[0].id);
@@ -35,7 +35,7 @@ GET http://localhost:8081/api/drivers
 
 
 ### create delivery
-POST http://localhost:8081/api/deliveries
+POST http://localhost:5000/api/delivery/deliveries
 Content-Type: application/json
 
 {
@@ -49,37 +49,47 @@ Content-Type: application/json
 %}
 
 ### confirm delivery
-PUT http://localhost:8081/api/deliveries/{{deliveryId}}/confirm
+PUT http://localhost:5000/api/delivery/deliveries/{{deliveryId}}/confirm
 Content-Type: application/json
 
 
 ### cancel delivery
-PUT http://localhost:8081/api/deliveries/{{deliveryId}}/cancel
+PUT http://localhost:5000/api/delivery/deliveries/{{deliveryId}}/cancel
 Content-Type: application/json
 
 ### get deliveries
-GET http://localhost:8081/api/deliveries
+GET http://localhost:5000/api/delivery/deliveries
 
 ### get payments
-GET http://localhost:9080/api/payments
+GET http://localhost:5000/api/payment/payments
 
 ### get payments
-GET http://localhost:9080/api/payments?status=Pending
+GET http://localhost:5000/api/payment/payments?status=Pending
 
 > {%
     client.global.set("paymentId", response.body[0].id);
 %}
 
 ### accept/paid payments
-PUT http://localhost:9080/api/payments/{{paymentId}}/accept
+PUT http://localhost:5000/api/payment/payments/{{paymentId}}/accept
 
 ### decline payments
-PUT http://localhost:9080/api/payments/{{paymentId}}/decline
+PUT http://localhost:5000/api/payment/{{paymentId}}/decline
 
 ### pickup delivery
-PUT http://localhost:8081/api/deliveries/{{deliveryId}}/pickup
+PUT http://localhost:5000/api/delivery/deliveries/{{deliveryId}}/pickup
 Content-Type: application/json
 
 ### start delivery
-PUT http://localhost:8081/api/deliveries/{{deliveryId}}/start
+PUT http://localhost:5000/api/delivery/deliveries/{{deliveryId}}/start
 Content-Type: application/json
+
+### complete delivery
+PUT http://localhost:5000/api/delivery/deliveries/{{deliveryId}}/complete
+Content-Type: application/json
+
+### get ledger entries
+GET http://localhost:5000/api/ledger/ledger-entires
+
+### get payments
+http://localhost:5000/api/ledger/ledger-transations

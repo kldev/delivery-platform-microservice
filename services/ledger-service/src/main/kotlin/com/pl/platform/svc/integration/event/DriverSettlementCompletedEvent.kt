@@ -11,6 +11,7 @@ data class DriverSettlementCompletedEvent(
     val amount: BigDecimal,
     val currency: String,
     val driverFullName: String,
+    val deliveryId: UUID,
     override val eventId: UUID = UUID.randomUUID(),
     override val occurredAt: Instant = Instant.now(),
     override val module: String = "settlement",

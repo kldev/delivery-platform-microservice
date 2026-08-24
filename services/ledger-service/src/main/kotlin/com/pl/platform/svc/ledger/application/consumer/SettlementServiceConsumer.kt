@@ -31,8 +31,8 @@ class SettlementServiceConsumer(
             )
 
         logger.info(
-            "Received driver settlement completed event {} for settlement {}",
-            event.eventId,
+            "Received driver settlement completed delivery id {} for settlement {}",
+            event.deliveryId,
             event.settlementId,
         )
 

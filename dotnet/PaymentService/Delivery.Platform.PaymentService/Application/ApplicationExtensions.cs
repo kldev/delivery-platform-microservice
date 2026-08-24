@@ -11,7 +11,7 @@ public static class ApplicationExtensions
     {
         services.AddScoped<AcceptPaymentHandler>();
         services.AddScoped<DeclinePaymentHandler>();
-        services.AddScoped<GetAllPaymentsHandler>();
+        services.AddScoped<GetPaymentsHandler>();
 
         return services;
     }

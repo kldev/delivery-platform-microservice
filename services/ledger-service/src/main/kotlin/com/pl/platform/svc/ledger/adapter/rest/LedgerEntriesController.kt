@@ -17,7 +17,7 @@ import java.util.UUID
 
 @Validated
 @RestController
-@RequestMapping("/api/ledger-entires")
+@RequestMapping("/api/ledger-entries")
 @Tag(name = "Ledger entry")
 class LedgerEntriesController(
     private val repository: LedgerEntryQueryRepository
