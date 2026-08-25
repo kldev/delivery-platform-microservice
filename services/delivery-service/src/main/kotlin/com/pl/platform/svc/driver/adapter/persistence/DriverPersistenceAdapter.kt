@@ -4,6 +4,7 @@ import com.pl.platform.svc.driver.domain.Driver
 import com.pl.platform.svc.driver.domain.DriverId
 import com.pl.platform.svc.driver.port.DriverRepository
 import org.springframework.stereotype.Repository
+import java.util.UUID
 
 @Repository
 class DriverPersistenceAdapter(
@@ -35,7 +36,10 @@ class DriverPersistenceAdapter(
         return repository.existsByPhoneNumber(phoneNumber)
     }
 
-    override fun getAll(): List<Driver> {
+    override fun getAll(driverId: UUID?): List<Driver> {
+        if (driverId != null) {
+            return repository.findAllById(driverId).map(DriverJpaEntity::toDomain)
+        }
         return repository.findAll().map(DriverJpaEntity::toDomain)
     }
 }

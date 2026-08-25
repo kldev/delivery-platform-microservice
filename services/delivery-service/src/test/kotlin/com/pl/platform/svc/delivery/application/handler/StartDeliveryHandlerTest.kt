@@ -2,8 +2,8 @@ package com.pl.platform.svc.delivery.application.handler
 
 import com.pl.platform.common.messaging.port.OutboxRepository
 import com.pl.platform.svc.delivery.application.command.StartDeliveryCommand
-import com.pl.platform.svc.delivery.application.event.DeliveryEvent
-import com.pl.platform.svc.delivery.application.event.DeliveryStartedEvent
+import com.pl.platform.common.messaging.event.delivery.DeliveryEvent
+import com.pl.platform.common.messaging.event.delivery.DeliveryStartedEvent
 import com.pl.platform.svc.delivery.port.DeliveryRepository
 import com.pl.platform.svc.test.fixture.DeliveryTestFactory
 import io.mockk.Runs

@@ -1,5 +1,5 @@
 package com.pl.platform.svc.messaging.adapter.publisher
-import com.pl.platform.svc.delivery.application.event.DeliveryEventType
+import com.pl.platform.common.messaging.event.delivery.DeliveryEventType
 import org.springframework.stereotype.Component
 
 @Component

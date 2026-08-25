@@ -2,6 +2,7 @@ package com.pl.platform.svc.driver.port
 
 import com.pl.platform.svc.driver.domain.Driver
 import com.pl.platform.svc.driver.domain.DriverId
+import java.util.UUID
 
 interface DriverRepository {
 
@@ -15,5 +16,5 @@ interface DriverRepository {
 
     fun existsByPhoneNumber(phoneNumber: String): Boolean
 
-    fun getAll(): List<Driver>
+    fun getAll(driverId: UUID? = null): List<Driver>
 }

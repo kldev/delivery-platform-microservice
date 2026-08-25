@@ -4,7 +4,7 @@ import com.pl.platform.common.exception.EntityNotFoundException
 import com.pl.platform.common.exception.EntityType
 import com.pl.platform.common.messaging.port.OutboxRepository
 import com.pl.platform.svc.delivery.application.command.StartDeliveryCommand
-import com.pl.platform.svc.delivery.application.event.DeliveryStartedEvent
+import com.pl.platform.common.messaging.event.delivery.DeliveryStartedEvent
 import com.pl.platform.svc.delivery.port.DeliveryRepository
 
 import org.springframework.stereotype.Service

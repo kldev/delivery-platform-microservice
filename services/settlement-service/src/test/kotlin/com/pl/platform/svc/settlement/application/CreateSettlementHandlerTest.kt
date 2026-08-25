@@ -4,8 +4,8 @@ import com.pl.platform.common.messaging.port.OutboxRepository
 import com.pl.platform.svc.settlement.application.create_settlement.CreateSettlementCommand
 import com.pl.platform.svc.settlement.application.create_settlement.CreateSettlementHandler
 import com.pl.platform.svc.settlement.application.create_settlement.SettlementCalculator
-import com.pl.platform.svc.settlement.application.event.DriverSettlementCompletedEvent
-import com.pl.platform.svc.settlement.application.event.SettlementCreatedEvent
+import com.pl.platform.common.messaging.event.settlement.DriverSettlementCompletedEvent
+import com.pl.platform.common.messaging.event.settlement.SettlementCreatedEvent
 import com.pl.platform.svc.settlement.domain.Settlement
 import com.pl.platform.svc.settlement.domain.SettlementRate
 import com.pl.platform.svc.settlement.port.SettlementRateRepository

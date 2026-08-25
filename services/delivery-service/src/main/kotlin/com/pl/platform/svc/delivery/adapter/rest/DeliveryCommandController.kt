@@ -29,7 +29,7 @@ class DeliveryCommandController(
     fun executeAction(
         @PathVariable deliveryId: UUID,
         @PathVariable action: DeliveryAction,
-        @RequestBody(required = false) driverId: UUID?
+        @RequestParam(required = false) driverId: UUID?
     ) {
         when (action) {
             DeliveryAction.CONFIRM ->

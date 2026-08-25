@@ -16,11 +16,15 @@ data class CreateDriverRequest(
 
     @field:NotBlank
     @field:Size(max = 100)
-    val phoneNumber: String
+    val phoneNumber: String,
+
+    @field:NotBlank
+    @field:Size(max = 320)
+    val email: String
 ) {
 
     fun toCommand(): CreateDriverCommand {
-        return CreateDriverCommand(firstName, lastName, phoneNumber)
+        return CreateDriverCommand(firstName, lastName, phoneNumber, email)
     }
 
 }

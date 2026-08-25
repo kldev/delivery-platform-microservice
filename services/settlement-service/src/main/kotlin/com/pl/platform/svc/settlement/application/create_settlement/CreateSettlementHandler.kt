@@ -1,6 +1,6 @@
 package com.pl.platform.svc.settlement.application.create_settlement
 import com.pl.platform.common.messaging.port.OutboxRepository
-import com.pl.platform.svc.settlement.application.event.DriverSettlementCompletedEvent
+import com.pl.platform.common.messaging.event.settlement.DriverSettlementCompletedEvent
 import com.pl.platform.svc.settlement.application.mapper.toCreatedEvent
 import com.pl.platform.svc.settlement.domain.Settlement
 import com.pl.platform.svc.settlement.port.SettlementRateRepository

@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 @RestController
 @RequestMapping("/api/drivers")
@@ -24,5 +26,5 @@ class DriverController(
         createDriverHandler.handle(request.toCommand())
 
     @GetMapping
-    fun getAll() : List<DriverResponse> = getAllDrivers.handle()
+    fun getAll(@RequestParam(required = false)  driverId: UUID? ) : List<DriverResponse> = getAllDrivers.handle(driverId)
 }

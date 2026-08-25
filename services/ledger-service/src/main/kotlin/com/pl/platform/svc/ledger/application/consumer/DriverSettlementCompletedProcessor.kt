@@ -1,8 +1,8 @@
 package com.pl.platform.svc.ledger.application.consumer
 
+import com.pl.platform.common.messaging.event.settlement.DriverSettlementCompletedEvent
 import com.pl.platform.svc.ledger.application.use_case.PostDriverSettlementCommand
 import com.pl.platform.svc.ledger.application.use_case.PostDriverSettlementHandler
-import com.pl.platform.svc.integration.event.DriverSettlementCompletedEvent
 import com.pl.platform.svc.messaging.adapter.persistence.ProcessedEventJpaEntity
 import com.pl.platform.svc.messaging.adapter.persistence.SpringDataProcessedEventRepository
 import org.slf4j.LoggerFactory

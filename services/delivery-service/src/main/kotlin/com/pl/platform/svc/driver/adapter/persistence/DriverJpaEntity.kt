@@ -30,6 +30,9 @@ class DriverJpaEntity(
     @Column(name = "phone_number", nullable = false, length = 30)
     var phoneNumber: String,
 
+    @Column(name = "email", nullable = false, length = 30)
+    var email: String,
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     var status: DriverStatusJpa,
@@ -48,7 +51,8 @@ class DriverJpaEntity(
             lastName = lastName,
             phoneNumber = phoneNumber,
             status = status.toDomain(),
-            createdAt = createdAt
+            createdAt = createdAt,
+            email = email,
         )
 
     fun updateFrom(
@@ -78,7 +82,8 @@ class DriverJpaEntity(
                 phoneNumber = driver.phoneNumber,
                 status = DriverStatusJpa.from(driver.status),
                 createdAt = driver.createdAt,
-                updatedAt = now
+                updatedAt = now,
+                email = driver.email,
             )
     }
 }

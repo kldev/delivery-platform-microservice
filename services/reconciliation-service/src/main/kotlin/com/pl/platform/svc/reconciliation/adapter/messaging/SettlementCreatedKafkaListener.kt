@@ -1,7 +1,6 @@
 package com.pl.platform.svc.reconciliation.adapter.messaging
 
-import com.pl.platform.svc.integration.event.PaymentCompletedEvent
-import com.pl.platform.svc.integration.event.SettlementCreatedEvent
+import com.pl.platform.common.messaging.event.settlement.SettlementCreatedEvent
 import com.pl.platform.svc.reconciliation.application.use_case.ProcessSettlementCreatedHandler
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty

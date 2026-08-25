@@ -4,7 +4,7 @@ import com.pl.platform.common.exception.EntityNotFoundException
 import com.pl.platform.common.exception.EntityType
 import com.pl.platform.common.messaging.port.OutboxRepository
 import com.pl.platform.svc.delivery.application.command.CompleteDeliveryCommand
-import com.pl.platform.svc.delivery.application.event.DeliveryCompletedEvent
+import com.pl.platform.common.messaging.event.delivery.DeliveryCompletedEvent
 import com.pl.platform.svc.delivery.port.DeliveryRepository
 import com.pl.platform.svc.driver.domain.DriverId
 import com.pl.platform.svc.driver.port.DriverRepository

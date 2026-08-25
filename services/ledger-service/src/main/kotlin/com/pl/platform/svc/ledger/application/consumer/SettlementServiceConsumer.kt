@@ -1,5 +1,5 @@
 package com.pl.platform.svc.ledger.application.consumer
-import com.pl.platform.svc.integration.event.DriverSettlementCompletedEvent
+import com.pl.platform.common.messaging.event.settlement.DriverSettlementCompletedEvent
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty

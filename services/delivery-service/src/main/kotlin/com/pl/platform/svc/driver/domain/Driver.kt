@@ -9,6 +9,7 @@ class Driver private constructor(
     val phoneNumber: String,
     status: DriverStatus,
     val createdAt: Instant,
+    val email: String
 ) {
 
     var status: DriverStatus = status
@@ -45,14 +46,16 @@ class Driver private constructor(
         fun create(
             firstName: String,
             lastName: String,
-            phoneNumber: String
+            phoneNumber: String,
+            email: String
         ) = Driver(
             id = DriverId.generate(),
             firstName = firstName,
             lastName = lastName,
             phoneNumber = phoneNumber,
             status = DriverStatus.ACTIVE,
-            createdAt = Instant.now()
+            createdAt = Instant.now(),
+            email = email
         )
 
         fun restore(
@@ -61,14 +64,16 @@ class Driver private constructor(
             lastName: String,
             phoneNumber: String,
             status: DriverStatus,
-            createdAt: Instant
+            createdAt: Instant,
+            email: String
         ) = Driver(
             id = id,
             firstName = firstName,
             lastName = lastName,
             phoneNumber = phoneNumber,
             status = status,
-            createdAt = createdAt
+            createdAt = createdAt,
+            email = email
         )
     }
 }

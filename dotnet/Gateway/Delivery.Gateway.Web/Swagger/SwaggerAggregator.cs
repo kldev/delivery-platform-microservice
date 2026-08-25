@@ -9,7 +9,7 @@ public class SwaggerAggregator(
 {
     private readonly HttpClient _httpClient = httpClientFactory.CreateClient("SwaggerClient");
 
-    public record ServiceSwaggerInfo(string Name, string Prefix, string ClusterKey);
+    private sealed record ServiceSwaggerInfo(string Name, string Prefix, string ClusterKey);
 
     private static readonly ServiceSwaggerInfo[] Services =
     [
@@ -17,7 +17,8 @@ public class SwaggerAggregator(
         new("Settlement", "/api/settlement", "settlement-cluster"),
         new("Ledger", "/api/ledger", "ledger-cluster"),
         new("Reconciliation", "/api/reconciliation", "reconciliation-cluster"),
-        new("Payment", "/api/payment", "payment-cluster")
+        new("Payment", "/api/payment", "payment-cluster"),
+        new("Notification", "/api/notification", "notification-cluster")
     ];
 
     /// <summary>
@@ -28,17 +29,26 @@ public class SwaggerAggregator(
         var service = Services.FirstOrDefault(s =>
             s.Name.Equals(serviceName, StringComparison.OrdinalIgnoreCase));
 
-        if (service == null) return null;
+        if (service == null)
+        {
+            logger.LogInformation("No service found for {Service}", serviceName);
+            return null;
+        }
 
         var baseUrl = GetClusterAddress(service.ClusterKey);
         
-        Console.WriteLine("BASE URL: " + baseUrl);
-        
-        if (string.IsNullOrEmpty(baseUrl)) return null;
+        if (string.IsNullOrEmpty(baseUrl))
+        {
+            logger.LogInformation("No service URL found for {Service}.", serviceName);
+            return null;
+        }
 
         try
         {
             var swaggerUrl = serviceName == "payment"?  $"{baseUrl}/openapi/v1.json" : $"{baseUrl}/api-spec";
+            if (serviceName == "notification")
+                swaggerUrl = $"{baseUrl}/api-spec?format=json";
+            
             var response = await _httpClient.GetStringAsync(swaggerUrl);
             var doc = JsonNode.Parse(response)?.AsObject();
 
@@ -76,7 +86,7 @@ public class SwaggerAggregator(
         }
         catch (Exception ex)
         {
-            logger.LogWarning(ex, "Failed to fetch swagger from {Service}", serviceName);
+            logger.LogWarning(ex, "Failed to fetch swagger from {Service} from url {Url}", serviceName, baseUrl);
             return null;
         }
     }

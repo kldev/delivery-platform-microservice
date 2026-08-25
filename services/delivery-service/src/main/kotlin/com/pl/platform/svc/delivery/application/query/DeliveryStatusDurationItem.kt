@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.time.Instant
 import java.util.UUID
 
-data class DeliveryStatusDurationItem(val id: UUID,
+data class DeliveryStatusDurationItem(val id: Long,
                                       val deliveryId: UUID,
                                       val status: DeliveryStatus,
                                       val previousStatus: DeliveryStatus?,

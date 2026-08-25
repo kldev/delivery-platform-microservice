@@ -16,7 +16,7 @@ class GetDriversRestIntegrationTest : BaseRestIntegrationTest() {
 
     @BeforeEach
     fun setUp() {
-        driverRepository.deleteAll()
+        cleanDatabase()
     }
 
     @Test

@@ -9,7 +9,9 @@ import jakarta.transaction.Transactional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import java.math.BigDecimal
 import kotlin.test.Test
 
@@ -141,18 +143,23 @@ class DeliveryStatusDurationQueryRepositoryTest : BaseIntegrationTest() {
 
         val deliveryId = deliveryDatabaseFixture.create()
 
+        Thread.sleep(200)
+        deliveryDatabaseFixture.changeStatus(deliveryId, DeliveryStatusJpa.CONFIRMED)
+
         val query = GetDeliveryStatusDurationQuery(
             deliveryId = deliveryId
         )
 
-        val result = repository.search(query)
+        val result = repository.search(query,getPageRequest())
 
         val currentStatus = result.content.last()
 
         assertThat(currentStatus.statusTo)
-            .isNull()
+            .isNotNull()
 
         assertThat(currentStatus.durationSeconds)
             .isGreaterThanOrEqualTo(BigDecimal.ZERO)
     }
+
+    fun getPageRequest() : Pageable = PageRequest.of(0, 20)
 }

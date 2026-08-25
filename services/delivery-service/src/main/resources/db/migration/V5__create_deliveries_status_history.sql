@@ -1,5 +1,5 @@
 CREATE TABLE deliveries_status_history (
-           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+           id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 
            delivery_id UUID NOT NULL,
            previous_status VARCHAR(50) NULL,

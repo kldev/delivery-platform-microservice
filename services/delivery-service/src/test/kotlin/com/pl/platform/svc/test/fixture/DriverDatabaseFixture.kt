@@ -16,13 +16,13 @@ class DriverDatabaseFixture(
         id: UUID = UUID.randomUUID(),
         firstName: String = "John",
         lastName: String = "Connor",
-        phoneNumber: String = "+45" + random.nextInt(1000) + random.nextInt(1000)
+        phoneNumber: String = "+45" + random.nextInt(1000) + random.nextInt(1000),
     ): UUID {
 
         val driver = DriverTestFactory.create(
             firstName = firstName,
             lastName = lastName,
-            phoneNumber = phoneNumber
+            phoneNumber = phoneNumber,
         )
 
         driverRepository.saveAndFlush(DriverJpaEntity.create(driver, Instant.now()));

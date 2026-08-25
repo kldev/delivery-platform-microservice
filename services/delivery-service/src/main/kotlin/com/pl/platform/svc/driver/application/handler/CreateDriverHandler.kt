@@ -15,7 +15,8 @@ class CreateDriverHandler(
         val driver = Driver.create(
             firstName = command.firstName.trim(),
             lastName = command.lastName.trim(),
-            phoneNumber = command.phoneNumber.trim()
+            phoneNumber = command.phoneNumber.trim(),
+            email = command.email.trim().lowercase(),
         )
 
         if (driverRepository.existsByPhoneNumber(driver.phoneNumber)) {
