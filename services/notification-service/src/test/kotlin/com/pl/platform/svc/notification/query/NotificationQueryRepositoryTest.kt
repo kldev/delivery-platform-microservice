@@ -38,7 +38,7 @@ class NotificationQueryRepositoryTest : BaseIntegrationTest() {
         val result = repository
             .find(NotificationQuery())
             .await()
-            .indefinitely()
+            .indefinitely().content
 
         assertTrue(result.size >= 3)
     }
@@ -61,7 +61,7 @@ class NotificationQueryRepositoryTest : BaseIntegrationTest() {
                 )
             )
             .await()
-            .indefinitely()
+            .indefinitely().content
 
         assertEquals(1, result.size)
         assertEquals(
@@ -90,7 +90,7 @@ class NotificationQueryRepositoryTest : BaseIntegrationTest() {
                 )
             )
             .await()
-            .indefinitely()
+            .indefinitely().content
 
         assertEquals(1, result.size)
         assertEquals(
@@ -129,7 +129,7 @@ class NotificationQueryRepositoryTest : BaseIntegrationTest() {
                 )
             )
             .await()
-            .indefinitely()
+            .indefinitely().content
 
         assertEquals(1, result.size)
     }
@@ -162,7 +162,7 @@ class NotificationQueryRepositoryTest : BaseIntegrationTest() {
                 )
             )
             .await()
-            .indefinitely()
+            .indefinitely().content
 
         assertEquals(1, result.size)
     }
@@ -214,7 +214,7 @@ class NotificationQueryRepositoryTest : BaseIntegrationTest() {
                 )
             )
             .await()
-            .indefinitely()
+            .indefinitely().content
 
         assertEquals(2, result.size)
     }
@@ -247,7 +247,7 @@ class NotificationQueryRepositoryTest : BaseIntegrationTest() {
                 )
             )
             .await()
-            .indefinitely()
+            .indefinitely().content
 
         assertEquals(1, result.size)
 
@@ -324,7 +324,7 @@ class NotificationQueryRepositoryTest : BaseIntegrationTest() {
                 )
             )
             .await()
-            .indefinitely()
+            .indefinitely().content
 
         assertEquals(1, result.size)
 
@@ -348,7 +348,7 @@ class NotificationQueryRepositoryTest : BaseIntegrationTest() {
                 )
             )
             .await()
-            .indefinitely()
+            .indefinitely().content
 
         assertTrue(result.isEmpty())
     }

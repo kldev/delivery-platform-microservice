@@ -1,4 +1,5 @@
 package com.pl.platform.svc.notification.adapter.persistence
+import com.pl.platform.common.rest.SliceResponse
 import com.pl.platform.svc.notification.domain.Notification
 import com.pl.platform.svc.notification.domain.NotificationChannel
 import com.pl.platform.svc.notification.domain.NotificationId
@@ -25,7 +26,7 @@ class PgNotificationQueryRepository(private val pool: Pool
     )
     var logSql: Boolean = false
 
-    override fun find(query: NotificationQuery): Uni<List<Notification>> {
+    override fun find(query: NotificationQuery): Uni<SliceResponse<Notification>> {
         val conditions = mutableListOf<String>()
         val parameters = Tuple.tuple()
 
@@ -54,7 +55,7 @@ class PgNotificationQueryRepository(private val pool: Pool
         }
 
         val limit = query.limit.coerceAtMost(500);
-        parameters.addLong(limit.toLong());
+        parameters.addLong(limit.toLong() + 1);
         parameters.addLong(query.offset.toLong())
 
         val where =
@@ -80,7 +81,7 @@ class PgNotificationQueryRepository(private val pool: Pool
                 sent_at
             FROM notifications
             $where
-            ORDER BY created_at DESC
+            ORDER BY created_at DESC, id DESC
             LIMIT $${parameters.size() -1}
             OFFSET $${parameters.size()}
             """.trimIndent()
@@ -94,7 +95,11 @@ class PgNotificationQueryRepository(private val pool: Pool
             .execute(parameters)
             .onItem()
             .transform { rows ->
-                rows.map { MapperRow.map(it) }
+                val items = rows.map(MapperRow::map)
+                SliceResponse(
+                    content = items.take(query.limit),
+                    hasNext = items.size > query.limit
+                )
             }
     }
 }
