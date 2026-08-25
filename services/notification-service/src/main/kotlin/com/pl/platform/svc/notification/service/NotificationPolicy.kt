@@ -15,6 +15,12 @@ class NotificationPolicy {
             NotificationChannel.EMAIL
         ),
 
+        DeliveryEventType.CREATED.value to setOf(
+            NotificationChannel.EMAIL,
+            NotificationChannel.SMS,
+        ),
+
+
         PaymentEventType.Completed.value to setOf(
             NotificationChannel.EMAIL,
             NotificationChannel.PUSH

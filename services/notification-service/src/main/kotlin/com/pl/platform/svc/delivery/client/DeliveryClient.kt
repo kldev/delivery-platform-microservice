@@ -18,16 +18,16 @@ interface DeliveryClient {
     @Path("/deliveries")
     fun getDeliveries(
         @QueryParam("status")
-        status: DeliveryStatus? = null,
+        status: DeliveryStatus?,
 
         @QueryParam("deliveryId")
-        deliveryId: UUID? = null,
+        deliveryId: UUID?,
     ): SliceResponse<DeliveryItemResponse>
 
     @GET
     @Path("/drivers")
     fun getDrivers(
         @QueryParam("driverId")
-        driverId: UUID? = null,
+        driverId: UUID?
     ): List<DriverResponse>
 }

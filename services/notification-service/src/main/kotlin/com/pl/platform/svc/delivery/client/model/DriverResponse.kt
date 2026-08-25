@@ -5,4 +5,6 @@ import java.util.UUID
 data class DriverResponse(val id: UUID,
                           val firstName: String,
                           val lastName: String,
-                          val phoneNumber: String )
+                          val phoneNumber: String,
+                          val email: String,
+                        )
