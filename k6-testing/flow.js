@@ -237,7 +237,7 @@ export function setup() {
                     firstName: `TestDriver${i + 1}`,
                     lastName: 'K6',
                     phoneNumber: phones[i],
-                    email: `test.driver${i+1}@fake.io``
+                    email: `test.driver${i+1}@fake.io`
                 }),
             );
 

@@ -7,9 +7,6 @@ import java.util.UUID
 
 fun Settlement.toCreatedEvent(): SettlementCreatedEvent =
     SettlementCreatedEvent(
-        eventId = UUID.randomUUID(),
-        occurredAt = Instant.now(),
-        aggregateId = id.value,
         deliveryId = deliveryId,
         driverId = driverId,
         driverFullName = driverFullName,
