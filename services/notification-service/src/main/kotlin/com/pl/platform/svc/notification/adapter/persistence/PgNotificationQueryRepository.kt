@@ -6,16 +6,25 @@ import com.pl.platform.svc.notification.port.NotificationRepository
 import com.pl.platform.svc.notification.domain.NotificationStatus
 import com.pl.platform.svc.notification.query.NotificationQuery
 import com.pl.platform.svc.notification.query.NotificationQueryRepository
+import io.quarkus.logging.Log
 import io.smallrye.mutiny.Uni
 import io.vertx.mutiny.sqlclient.Pool
 import io.vertx.mutiny.sqlclient.Tuple
 import jakarta.enterprise.context.ApplicationScoped
+import org.eclipse.microprofile.config.inject.ConfigProperty
 import java.time.ZoneOffset
 import java.util.UUID
 
 @ApplicationScoped
 class PgNotificationQueryRepository(private val pool: Pool
 ): NotificationQueryRepository {
+
+    @ConfigProperty(
+        name = "notification.sql.log",
+        defaultValue = "false"
+    )
+    var logSql: Boolean = false
+
     override fun find(query: NotificationQuery): Uni<List<Notification>> {
         val conditions = mutableListOf<String>()
         val parameters = Tuple.tuple()
@@ -30,10 +39,10 @@ class PgNotificationQueryRepository(private val pool: Pool
             parameters.addUUID(it)
         }
 
-        query.fromAtInstant().let {
+        query.fromAtInstant()?.let {
             conditions += "created_at >= $${parameters.size() + 1}"
             parameters.addOffsetDateTime(
-                it?.atOffset(ZoneOffset.UTC)
+                it.atOffset(ZoneOffset.UTC)
             )
         }
 
@@ -43,6 +52,10 @@ class PgNotificationQueryRepository(private val pool: Pool
                 it.atOffset(ZoneOffset.UTC)
             )
         }
+
+        val limit = query.limit.coerceAtMost(500);
+        parameters.addLong(limit.toLong());
+        parameters.addLong(query.offset.toLong())
 
         val where =
             if (conditions.isEmpty()) {
@@ -68,7 +81,13 @@ class PgNotificationQueryRepository(private val pool: Pool
             FROM notifications
             $where
             ORDER BY created_at DESC
+            LIMIT $${parameters.size() -1}
+            OFFSET $${parameters.size()}
             """.trimIndent()
+
+        if (logSql) {
+            Log.info("SQL: $sql")
+        }
 
         return pool
             .preparedQuery(sql)
