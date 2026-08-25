@@ -17,9 +17,9 @@ class DriverSeeder(private val driverRepository: DriverRepository) {
         if (driverRepository.getAll().isNotEmpty())
             return
 
-        val driverA = Driver.create(firstName = "John" , lastName = "Smith",  phoneNumber = "+1530200111")
-        val driverB = Driver.create(firstName = "Annie" , lastName = "Stockhouse",  phoneNumber = "+1530200221")
-        val driverC = Driver.create(firstName = "Chandler" , lastName = "Marius",  phoneNumber = "+15302001121")
+        val driverA = Driver.create(firstName = "John" , lastName = "Smith",  phoneNumber = "+1530200111", "j.smith@fake.io")
+        val driverB = Driver.create(firstName = "Annie" , lastName = "Stockhouse",  phoneNumber = "+1530200221", "a.stock@fake.io")
+        val driverC = Driver.create(firstName = "Chandler" , lastName = "Marius",  phoneNumber = "+15302001121", "c.marius@fake.io")
 
         driverRepository.create(driverA);
         driverRepository.create(driverB);

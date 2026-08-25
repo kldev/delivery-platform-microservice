@@ -16,7 +16,8 @@ class DriverRestIntegrationTest : BaseRestIntegrationTest() {
         val request = CreateDriverRequest(
             firstName = "John",
             lastName = "Connor",
-            phoneNumber = "+48123123123"
+            phoneNumber = "+48123123123",
+            email = "j.connor@fake.io"
         )
 
         restTestClient
@@ -36,7 +37,8 @@ class DriverRestIntegrationTest : BaseRestIntegrationTest() {
         val request = CreateDriverRequest(
             firstName = "",
             lastName = "Connor",
-            phoneNumber = "+48123123123"
+            phoneNumber = "+48123123123",
+            email = "j.connor@fake.io"
         )
 
         restTestClient

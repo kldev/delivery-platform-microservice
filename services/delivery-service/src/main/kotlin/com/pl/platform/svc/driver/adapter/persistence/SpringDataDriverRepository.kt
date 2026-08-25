@@ -6,5 +6,5 @@ import java.util.UUID
 interface SpringDataDriverRepository : JpaRepository<DriverJpaEntity, UUID> {
     fun findByPhoneNumber(phoneNumber: String): DriverJpaEntity?
     fun existsByPhoneNumber(phoneNumber: String): Boolean
-    fun findAllByDriverId(driverId: UUID): List<DriverJpaEntity>
+    fun findAllById(driverId: UUID): List<DriverJpaEntity>
 }

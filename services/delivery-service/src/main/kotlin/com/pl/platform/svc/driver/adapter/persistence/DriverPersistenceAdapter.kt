@@ -38,7 +38,7 @@ class DriverPersistenceAdapter(
 
     override fun getAll(driverId: UUID?): List<Driver> {
         if (driverId != null) {
-            return repository.findAllByDriverId(driverId).map(DriverJpaEntity::toDomain)
+            return repository.findAllById(driverId).map(DriverJpaEntity::toDomain)
         }
         return repository.findAll().map(DriverJpaEntity::toDomain)
     }

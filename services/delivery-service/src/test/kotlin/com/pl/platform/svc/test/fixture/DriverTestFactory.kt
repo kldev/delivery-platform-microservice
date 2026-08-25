@@ -7,6 +7,12 @@ import java.security.SecureRandom
 class DriverTestFactory() {
     companion object {
         private val random = SecureRandom()
+        fun fakeEmail(
+            firstName: String,
+            lastName: String,
+        ): String =
+            "${firstName.trim().lowercase()}.${lastName.trim().lowercase()}${random.nextInt(9000)}@fake.io"
+
         fun create(
             firstName: String = "John",
             lastName: String = "Connor",
@@ -16,6 +22,8 @@ class DriverTestFactory() {
                 firstName = firstName,
                 lastName = lastName,
                 phoneNumber = phoneNumber,
+                fakeEmail(firstName, lastName),
+
             )
     }
 }
