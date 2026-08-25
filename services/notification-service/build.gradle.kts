@@ -29,12 +29,16 @@ dependencies {
     implementation("io.quarkus:quarkus-smallrye-openapi")
     implementation("io.quarkus:quarkus-messaging-kafka")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("io.quarkus:quarkus-rest-client")
+    implementation("io.quarkus:quarkus-rest-client-jackson")
+
 
     testImplementation("io.quarkus:quarkus-junit")
     testImplementation("io.rest-assured:rest-assured")
 
     testImplementation("org.testcontainers:testcontainers:2.0.5")
     testImplementation("org.testcontainers:postgresql:1.21.4")
+    testImplementation("org.wiremock:wiremock:3.13.1")
 }
 
 group = "com.pl.platform.svc"
