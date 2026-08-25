@@ -191,7 +191,26 @@ services:
       broker:
         condition: service_healthy
       postgres:
-        condition: service_healthy                            
+        condition: service_healthy
+
+  notification-svc:
+    build:
+      context: .
+      dockerfile: services/notification-service/Dockerfile
+    container_name: notification
+    mem_limit: 768m
+    networks:
+      - inner-cluster-communication
+    environment:
+      KAFKA_SERVERS: broker:19092
+      PG_HOST: postgres
+      PORT: 8080
+      JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=60 -XX:InitialRAMPercentage=15"
+    depends_on:
+      broker:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
 
   gateway:
     build:

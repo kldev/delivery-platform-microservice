@@ -5,6 +5,7 @@ include(
     ":services:ledger-service",
     ":services:settlement-service",    
     ":services:reconciliation-service",
+    ":services:notification-service",
 
     ":libraries:common"    
 )
