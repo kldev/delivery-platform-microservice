@@ -50,6 +50,12 @@ var app = builder.Build();
             "Reconciliation",
             "/api-docs/reconciliation/swagger.json",
             true);
+        
+        options.AddDocument(
+            "notification",
+            "notification",
+            "/api-docs/notification/swagger.json",
+            true);
     });
 
     app.MapReverseProxy();
