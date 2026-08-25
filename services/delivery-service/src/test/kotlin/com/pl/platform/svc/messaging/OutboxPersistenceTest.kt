@@ -3,7 +3,7 @@ package com.pl.platform.svc.messaging
 import com.pl.platform.common.messaging.OutboxStatus
 import com.pl.platform.common.messaging.port.OutboxRepository
 import com.pl.platform.svc.BaseIntegrationTest
-import com.pl.platform.svc.delivery.application.event.DeliveryCreatedEvent
+import com.pl.platform.common.messaging.event.delivery.DeliveryCreatedEvent
 import com.pl.platform.svc.messaging.adapter.persistence.SpringDataOutboxRepository
 
 

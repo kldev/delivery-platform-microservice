@@ -1,8 +1,10 @@
 package com.pl.platform.svc.messaging.adapter.persistence
 
+import com.pl.platform.common.messaging.event.Event
 import com.pl.platform.svc.messaging.port.ProcessedEventRepository
 import io.smallrye.mutiny.Uni
 import io.vertx.mutiny.sqlclient.Pool
+import io.vertx.mutiny.sqlclient.SqlConnection
 import io.vertx.mutiny.sqlclient.Tuple
 import jakarta.enterprise.context.ApplicationScoped
 import java.util.UUID
@@ -26,8 +28,8 @@ class PgProcessedEventRepository(
                 rows.first().getBoolean(0)
              }
 
-    override fun save(eventId: UUID, eventType: String): Uni<Boolean> =
-        pool
+    override fun save(connection: SqlConnection, event: Event): Uni<Boolean> =
+        connection
             .preparedQuery(
                 """
                 INSERT INTO processed_events (
@@ -39,7 +41,7 @@ class PgProcessedEventRepository(
                 ON CONFLICT (event_id) DO NOTHING
                 """.trimIndent()
             )
-            .execute(Tuple.of(eventId, eventType))
+            .execute(Tuple.of(event.eventId, event.eventType))
             .onItem()
             .transform { result ->
                 result.rowCount() == 1

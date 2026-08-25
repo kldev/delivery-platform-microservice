@@ -3,7 +3,7 @@ package com.pl.platform.svc.delivery.application.handler
 import com.pl.platform.common.messaging.port.OutboxRepository
 import com.pl.platform.svc.delivery.adapter.rest.response.DeliveryCreateResponse
 import com.pl.platform.svc.delivery.application.command.CreateDeliveryCommand
-import com.pl.platform.svc.delivery.application.event.DeliveryCreatedEvent
+import com.pl.platform.common.messaging.event.delivery.DeliveryCreatedEvent
 import com.pl.platform.svc.delivery.domain.Delivery
 import com.pl.platform.svc.delivery.port.DeliveryRepository
 import com.pl.platform.svc.pricing.service.DeliveryPricingService

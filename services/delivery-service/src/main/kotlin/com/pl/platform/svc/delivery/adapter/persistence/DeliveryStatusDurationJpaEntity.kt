@@ -16,7 +16,7 @@ import java.util.UUID
 class DeliveryStatusDurationJpaEntity(
     @Id
     @Column(name = "id")
-    var id: UUID,
+    var id: Long,
 
     @Column(name = "delivery_id")
     var deliveryId: UUID,

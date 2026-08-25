@@ -24,4 +24,4 @@ SELECT
     ) AS duration_seconds
 
 FROM deliveries_status_history
-ORDER BY delivery_id, changed_at;
+ORDER BY id ASC, changed_at ASC;

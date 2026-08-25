@@ -1,14 +1,14 @@
 package com.pl.platform.svc.notification.adapter.persistence
 
 import com.pl.platform.svc.notification.domain.Notification
-import com.pl.platform.svc.notification.domain.NotificationChannel
 import com.pl.platform.svc.notification.domain.NotificationId
 import com.pl.platform.svc.notification.port.NotificationRepository
-import com.pl.platform.svc.notification.domain.NotificationStatus
 import io.smallrye.mutiny.Uni
 import io.vertx.mutiny.sqlclient.Pool
+import io.vertx.mutiny.sqlclient.SqlConnection
 import io.vertx.mutiny.sqlclient.Tuple
 import jakarta.enterprise.context.ApplicationScoped
+import java.time.Instant
 import java.time.ZoneOffset
 import java.util.UUID
 
@@ -18,28 +18,30 @@ class PgNotificationRepository(
 ) : NotificationRepository {
 
     override fun create(
+        connection: SqlConnection,
         notification: Notification
-    ): Uni<Notification> =
-        pool.preparedQuery(
+    ): Uni<Notification?> {
+
+        return connection.preparedQuery(
             """
-            INSERT INTO notifications (
-                id,
-                event_id,
-                event_type,
-                recipient,
-                channel,
-                payload,
-                status,
-                attempts,
-                last_error,
-                created_at,
-                sent_at
-            )
-            VALUES (
-                $1, $2, $3, $4, $5,
-                $6::jsonb, $7, $8, $9, $10, $11
-            )
-            """.trimIndent()
+                        INSERT INTO notifications (
+                            id,
+                            event_id,
+                            event_type,
+                            recipient,
+                            channel,
+                            payload,
+                            status,
+                            attempts,
+                            last_error,
+                            created_at,
+                            sent_at
+                        )
+                        VALUES (
+                            $1, $2, $3, $4, $5,
+                            $6::jsonb, $7, $8, $9, $10, $11
+                        )
+                        """.trimIndent()
         )
             .execute(
                 Tuple.tuple()
@@ -52,10 +54,18 @@ class PgNotificationRepository(
                     .addString(notification.status.name)
                     .addInteger(notification.attempts)
                     .addString(notification.lastError)
-                    .addOffsetDateTime(notification.createdAt.atOffset(ZoneOffset.UTC))
-                    .addOffsetDateTime(notification.sentAt?.atOffset(ZoneOffset.UTC))
+                    .addOffsetDateTime(
+                        notification.createdAt
+                            .atOffset(ZoneOffset.UTC)
+                    )
+                    .addOffsetDateTime(
+                        notification.sentAt
+                            ?.atOffset(ZoneOffset.UTC)
+                    )
             )
             .replaceWith(notification)
+
+    }
 
     override fun update(
         notification: Notification
@@ -76,7 +86,9 @@ class PgNotificationRepository(
                     .addString(notification.status.name)
                     .addInteger(notification.attempts)
                     .addString(notification.lastError)
-                    .addOffsetDateTime(notification.sentAt?.atOffset(ZoneOffset.UTC))
+                    .addOffsetDateTime(
+                        notification.sentAt?.atOffset(ZoneOffset.UTC)
+                    )
                     .addUUID(notification.id.value)
             )
             .replaceWith(notification)
@@ -147,6 +159,4 @@ class PgNotificationRepository(
             .execute(Tuple.of(id.value))
             .onItem()
             .transform { it.rowCount() == 1 }
-
-
 }

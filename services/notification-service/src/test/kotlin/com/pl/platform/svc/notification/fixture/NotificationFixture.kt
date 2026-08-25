@@ -5,13 +5,15 @@ import com.pl.platform.svc.notification.domain.NotificationChannel
 import com.pl.platform.svc.notification.domain.NotificationId
 import com.pl.platform.svc.notification.port.NotificationRepository
 import com.pl.platform.svc.notification.domain.NotificationStatus
+import io.vertx.mutiny.sqlclient.Pool
 import jakarta.enterprise.context.ApplicationScoped
 import java.time.Instant
 import java.util.UUID
 
 @ApplicationScoped
 class NotificationFixture(
-    private val repository: NotificationRepository
+    private val repository: NotificationRepository,
+    private val pool: Pool
 ) {
 
     fun create(
@@ -42,8 +44,12 @@ class NotificationFixture(
             sentAt = sentAt
         )
 
-        return repository
-            .create(notification)
+        return pool.withConnection { connection ->
+            repository
+                .create(connection, notification)
+                .onItem()
+                .transform { requireNotNull(it) }
+        }
             .await()
             .indefinitely()
     }

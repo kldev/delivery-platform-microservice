@@ -5,11 +5,10 @@ import java.time.Instant
 import java.util.UUID
 
 data class PaymentDeclinedEvent(
-    override val eventId: UUID,
-    override val occurredAt: Instant,
-    override val aggregateId: UUID,
-    override val module: String,
-    override val eventType: String,
-    val deliveryId: UUID,
-) : Event {
-}
+    override val deliveryId: UUID,
+    override val paymentId: UUID,
+) : PaymentEvent(
+    paymentId = paymentId,
+    deliveryId = deliveryId,
+    eventType = PaymentEventType.Declined.value
+)

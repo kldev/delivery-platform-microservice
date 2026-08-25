@@ -4,7 +4,7 @@ import com.pl.platform.common.exception.EntityNotFoundException
 import com.pl.platform.common.exception.EntityType
 import com.pl.platform.common.messaging.port.OutboxRepository
 import com.pl.platform.svc.delivery.application.command.AssignDriverCommand
-import com.pl.platform.svc.delivery.application.event.DeliveryAssignedEvent
+import com.pl.platform.common.messaging.event.delivery.DeliveryAssignedEvent
 import com.pl.platform.svc.delivery.port.DeliveryRepository
 import com.pl.platform.svc.driver.port.DriverRepository
 import org.springframework.stereotype.Service

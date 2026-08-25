@@ -1,4 +1,4 @@
-package com.pl.platform.svc.settlement.application.event
+package com.pl.platform.common.messaging.event.settlement
 
 import com.pl.platform.common.messaging.event.Event
 import java.math.BigDecimal
@@ -6,16 +6,10 @@ import java.time.Instant
 import java.util.UUID
 
 data class SettlementCreatedEvent(
-    override val eventId: UUID,
-    override val occurredAt: Instant,
-    override val aggregateId: UUID,
-    override val module: String = "settlement",
-    override val eventType: String = "settlement.created",
-
-    val settlementId: UUID,
+    override val settlementId: UUID,
     val deliveryId: UUID,
     val driverId: UUID,
-    val driverFullName: String,
+    val driverFullName: String = "",
     val deliveryAmount: BigDecimal,
     val currency: String,
     val basePercentage: BigDecimal,
@@ -26,5 +20,9 @@ data class SettlementCreatedEvent(
     val driverAmount: BigDecimal,
     val distanceKm: BigDecimal,
     val completedAt: Instant,
-) : Event
+) : SettlementEvent(
+    settlementId,
+    aggregateId = settlementId,
+    eventType = SettlementEventType.Created.value
+)
 

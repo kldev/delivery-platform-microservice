@@ -1,6 +1,6 @@
 package com.pl.platform.svc.settlement.application.mapper
 
-import com.pl.platform.svc.settlement.application.event.SettlementCreatedEvent
+import com.pl.platform.common.messaging.event.settlement.SettlementCreatedEvent
 import com.pl.platform.svc.settlement.domain.Settlement
 import java.time.Instant
 import java.util.UUID

@@ -1,6 +1,6 @@
 package com.pl.platform.svc.reconciliation.application.use_case
 
-import com.pl.platform.svc.integration.event.SettlementCreatedEvent
+import com.pl.platform.common.messaging.event.settlement.SettlementCreatedEvent
 import com.pl.platform.svc.messaging.adapter.persistence.ProcessedEventJpaEntity
 import com.pl.platform.svc.messaging.adapter.persistence.SpringDataProcessedEventRepository
 import com.pl.platform.svc.reconciliation.domain.Reconciliation
@@ -14,6 +14,7 @@ import io.mockk.verify
 import io.mockk.verifyOrder
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
+import java.time.Instant
 import java.util.UUID
 import kotlin.test.assertEquals
 
@@ -237,9 +238,16 @@ class ProcessSettlementCreatedHandlerTest {
         settlementId = settlementId,
         driverId = UUID.randomUUID(),
         deliveryId = deliveryId,
-        driverAmount = amount.multiply(BigDecimal("0.8")),
-        deliveryAmount = amount,
-        currency = currency
+        driverAmount = amount,
+        deliveryAmount = amount.multiply(BigDecimal("1.3")),
+        currency = currency,
+        basePercentage = BigDecimal("70.0"),
+        nightPercentage = BigDecimal("5.0"),
+        weekendPercentage = BigDecimal("2.0"),
+        distancePercentage = BigDecimal("3.0"),
+        totalPercentage = BigDecimal("80.0"),
+        distanceKm = BigDecimal("25.0"),
+        completedAt = Instant.now()
     )
 }
 

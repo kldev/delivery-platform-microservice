@@ -1,4 +1,4 @@
-package com.pl.platform.svc.delivery.application.event
+package com.pl.platform.common.messaging.event.delivery
 
 fun DeliveryEvent.eventType(): DeliveryEventType =
     when (this) {

@@ -2,7 +2,6 @@ package com.pl.platform.svc.messaging.adapter.publisher
 
 import com.pl.platform.common.messaging.OutboxMessage
 import com.pl.platform.common.messaging.port.EventPublisher
-import com.pl.platform.svc.delivery.application.event.DeliveryEventType
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.kafka.core.KafkaTemplate

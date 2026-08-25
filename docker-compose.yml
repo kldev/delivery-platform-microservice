@@ -221,7 +221,8 @@ services:
     networks:
       - inner-cluster-communication     
     environment:
-      ASPNETCORE_ENVIRONMENT: Docker            
+      ASPNETCORE_ENVIRONMENT: Docker
+      #Logging__LogLevel__Yarp: Debug            
     ports:
     - "5000:8080"            
 

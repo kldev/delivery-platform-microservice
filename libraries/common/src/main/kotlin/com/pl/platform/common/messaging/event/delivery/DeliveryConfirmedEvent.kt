@@ -1,12 +1,12 @@
-package com.pl.platform.svc.delivery.application.event
+package com.pl.platform.common.messaging.event.delivery
 
 import java.math.BigDecimal
 import java.util.UUID
 
 data class DeliveryConfirmedEvent(
-    val deliveryId: UUID,
+    override val deliveryId: UUID,
     var price: BigDecimal,
     var currency: String = "PLN"
-) : DeliveryEvent(aggregateId = deliveryId,
+) : DeliveryEvent(deliveryId = deliveryId,
     eventType = DeliveryEventType.CONFIRMED.value
 )

@@ -1,6 +1,7 @@
 package com.pl.platform.svc.reconciliation.application.use_case
 
-import com.pl.platform.svc.integration.event.PaymentCompletedEvent
+
+import com.pl.platform.common.messaging.event.payments.PaymentCompletedEvent
 import com.pl.platform.svc.messaging.adapter.persistence.ProcessedEventJpaEntity
 import com.pl.platform.svc.messaging.adapter.persistence.SpringDataProcessedEventRepository
 import com.pl.platform.svc.reconciliation.domain.Reconciliation

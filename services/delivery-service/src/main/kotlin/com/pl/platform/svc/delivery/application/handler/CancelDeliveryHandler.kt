@@ -4,7 +4,7 @@ import com.pl.platform.common.exception.EntityNotFoundException
 import com.pl.platform.common.exception.EntityType
 import com.pl.platform.common.messaging.port.OutboxRepository
 import com.pl.platform.svc.delivery.application.command.CancelDeliveryCommand
-import com.pl.platform.svc.delivery.application.event.DeliveryCancelledEvent
+import com.pl.platform.common.messaging.event.delivery.DeliveryCancelledEvent
 import com.pl.platform.svc.delivery.port.DeliveryRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

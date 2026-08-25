@@ -6,9 +6,10 @@ import com.pl.platform.svc.notification.domain.NotificationId
 import com.pl.platform.svc.notification.domain.NotificationStatus
 import com.pl.platform.svc.notification.port.NotificationRepository
 import io.smallrye.mutiny.Uni
+import io.vertx.mutiny.sqlclient.Pool
 import jakarta.enterprise.context.ApplicationScoped
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 
 data class CreateNotificationCommand(
@@ -21,10 +22,13 @@ data class CreateNotificationCommand(
 
 @ApplicationScoped
 class CreateNotification(
-    private val repository: NotificationRepository
+    private val repository: NotificationRepository,
+    private val pool: Pool
 ) {
 
-    fun execute(command: CreateNotificationCommand): Uni<Notification> {
+    fun execute(
+        command: CreateNotificationCommand
+    ): Uni<Notification> {
 
         val notification = Notification(
             id = NotificationId(UUID.randomUUID()),
@@ -40,6 +44,15 @@ class CreateNotification(
             sentAt = null
         )
 
-        return repository.create(notification)
+        return pool.withConnection { connection ->
+                repository.create(
+                    connection,
+                    notification
+                ).onItem().transform { current ->
+                    requireNotNull(current) {
+                        "Notification not created"
+                    }
+                }
+            }
     }
 }

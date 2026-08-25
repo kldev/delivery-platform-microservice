@@ -1,11 +1,10 @@
-package com.pl.platform.svc.delivery.application.event
+package com.pl.platform.common.messaging.event.delivery
 
-import java.time.Instant
 import java.util.UUID
 
 data class DeliveryAssignedEvent(
-    val deliveryId: UUID,
+    override val deliveryId: UUID,
     val driverId: UUID,
 ) : DeliveryEvent(
-    aggregateId= deliveryId,
+    deliveryId,
     eventType = DeliveryEventType.ASSIGNED.value)

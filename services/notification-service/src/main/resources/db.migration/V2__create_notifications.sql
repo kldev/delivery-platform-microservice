@@ -2,7 +2,7 @@ CREATE TABLE notifications (
        id UUID PRIMARY KEY,
        event_id UUID NOT NULL,
        event_type VARCHAR(255) NOT NULL,
-       recipient VARCHAR(255) NOT NULL,
+       recipient VARCHAR(255) NULL,
        channel VARCHAR(50) NOT NULL,
        payload JSONB NOT NULL,
        status VARCHAR(50) NOT NULL DEFAULT 'PENDING',
