@@ -1,3 +1,8 @@
+FROM eclipse-temurin:25-jre AS runtime
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
 FROM gradle:9.7.1-jdk25 AS build
 
 WORKDIR /app
@@ -9,7 +14,7 @@ COPY settings.gradle.kts .
 RUN gradle dependencies
 RUN gradle :services:notification-service:quarkusBuild --no-daemon
 
-FROM eclipse-temurin:25-jre
+FROM runtime
 
 WORKDIR /app
 ENV QUARKUS_HTTP_HOST=0.0.0.0

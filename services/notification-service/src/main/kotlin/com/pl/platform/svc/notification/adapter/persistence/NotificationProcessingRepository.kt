@@ -62,7 +62,7 @@ class NotificationProcessingRepository(
         pool.preparedQuery(
             """
             UPDATE notifications
-                set recipient = $2,              
+                set recipient = $2              
             where id = $1
         """.trimIndent()
         ).execute(
@@ -83,6 +83,7 @@ class NotificationProcessingRepository(
             .execute(Tuple.tuple().addUUID(id).addOffsetDateTime(OffsetDateTime.now()))
             .replaceWithVoid()
 
+
     fun markFailed(
         id: UUID,
         error: String,
@@ -90,7 +91,11 @@ class NotificationProcessingRepository(
         pool.preparedQuery(
             """
         UPDATE notifications
-        SET status = 'FAILED',
+        SET status =  CASE 
+                        WHEN attempts + 1 >= 5 THEN 'FAILED'
+                        WHEN status = 'PROCESSING' THEN 'PENDING'
+                        ELSE status
+                       END,
             attempts = attempts + 1,
             last_error = $2
         WHERE id = $1

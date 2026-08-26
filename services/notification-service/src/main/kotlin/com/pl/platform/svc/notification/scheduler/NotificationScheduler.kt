@@ -11,7 +11,7 @@ class NotificationScheduler(
     private val processor: NotificationProcessor,
 ) {
 
-    @Scheduled(every = "5s", concurrentExecution = Scheduled.ConcurrentExecution.SKIP)
+    @Scheduled(every = "30s", concurrentExecution = Scheduled.ConcurrentExecution.SKIP)
 
     fun process(): Uni<Void> {
         Log.info("Processing notifications")
