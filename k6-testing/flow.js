@@ -7,6 +7,9 @@ const BASE_URL = __ENV.BASE_URL || 'http://localhost:5000';
 const flowSuccess = new Counter('flow_success');
 const flowFailure = new Counter('flow_failure');
 
+const MAX_RETRIES = 10;
+const DEFAULT_RETRY_AFTER_SECONDS = 1;
+
 export const options = {
     scenarios: {
         delivery_flow: {
@@ -28,15 +31,76 @@ function request(method, url, body = null) {
     const params = {
         headers: {
             'Content-Type': 'application/json',
+            'X-Api-Key': 'Rmc37uQiNA25qxhJuYw68wre3lSBHpkA7zyLI'
         },
     };
 
-    return http.request(
-        method,
-        `${BASE_URL}${url}`,
-        body,
-        params,
-    );
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+        const response = http.request(
+            method,
+            `${BASE_URL}${url}`,
+            body,
+            params,
+        );
+
+        if (response.status !== 429) {
+            return response;
+        }
+
+        if (attempt >= MAX_RETRIES) {
+            console.warn(
+                `[RATE LIMIT] ${method} ${url} -> 429, ` +
+                `max retries (${MAX_RETRIES}) reached`
+            );
+
+            return response;
+        }
+
+        const retryAfter = parseRetryAfter(response);
+
+        console.warn(
+            `[RATE LIMIT] ${method} ${url} -> 429, ` +
+            `retry ${attempt + 1}/${MAX_RETRIES} ` +
+            `in ${retryAfter}s`
+        );
+
+        for (let remaining = retryAfter; remaining > 0; remaining--) {
+            console.log(
+                `[RATE LIMIT] ${method} ${url} -> ` +
+                `retry in ${remaining}s ` +
+                `(attempt ${attempt + 1}/${MAX_RETRIES})`
+            );
+
+            sleep(1);
+        }
+    }
+}
+
+function parseRetryAfter(response) {
+    const value = response.headers['Retry-After'];
+    console.info(response.headers)
+
+    if (!value) {
+        console.warn(
+            '[RATE LIMIT] 429 without Retry-After header, ' +
+            `using default ${DEFAULT_RETRY_AFTER_SECONDS}s`
+        );
+
+        return DEFAULT_RETRY_AFTER_SECONDS;
+    }
+
+    const seconds = Number.parseInt(value, 10);
+
+    if (Number.isNaN(seconds) || seconds < 1) {
+        console.warn(
+            `[RATE LIMIT] Invalid Retry-After="${value}", ` +
+            `using default ${DEFAULT_RETRY_AFTER_SECONDS}s`
+        );
+
+        return DEFAULT_RETRY_AFTER_SECONDS;
+    }
+
+    return seconds;
 }
 
 // ---------------------------------------------------------
@@ -73,8 +137,7 @@ function waitForPayment(deliveryId, timeout = 30000) {
     while (Date.now() - start < timeout) {
         const payments = getPendingPayment(deliveryId);
 
-        if (payments == null || payments.length == 0) {
-             console.error("No payments yet")
+        if (payments == null || payments.length == 0) {        
              sleep(1);
             continue
         }
