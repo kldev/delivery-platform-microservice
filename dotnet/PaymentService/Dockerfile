@@ -1,3 +1,9 @@
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 WORKDIR /src
@@ -22,7 +28,7 @@ RUN dotnet publish \
     /p:UseAppHost=false
 
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+FROM runtime
 
 WORKDIR /app
 

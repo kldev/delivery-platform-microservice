@@ -1,3 +1,8 @@
+FROM eclipse-temurin:25-jre AS runtime
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
 FROM gradle:9.7.1-jdk25 AS build
 
 WORKDIR /app
@@ -9,7 +14,7 @@ COPY settings.gradle.kts .
 
 RUN gradle clean :services:ledger-service:bootJar --no-daemon
 
-FROM eclipse-temurin:25-jre
+FROM runtime
 
 WORKDIR /app
 
