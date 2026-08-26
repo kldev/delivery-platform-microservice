@@ -49,6 +49,41 @@ class DeliveryCommandController(
     ): DeliveryCreateResponse =
         deliveryService.create(request.toCommand())
 
+    @Operation(
+        summary = "Execute delivery action",
+        description = """
+        Executes an action on an existing delivery.
+        
+        Supported actions:
+        - CONFIRM — confirms the delivery.
+        - ASSIGN — assigns a driver to the delivery. The driverId query parameter is required.
+        - CANCEL — cancels the delivery.
+        - PICKUP — marks the delivery as picked up.
+        - START — starts the delivery.
+        - COMPLETE — completes the delivery.
+        
+        The requested action must be valid for the current delivery state.
+        If the action is not allowed, the request is rejected.
+    """,
+        parameters = [
+            Parameter(
+                name = "deliveryId",
+                description = "Unique identifier of the delivery",
+                required = true
+            ),
+            Parameter(
+                name = "action",
+                description = "Action to execute on the delivery",
+                required = true
+            ),
+            Parameter(
+                name = "driverId",
+                description = "Unique identifier of the driver. Required when action is ASSIGN.",
+                required = false,
+                `in` = ParameterIn.QUERY
+            )
+        ]
+    )
     @PutMapping("/{deliveryId}/{action}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun executeAction(

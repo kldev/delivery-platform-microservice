@@ -5,6 +5,9 @@ import com.pl.platform.svc.driver.adapter.rest.response.DriverResponse
 import com.pl.platform.svc.driver.application.handler.CreateDriverHandler
 import com.pl.platform.svc.driver.application.handler.GetAllDriversHandler
 import com.pl.platform.svc.driver.application.handler.GetDriverHandler
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.enums.ParameterIn
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,17 +26,69 @@ class DriverController(
     private val createDriverHandler: CreateDriverHandler,
     private val getAllDrivers: GetAllDriversHandler,
     private val getDriver: GetDriverHandler
-
 ) {
+
     @PostMapping
-    fun create(@Valid @RequestBody request: CreateDriverRequest): DriverResponse =
+    @Operation(
+        summary = "Create driver",
+        description = """
+            Creates a new driver.
+            
+            The request must contain the driver's basic information,
+            including first name, last name, phone number and email address.
+            
+            Returns the created driver with its generated unique identifier.
+        """
+    )
+    fun create(
+        @Valid @RequestBody request: CreateDriverRequest
+    ): DriverResponse =
         createDriverHandler.handle(request.toCommand())
 
     @GetMapping
-    fun getAll(@RequestParam(required = false)  driverId: UUID? ) : List<DriverResponse> = getAllDrivers.handle(driverId)
+    @Operation(
+        summary = "Get drivers",
+        description = """
+            Returns a list of drivers.
+            
+            An optional driver ID can be provided to filter the results
+            to a specific driver.
+            
+            When no driver ID is provided, all available drivers are returned.
+        """,
+        parameters = [
+            Parameter(
+                name = "driverId",
+                description = "Filters drivers by their unique identifier",
+                required = false,
+                `in` = ParameterIn.QUERY
+            )
+        ]
+    )
+    fun getAll(
+        @RequestParam(required = false) driverId: UUID?
+    ): List<DriverResponse> =
+        getAllDrivers.handle(driverId)
 
     @GetMapping("/{driverId}")
-    fun getDriver(@PathVariable()  driverId: UUID ) : DriverResponse? = getDriver.handle(driverId)
+    @Operation(
+        summary = "Get driver by ID",
+        description = """
+            Returns a driver identified by the given driver ID.
+            
+            If no driver exists with the specified ID, the response is empty.
+        """,
+        parameters = [
+            Parameter(
+                name = "driverId",
+                description = "Unique identifier of the driver",
+                required = true,
+                `in` = ParameterIn.PATH
+            )
+        ]
+    )
+    fun getDriver(
+        @PathVariable driverId: UUID
+    ): DriverResponse? =
+        getDriver.handle(driverId)
 }
-
-
