@@ -7,7 +7,9 @@ import com.pl.platform.svc.delivery.client.model.DriverResponse
 import io.smallrye.mutiny.Uni
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
+import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.QueryParam
+
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient
 import java.util.UUID
 
@@ -31,4 +33,11 @@ interface DeliveryClient {
         @QueryParam("driverId")
         driverId: UUID?
     ): Uni<List<DriverResponse>>
+
+    @GET
+    @Path("/drivers/{driverId}")
+    fun getSingleDrivers(
+        @PathParam("driverId")
+        driverId: UUID?
+    ): Uni<DriverResponse>
 }

@@ -6,6 +6,7 @@ import io.quarkus.logging.Log
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import org.eclipse.microprofile.rest.client.inject.RestClient
+import java.time.Duration
 import java.util.UUID
 
 @ApplicationScoped
@@ -39,11 +40,11 @@ class DeliveryDriverService(
                 }
 
                 deliveryClient
-                    .getDrivers(driverId)
+                    .getSingleDrivers(driverId)
+                    .onFailure().
+                        retry().withBackOff(Duration.ofMillis(300))
+                    .atMost(3)
                     .onItem()
-                    .transform { drivers ->
-                        drivers.firstOrNull()
-                    }
                     .invoke { driver ->
                         Log.infof(
                             "Resolved driver for driverId=%s: %s",
