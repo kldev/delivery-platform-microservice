@@ -23,13 +23,15 @@ class NotificationDispatcher(
     }
 
     fun dispatch(json: String): Uni<Void> {
+        val start = System.nanoTime()
+
         return Uni.createFrom()
             .item {
                 objectMapper.readValue(json, EventMetadata::class.java)
             }
             .invoke { metadata ->
                 Log.infof(
-                    "Received event: eventId=%s, eventType=%s",
+                    "START event: eventId=%s, eventType=%s",
                     metadata.eventId,
                     metadata.eventType
                 )
@@ -41,11 +43,26 @@ class NotificationDispatcher(
             .ifNoItem()
             .after(PROCESSING_TIMEOUT)
             .fail()
+            .invoke(Runnable  {
+                val elapsed = Duration.ofNanos(
+                    System.nanoTime() - start
+                )
+
+                Log.infof(
+                    "END event processing: duration=%s",
+                    elapsed
+                )
+            })
             .onFailure()
             .invoke { error ->
-                Log.error(
-                    "Failed to process notification event",
-                    error
+                val elapsed = Duration.ofNanos(
+                    System.nanoTime() - start
+                )
+
+                Log.errorf(
+                    error,
+                    "FAILED event processing after %s",
+                    elapsed
                 )
             }
     }

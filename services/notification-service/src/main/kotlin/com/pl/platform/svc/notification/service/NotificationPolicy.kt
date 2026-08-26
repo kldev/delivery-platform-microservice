@@ -15,7 +15,7 @@ class NotificationPolicy {
             NotificationChannel.EMAIL
         ),
 
-        DeliveryEventType.CREATED.value to setOf(
+        DeliveryEventType.ASSIGNED.value to setOf(
             NotificationChannel.EMAIL,
             NotificationChannel.SMS,
         ),

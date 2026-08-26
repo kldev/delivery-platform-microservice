@@ -18,7 +18,7 @@ class NotificationScheduler(
 
         return processor.process(
             status = NotificationStatus.PENDING,
-            batchSize = 100,
+            batchSize = 500,
         ).onFailure()
             .invoke { error ->
                 Log.error("Failed to process notifications", error)

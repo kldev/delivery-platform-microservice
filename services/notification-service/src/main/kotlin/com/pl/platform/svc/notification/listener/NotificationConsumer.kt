@@ -16,13 +16,19 @@ class NotificationConsumer(
         message: Message<String>
     ): Uni<Void> {
 
+
         return dispatcher
             .dispatch(message.payload)
-
-//            .onItem()
-//            .transformToUni { _ ->
-//                Uni.createFrom()
-//                    .completionStage(message.ack())
-//            }
+            .invoke(Runnable{
+                message.ack()
+            })
+            .onFailure()
+            .invoke { error ->
+                Log.errorf(
+                    error,
+                    "FAILED NotificationConsumer : %s",
+                    message.payload
+                )
+            }
     }
 }

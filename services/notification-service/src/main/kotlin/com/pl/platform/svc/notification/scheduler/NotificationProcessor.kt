@@ -80,7 +80,7 @@ class NotificationProcessor(
                 repository.markSent(notification.id.value)
             }.onItem().invoke { _ ->
                 run {
-                    Log.info("Recipient could not be resolved")
+                    Log.info("Notification sent successfully")
                 }
             }
     }
