@@ -32,6 +32,7 @@ dependencies {
     implementation("io.quarkus:quarkus-rest-client")
     implementation("io.quarkus:quarkus-rest-client-jackson")
     implementation("io.quarkus:quarkus-scheduler")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.4")
 
 
     testImplementation("io.quarkus:quarkus-junit")
