@@ -1,14 +1,14 @@
 package com.pl.platform.svc.notification.scheduler
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.benmanes.caffeine.cache.Caffeine
 import com.pl.platform.svc.delivery.service.DeliveryDriverService
 import com.pl.platform.svc.notification.adapter.persistence.NotificationProcessingRepository
 import com.pl.platform.svc.notification.domain.Notification
-import com.pl.platform.svc.notification.domain.NotificationChannel
-import com.pl.platform.svc.notification.query.NotificationQueryRepository
 import com.pl.platform.svc.notification.sender.NotificationRecipient
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
+import java.time.Duration
 import java.util.UUID
 
 @ApplicationScoped
@@ -17,6 +17,11 @@ class NotificationRecipientResolver(
     private val objectMapper: ObjectMapper,
     private val repository: NotificationProcessingRepository,
 ) {
+
+    private val driverCache = Caffeine.newBuilder()
+        .maximumSize(50)
+        .expireAfterWrite(Duration.ofMinutes(10))
+        .build<UUID, NotificationRecipient>()
 
     fun resolve(
         notification: Notification,
@@ -32,27 +37,50 @@ class NotificationRecipientResolver(
         return deliveryService
             .findDriverByDeliveryId(deliveryId)
             .onItem()
-            .transformToUni { delivery ->
+            .transformToUni { driver ->
 
-                if (delivery == null) {
+                if (driver == null) {
                     return@transformToUni Uni.createFrom().nullItem()
                 }
 
+                driverCache.getIfPresent(driver.id)?.let { cachedRecipient ->
+                    return@transformToUni updateRecipient(
+                        notification,
+                        cachedRecipient,
+                    )
+                }
+
                 val recipient = NotificationRecipient(
-                    fullName = "${delivery.firstName} ${delivery.lastName}",
-                    phoneNumber = delivery.phoneNumber,
-                    email = delivery.email,
+                    fullName = "${driver.firstName} ${driver.lastName}",
+                    phoneNumber = driver.phoneNumber,
+                    email = driver.email,
                 )
 
-                val recipientJson = objectMapper.writeValueAsString(recipient)
+                driverCache.put(
+                    driver.id,
+                    recipient,
+                )
 
-                repository
-                    .updateRecipient(
-                        notification.id.value,
-                        recipientJson,
-                    )
-                    .replaceWith(recipient)
+                updateRecipient(
+                    notification,
+                    recipient,
+                )
             }
+    }
+
+    private fun updateRecipient(
+        notification: Notification,
+        recipient: NotificationRecipient,
+    ): Uni<NotificationRecipient> {
+
+        val recipientJson = objectMapper.writeValueAsString(recipient)
+
+        return repository
+            .updateRecipient(
+                notification.id.value,
+                recipientJson,
+            )
+            .replaceWith(recipient)
     }
 
     private fun parseRecipient(
