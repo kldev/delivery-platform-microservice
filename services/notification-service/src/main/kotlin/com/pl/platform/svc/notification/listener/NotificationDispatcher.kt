@@ -25,9 +25,9 @@ class NotificationDispatcher(
     fun dispatch(json: String): Uni<Void> {
         val start = System.nanoTime()
 
-        return Uni.createFrom()
-            .item {
-                objectMapper.readValue(json, EventMetadata::class.java)
+        return Uni.createFrom().item(json)
+            .onItem().transform { i ->
+                objectMapper.readValue(i, EventMetadata::class.java)
             }
             .invoke { metadata ->
                 Log.infof(
