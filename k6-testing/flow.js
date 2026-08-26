@@ -1,3 +1,4 @@
+import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 import { Counter } from 'k6/metrics';
@@ -31,7 +32,8 @@ function request(method, url, body = null) {
     const params = {
         headers: {
             'Content-Type': 'application/json',
-            'X-Api-Key': 'Rmc37uQiNA25qxhJuYw68wre3lSBHpkA7zyLI'
+            'X-Api-Key': 'Rmc37uQiNA25qxhJuYw68wre3lSBHpkA7zyLI',
+            'X-Idempotency-Key': uuidv4()
         },
     };
 
