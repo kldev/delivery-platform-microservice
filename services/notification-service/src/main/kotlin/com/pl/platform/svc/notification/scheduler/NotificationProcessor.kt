@@ -9,6 +9,7 @@ import io.quarkus.logging.Log
 import io.smallrye.mutiny.Multi
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
+import java.time.Duration
 
 @ApplicationScoped
 class NotificationProcessor(
@@ -16,6 +17,9 @@ class NotificationProcessor(
     private val resolver: NotificationRecipientResolver,
     private val senders: NotificationSenderRegistry,
 ) {
+    companion object {
+        private val PROCESSING_TIMEOUT = Duration.ofSeconds(120)
+    }
 
     fun process(
         status: NotificationStatus,
@@ -25,6 +29,11 @@ class NotificationProcessor(
             status = status,
             batchSize = batchSize,
         )
+            .invoke { batch ->
+                Log.info(
+                    "Processing ${batch.size} notifications...",
+                )
+            }
             .onItem()
             .transformToMulti { notifications ->
                 Multi.createFrom().iterable(notifications)
@@ -32,7 +41,7 @@ class NotificationProcessor(
             .onItem()
             // transformToUniAndConcatenate one by one
             // transformToUniAndMerge  async
-            .transformToUniAndMerge { notification ->
+            .transformToUniAndConcatenate { notification ->
                 processNotification(notification)
             }
             .collect()
@@ -69,6 +78,10 @@ class NotificationProcessor(
             .onItem()
             .transformToUni {
                 repository.markSent(notification.id.value)
+            }.onItem().invoke { _ ->
+                run {
+                    Log.info("Recipient could not be resolved")
+                }
             }
     }
 
@@ -78,7 +91,11 @@ class NotificationProcessor(
         repository.markFailed(
             notification.id.value,
             "Recipient could not be resolved",
-        )
+        ).onItem().invoke { _ ->
+            run {
+                Log.info("Recipient could not be resolved")
+            }
+        }
 
     private fun handleUnsupportedChannel(
         notification: Notification,
@@ -86,7 +103,11 @@ class NotificationProcessor(
         repository.markFailed(
             notification.id.value,
             "Unsupported notification channel: ${notification.channel}",
-        )
+        ).onItem().invoke { _ ->
+            run {
+                Log.info("Unsupported notification channel: ${notification.channel}")
+            }
+        }
 
     private fun handleProcessingError(
         notification: Notification,

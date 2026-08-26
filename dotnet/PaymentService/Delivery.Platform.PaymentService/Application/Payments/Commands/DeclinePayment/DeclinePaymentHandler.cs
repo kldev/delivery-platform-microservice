@@ -23,6 +23,7 @@ public sealed class DeclinePaymentHandler(PaymentDbContext dbContext, JsonSerial
         
         var @event = new PaymentDeclinedEvent(
             EventId: Guid.NewGuid(),
+            PaymentId: command.PaymentId,
             DeliveryId: payment.DeliveryId,
             OccurredAt: DateTimeOffset.Now,
             AggregateId: payment.Id);

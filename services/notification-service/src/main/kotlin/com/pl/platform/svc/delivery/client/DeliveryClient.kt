@@ -4,6 +4,7 @@ import com.pl.platform.common.rest.SliceResponse
 import com.pl.platform.svc.delivery.client.model.DeliveryItemResponse
 import com.pl.platform.svc.delivery.client.model.DeliveryStatus
 import com.pl.platform.svc.delivery.client.model.DriverResponse
+import io.smallrye.mutiny.Uni
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.QueryParam
@@ -22,12 +23,12 @@ interface DeliveryClient {
 
         @QueryParam("deliveryId")
         deliveryId: UUID?,
-    ): SliceResponse<DeliveryItemResponse>
+    ): Uni<SliceResponse<DeliveryItemResponse>>
 
     @GET
     @Path("/drivers")
     fun getDrivers(
         @QueryParam("driverId")
         driverId: UUID?
-    ): List<DriverResponse>
+    ): Uni<List<DriverResponse>>
 }

@@ -4,6 +4,7 @@ namespace Delivery.Platform.PaymentService.Events.Contracts;
 
 public sealed record PaymentPaidEvent(
     Guid EventId,
+    Guid PaymentId,
     Guid DeliveryId,
     DateTimeOffset OccurredAt,
     Guid AggregateId,

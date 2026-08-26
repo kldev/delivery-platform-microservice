@@ -23,6 +23,7 @@ public sealed class AcceptPaymentHandler(
 
         var @event = new PaymentPaidEvent(
             EventId: Guid.NewGuid(),
+            PaymentId: payment.Id,
             DeliveryId: payment.DeliveryId,
             OccurredAt: DateTimeOffset.Now,
             AggregateId: payment.Id);

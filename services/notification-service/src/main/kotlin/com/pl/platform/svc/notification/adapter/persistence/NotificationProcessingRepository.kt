@@ -6,6 +6,7 @@ import io.smallrye.mutiny.Uni
 import io.vertx.mutiny.sqlclient.Pool
 import io.vertx.mutiny.sqlclient.Tuple
 import jakarta.enterprise.context.ApplicationScoped
+import java.time.OffsetDateTime
 import java.util.UUID
 
 @ApplicationScoped
@@ -74,11 +75,12 @@ class NotificationProcessingRepository(
         pool.preparedQuery(
             """
         UPDATE notifications
-        SET status = 'SENT'
+        SET status = 'SENT',
+            sent_at = $2
         WHERE id = $1
         """.trimIndent()
         )
-            .execute(Tuple.of(id))
+            .execute(Tuple.tuple().addUUID(id).addOffsetDateTime(OffsetDateTime.now()))
             .replaceWithVoid()
 
     fun markFailed(

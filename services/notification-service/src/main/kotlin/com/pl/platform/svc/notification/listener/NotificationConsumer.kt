@@ -18,6 +18,7 @@ class NotificationConsumer(
 
         return dispatcher
             .dispatch(message.payload)
+
 //            .onItem()
 //            .transformToUni { _ ->
 //                Uni.createFrom()

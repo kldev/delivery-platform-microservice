@@ -16,29 +16,40 @@ class DeliveryDriverService(
 
     fun findDriverByDeliveryId(
         deliveryId: UUID,
-    ): Uni<DriverResponse?> {
-        val deliveries = deliveryClient.getDeliveries(
-            status = null,
-            deliveryId = deliveryId,
-        )
-
-        Log.info("Get deliveries ${deliveries.content.size} for $deliveryId")
-
-        val driverId = deliveries.content
-            .firstOrNull()
-            ?.driverId
-            ?: return Uni.createFrom().item { null as DriverResponse? }
-
-        return Uni.createFrom().item {
-            deliveryClient
-                .getDrivers(driverId)
-                .firstOrNull()
-        }.onItem().invoke { driver ->
-            Log.infof(
-                "Resolved driver for driverId=%s: %s",
-                driverId,
-                driver,
+    ): Uni<DriverResponse?> =
+        deliveryClient
+            .getDeliveries(
+                status = null,
+                deliveryId = deliveryId,
             )
-        }
-    }
+            .onItem()
+            .transformToUni { deliveries ->
+
+                Log.info(
+                    "Get deliveries ${deliveries.content.size} for $deliveryId"
+                )
+
+                val driverId = deliveries.content
+                    .firstOrNull()
+                    ?.driverId
+
+                if (driverId == null) {
+                    return@transformToUni Uni.createFrom()
+                        .nullItem<DriverResponse>()
+                }
+
+                deliveryClient
+                    .getDrivers(driverId)
+                    .onItem()
+                    .transform { drivers ->
+                        drivers.firstOrNull()
+                    }
+                    .invoke { driver ->
+                        Log.infof(
+                            "Resolved driver for driverId=%s: %s",
+                            driverId,
+                            driver,
+                        )
+                    }
+            }
 }

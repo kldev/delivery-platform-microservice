@@ -73,9 +73,10 @@ function waitForPayment(deliveryId, timeout = 30000) {
     while (Date.now() - start < timeout) {
         const payments = getPendingPayment(deliveryId);
 
-        if (!payments) {
+        if (payments == null || payments.length == 0) {
             console.error("No payments")
-            return null;
+             sleep(1);
+            break
         }
 
        const payment = payments.find(

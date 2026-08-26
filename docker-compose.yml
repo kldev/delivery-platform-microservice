@@ -206,6 +206,7 @@ services:
       PG_HOST: postgres
       PORT: 8080
       JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=60 -XX:InitialRAMPercentage=15"
+      DELIVERY_URL: http://delivery:8080
     depends_on:
       broker:
         condition: service_healthy
