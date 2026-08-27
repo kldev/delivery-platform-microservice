@@ -6,6 +6,7 @@ import com.pl.platform.svc.driver.adapter.rest.request.CreateDriverRequest
 import com.pl.platform.svc.driver.adapter.rest.response.DriverResponse
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.client.expectBody
+import java.util.UUID
 import kotlin.test.Test
 
 class DriverRestIntegrationTest : BaseRestIntegrationTest() {
@@ -23,11 +24,12 @@ class DriverRestIntegrationTest : BaseRestIntegrationTest() {
         restTestClient
             .post()
             .uri(url("/api/drivers"))
+            .header("X-Idempotency-Key", UUID.randomUUID().toString())
             .contentType(MediaType.APPLICATION_JSON)
             .body(request)
             .exchange()
             .expectStatus()
-            .isOk
+            .isCreated
             .expectBody<DriverResponse>()
     }
 

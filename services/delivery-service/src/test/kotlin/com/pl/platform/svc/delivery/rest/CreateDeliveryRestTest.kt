@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.web.servlet.client.expectBody
 import java.math.BigDecimal
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -44,13 +45,15 @@ class CreateDeliveryRestTest : BaseRestIntegrationTest() {
         val request = CreateDeliveryRequest(
             pickupAddress = "Opole, Krakowska 10",
             deliveryAddress = "Wrocław, Rynek 1",
-            distanceKm = BigDecimal("100.00")
+            distanceKm = BigDecimal("100.00"),
+            currency = "PLN"
         )
 
         val response =
             restTestClient
                 .post()
                 .uri(url("/api/deliveries"))
+                .header("X-Idempotency-Key", UUID.randomUUID().toString())
                 .body(request)
                 .exchange()
                 .expectStatus()
@@ -77,7 +80,8 @@ class CreateDeliveryRestTest : BaseRestIntegrationTest() {
         val request = CreateDeliveryRequest(
             pickupAddress = "",
             deliveryAddress = "Wrocław, Rynek 1",
-            distanceKm = BigDecimal("200.99")
+            distanceKm = BigDecimal("200.99"),
+            currency = "PLN"
         )
 
         restTestClient
@@ -94,7 +98,8 @@ class CreateDeliveryRestTest : BaseRestIntegrationTest() {
         val request = CreateDeliveryRequest(
             pickupAddress = "Opole, Krakowska 10",
             deliveryAddress = "",
-            distanceKm = BigDecimal("100.00")
+            distanceKm = BigDecimal("100.00"),
+            currency = "PLN"
         )
 
         restTestClient
@@ -112,12 +117,14 @@ class CreateDeliveryRestTest : BaseRestIntegrationTest() {
         val request = CreateDeliveryRequest(
             pickupAddress = "Opole, Krakowska 10",
             deliveryAddress = "Brzeg, Długa 10",
-            distanceKm = BigDecimal("100.00")
+            distanceKm = BigDecimal("100.00"),
+            currency = "PLN"
         )
 
         restTestClient
             .post()
             .uri("/api/deliveries")
+            .header("X-Idempotency-Key", UUID.randomUUID().toString())
             .body(
                 request
             )
