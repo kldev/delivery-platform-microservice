@@ -252,6 +252,7 @@ services:
       PORT: 8080
       JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=60"
       DELIVERY_URL: http://delivery:8080
+      INTERVAL: 5s
     depends_on:
       broker:
         condition: service_healthy
