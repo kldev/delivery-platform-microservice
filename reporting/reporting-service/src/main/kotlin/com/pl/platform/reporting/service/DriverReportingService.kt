@@ -3,6 +3,8 @@ package com.pl.platform.reporting.service
 import com.pl.platform.reporting.common.CurrencyTotalCalculator
 import com.pl.platform.reporting.model.DriverReport
 import com.pl.platform.reporting.model.DriverReportResult
+import com.pl.platform.reporting.service.DriverReportUtil.buildReport
+import com.pl.platform.reporting.service.DriverReportUtil.threadInfo
 import com.pl.platform.svc.delivery.DriverDeliveryService
 import com.pl.platform.svc.delivery.client.model.DeliveryItemResponse
 import com.pl.platform.svc.delivery.client.model.DriverResponse
@@ -55,8 +57,7 @@ class DriverReportingService(
                     } catch (e: InterruptedException) {
                         Thread.currentThread().interrupt()
                         throw e
-                    }
-                    catch (e: Exception) {
+                    } catch (e: Exception) {
                         log.debugf(
                             e,
                             "Driver report FAILED: driverId=%s, thread=%s",
@@ -187,44 +188,5 @@ class DriverReportingService(
             StructuredTaskScope.Subtask.State.FAILED -> throw task.exception()
             else -> error("Subtask did not complete")
         }
-    }
-
-    private fun buildReport(
-        driverId: UUID,
-        driver: DriverResponse,
-        deliveries: List<DeliveryItemResponse>,
-        settlements: List<SettlementResponse>
-    ): DriverReportResult {
-
-        log.debugf(
-            "buildDriverReport: driverId=%s, deliveries=%d, settlements=%d, thread=%s",
-            driverId,
-            deliveries.size,
-            settlements.size,
-            threadInfo()
-        )
-
-        return DriverReportResult(
-            driverId = driverId,
-            fullName = "${driver.firstName} ${driver.lastName}",
-            deliveriesCount = deliveries.size,
-            deliveriesTotalCost = CurrencyTotalCalculator.sumByCurrency(
-                deliveries,
-                amount = { it.price },
-                currency = { it.currency }
-            ),
-            settlementsCount = settlements.size,
-            settlementDriverRevenue = CurrencyTotalCalculator.sumByCurrency(
-                settlements,
-                amount = { it.driverAmount },
-                currency = { it.currency }
-            )
-        )
-    }
-
-    private fun threadInfo(): String {
-        val thread = Thread.currentThread()
-
-        return "threadId=${thread.threadId()}, virtual=${thread.isVirtual}"
     }
 }
