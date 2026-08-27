@@ -3,6 +3,7 @@ package com.pl.platform.svc.settlement.application.query
 import com.pl.platform.svc.common.AbstractJpaSliceQueryRepository
 import com.pl.platform.svc.settlement.adapter.persistence.SettlementJpaEntity
 import com.pl.platform.svc.settlement.adapter.persistence.SettlementSpecifications
+import com.pl.platform.svc.settlement.adapter.rest.SettlementResponse
 import com.pl.platform.svc.settlement.domain.Settlement
 import jakarta.persistence.EntityManager
 import org.springframework.data.jpa.domain.Specification
@@ -14,7 +15,7 @@ class SettlementQueryRepository(
 ) : AbstractJpaSliceQueryRepository<
         SettlementJpaEntity,
         GetSettlementsListQuery,
-        Settlement
+        SettlementResponse
         >(entityManager) {
 
     init {
@@ -31,6 +32,6 @@ class SettlementQueryRepository(
 
     override fun from(
         entity: SettlementJpaEntity,
-    ): Settlement =
-        entity.toDomain()
+    ): SettlementResponse =
+        SettlementResponse.fromJpa(entity)
 }

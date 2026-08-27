@@ -72,16 +72,16 @@ class DeliveryQueryController(
     )
     fun getAll(@RequestParam(required = false) status: DeliveryStatus?,
                @RequestParam(required = false) deliveryId: UUID?,
+               @RequestParam(required = false) driverId: UUID?,
                @RequestParam(required = false, defaultValue = "100")@Max(500) size: Int,
-               @RequestParam(required = false, defaultValue = "0") page: Int): SliceResponse<DeliveryItemResponse> {
-
-        return deliveryQueryRepository.search(
-            GetDeliveryQuery(status, deliveryId), PageRequest.of(
+               @RequestParam(required = false, defaultValue = "0") page: Int)
+        = deliveryQueryRepository.search(
+            GetDeliveryQuery(status, deliveryId, driverId), PageRequest.of(
                 page, size,
                 Sort.by(Sort.Direction.DESC, "createdAt")
             )
         );
-    }
+
 
     @GetMapping("status-duration")
     @Operation(
@@ -124,13 +124,13 @@ class DeliveryQueryController(
     fun getStatusDuration(
         @RequestParam(required = false) deliveryId: UUID?,
         @RequestParam(required = false, defaultValue = "100")@Max(500) size: Int,
-        @RequestParam(required = false, defaultValue = "0") page: Int,): SliceResponse<DeliveryStatusDurationItem> {
+        @RequestParam(required = false, defaultValue = "0") page: Int)
 
-        return deliveryStatusDurationQueryRepository.search(
+        = deliveryStatusDurationQueryRepository.search(
             GetDeliveryStatusDurationQuery(deliveryId), PageRequest.of(
                 page, size,
                 Sort.by(Sort.Direction.ASC, "statusFrom")
             )
         );
-    }
+
 }

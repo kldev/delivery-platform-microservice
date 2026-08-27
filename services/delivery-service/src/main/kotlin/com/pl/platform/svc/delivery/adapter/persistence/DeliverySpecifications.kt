@@ -17,6 +17,8 @@ object DeliverySpecifications {
 
             query.deliveryId
                 ?.let(::deliveryIdEquals),
+            query.driverId
+                ?.let(::driverIdEquals),
         ).fold(
             Specification { _, _, _ -> null }
         ) { result, specification ->
@@ -38,14 +40,24 @@ object DeliverySpecifications {
         }
 
     private fun deliveryIdEquals(
-        deliveryId: UUID?,
-    ): Specification<DeliveryJpaEntity>? =
-        deliveryId?.let {
+        deliveryId: UUID,
+    ): Specification<DeliveryJpaEntity> =
             Specification { root, _, cb ->
                 cb.equal(
                     root.get<UUID>("id"),
-                    it,
+                    deliveryId,
                 )
             }
-        }
+
+
+    private fun driverIdEquals(
+        driverId: UUID,
+    ): Specification<DeliveryJpaEntity> =
+            Specification { root, _, cb ->
+                cb.equal(
+                    root.get<UUID>("driverId"),
+                    driverId,
+                )
+            }
+
 }

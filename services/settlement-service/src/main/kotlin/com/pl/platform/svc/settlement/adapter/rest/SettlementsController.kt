@@ -21,18 +21,19 @@ import java.util.UUID
 class SettlementsController(private val handler: GetSettlementsListHandler) {
 
     @GetMapping
-    fun search(@RequestParam(required = false) search: String?,
-               @RequestParam(required = false, defaultValue = "100")@Max(500) size: Int,
-               @RequestParam(required = false, defaultValue = "0") page: Int,
-               @RequestParam(required = false) driverId: UUID?,
-               @RequestParam(required = false) deliveryId: UUID?): SliceResponse<Settlement>
-    {
-        val query = GetSettlementsListQuery(
-            search=search,
-            size=size, page=page,
-            driverId=driverId,
-            deliveryId=deliveryId )
-
-        return handler.handle(query);
-    }
+    fun search(
+        @RequestParam(required = false) search: String?,
+        @RequestParam(required = false, defaultValue = "100") @Max(500) size: Int,
+        @RequestParam(required = false, defaultValue = "0") page: Int,
+        @RequestParam(required = false) driverId: UUID?,
+        @RequestParam(required = false) deliveryId: UUID?
+    ) =
+        handler.handle(
+            GetSettlementsListQuery(
+                search = search,
+                size = size, page = page,
+                driverId = driverId,
+                deliveryId = deliveryId
+            )
+        );
 }
