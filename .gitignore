@@ -38,7 +38,3 @@ out/
 docs
 ### Kotlin ###
 .kotlin
-
-##
-docker-compose.infra.yml
-start-infra.ps1
