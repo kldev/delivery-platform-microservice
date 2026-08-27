@@ -68,7 +68,6 @@ class DriverReportingService(
                             DriverReportResult.failure(
                                 driverId,
                                 fullName = null,
-                                error = e
                             )
                     }
 
@@ -98,8 +97,8 @@ class DriverReportingService(
             currency = { it.currency }
         )
 
-        val failureCount = results.values.count { !it.isSuccess() }
-        val successCount = results.values.count { it.isSuccess() }
+        val failureCount = results.values.count { !it.success }
+        val successCount = results.values.count { it.success }
 
         log.debugf(
             "buildReport END: results=%d, failures=%d, thread=%s",
@@ -118,52 +117,75 @@ class DriverReportingService(
 
     @Throws(InterruptedException::class)
     private fun fetchDriverReport(driverId: UUID): DriverReportResult {
-        log.debugf(
-            "fetchDriverReport START: driverId=%s, thread=%s",
-            driverId,
-            threadInfo()
-        )
-
-        StructuredTaskScope.open<Any?, Void?>(Joiner.awaitAll()).use { scope ->
-
-            val deliveriesTask = scope.fork<List<DeliveryItemResponse>> (
-                Callable {
-                    driverDeliveryService.getDeliveries(driverId)
-                }
-            )
-
-            val settlementTask = scope.fork<List<SettlementResponse>> (
-                Callable {
-                    driverSettlementService.getSettlements(driverId)
-                }
-            )
-
-            val driverTask = scope.fork<DriverResponse> (
-                Callable {
-                    driverDeliveryService.getDriver(driverId)
-                }
-            )
-
+        return try {
             log.debugf(
-                "fetchDriverReport waiting for child tasks: driverId=%s, thread=%s",
+                "fetchDriverReport START: driverId=%s, thread=%s",
                 driverId,
                 threadInfo()
             )
 
-            scope.join()
+            StructuredTaskScope.open<Any?, Void?>(Joiner.awaitAll()).use { scope ->
 
-            log.debugf(
-                "fetchDriverReport child tasks completed: driverId=%s, thread=%s",
-                driverId,
-                threadInfo()
+                val deliveriesTask = scope.fork<List<DeliveryItemResponse>>(
+                    Callable {
+                        driverDeliveryService.getDeliveries(driverId)
+                    }
+                )
+
+                val settlementTask = scope.fork<List<SettlementResponse>>(
+                    Callable {
+                        driverSettlementService.getSettlements(driverId)
+                    }
+                )
+
+                val driverTask = scope.fork<DriverResponse>(
+                    Callable {
+                        driverDeliveryService.getDriver(driverId)
+                    }
+                )
+
+                log.debugf(
+                    "fetchDriverReport waiting for child tasks: driverId=%s, thread=%s",
+                    driverId,
+                    threadInfo()
+                )
+
+                scope.join()
+
+                log.debugf(
+                    "fetchDriverReport child tasks completed: driverId=%s, thread=%s",
+                    driverId,
+                    threadInfo()
+                )
+
+                return buildReport(
+                    driverId = driverId,
+                    driver = getResult(driverTask),
+                    deliveries = getResult(deliveriesTask),
+                    settlements = getResult(settlementTask)
+                )
+            }
+        } catch (e: InterruptedException) {
+            Thread.currentThread().interrupt()
+            throw e
+        } catch (e: Exception) {
+            log.errorf(
+                e,
+                "Driver report FAILED: driverId=%s",
+                driverId
             )
 
-            return buildReport(
-                driverId = driverId,
-                driver = driverTask.get(),
-                deliveries = deliveriesTask.get(),
-                settlements = settlementTask.get()
-            )
+            DriverReportResult.failure(driverId)
+        }
+    }
+
+    private fun <T> getResult(
+        task: StructuredTaskScope.Subtask<T>
+    ): T {
+        return when (task.state()) {
+            StructuredTaskScope.Subtask.State.SUCCESS -> task.get()
+            StructuredTaskScope.Subtask.State.FAILED -> throw task.exception()
+            else -> error("Subtask did not complete")
         }
     }
 
