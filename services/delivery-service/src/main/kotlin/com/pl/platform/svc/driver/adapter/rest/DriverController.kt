@@ -8,6 +8,8 @@ import com.pl.platform.svc.driver.application.handler.GetDriverHandler
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.GetMapping
@@ -65,6 +67,18 @@ class DriverController(
             )
         ]
     )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Drivers returned successfully"
+            ),
+            ApiResponse(
+                responseCode = "429",
+                description = "Too many requests. The client has exceeded the allowed request rate."
+            )
+        ]
+    )
     fun getAll(
         @RequestParam(required = false) driverId: UUID?
     ): List<DriverResponse> =
@@ -84,6 +98,18 @@ class DriverController(
                 description = "Unique identifier of the driver",
                 required = true,
                 `in` = ParameterIn.PATH
+            )
+        ]
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Driver returned successfully"
+            ),
+            ApiResponse(
+                responseCode = "429",
+                description = "Too many requests. The client has exceeded the allowed request rate."
             )
         ]
     )

@@ -11,6 +11,8 @@ import com.pl.platform.svc.delivery.domain.DeliveryStatus
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.constraints.Max
 import org.springframework.data.domain.PageRequest
@@ -70,6 +72,18 @@ class DeliveryQueryController(
             )
         ]
     )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Deliveries returned successfully"
+            ),
+            ApiResponse(
+                responseCode = "429",
+                description = "Too many requests. The client has exceeded the allowed request rate."
+            )
+        ]
+    )
     fun getAll(@RequestParam(required = false) status: DeliveryStatus?,
                @RequestParam(required = false) deliveryId: UUID?,
                @RequestParam(required = false) driverId: UUID?,
@@ -118,6 +132,18 @@ class DeliveryQueryController(
                 description = "Zero-based page number",
                 required = false,
                 `in` = ParameterIn.QUERY
+            )
+        ]
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Status durations returned successfully"
+            ),
+            ApiResponse(
+                responseCode = "429",
+                description = "Too many requests. The client has exceeded the allowed request rate."
             )
         ]
     )
