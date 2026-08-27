@@ -43,7 +43,10 @@ class DeliveryJpaEntity(
     var createdAt: Instant,
 
     @Column(name = "updated_at", nullable = false)
-    var updatedAt: Instant
+    var updatedAt: Instant,
+
+    @Column(name = "currency", nullable = true)
+    var currency: String?
 ) {
 
     fun toDomain(): Delivery =
@@ -55,6 +58,7 @@ class DeliveryJpaEntity(
             status = status.toDomain(),
             price = price,
             distanceKm = distanceKm,
+            currency = currency,
         )
 
     fun updateFrom(delivery: Delivery) {
@@ -84,6 +88,7 @@ class DeliveryJpaEntity(
                 updatedAt = now,
                 price = delivery.price,
                 distanceKm = delivery.distanceKm,
+                currency = delivery.currency,
             )
         }
     }

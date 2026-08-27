@@ -1,0 +1,208 @@
+package com.pl.platform.reporting.service
+
+import com.pl.platform.reporting.common.CurrencyTotalCalculator
+import com.pl.platform.reporting.model.DriverReport
+import com.pl.platform.reporting.model.DriverReportResult
+import com.pl.platform.svc.delivery.DriverDeliveryService
+import com.pl.platform.svc.delivery.client.model.DeliveryItemResponse
+import com.pl.platform.svc.delivery.client.model.DriverResponse
+import com.pl.platform.svc.settlement.DriverSettlementService
+import com.pl.platform.svc.settlement.client.model.SettlementResponse
+import jakarta.enterprise.context.ApplicationScoped
+import org.jboss.logging.Logger
+import java.util.UUID
+import java.util.concurrent.Callable
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.StructuredTaskScope
+import java.util.concurrent.StructuredTaskScope.Joiner
+import java.util.function.Consumer
+
+@ApplicationScoped
+class DriverReportingService(
+    private val driverDeliveryService: DriverDeliveryService,
+    private val driverSettlementService: DriverSettlementService
+) {
+
+    private val log = Logger.getLogger(DriverReportingService::class.java)
+
+    @Throws(InterruptedException::class)
+    fun buildReport(driverIds: List<UUID>): DriverReport {
+        log.debugf(
+            "buildReport START: drivers=%d, thread=%s",
+            driverIds.size,
+            threadInfo()
+        )
+
+        val results = ConcurrentHashMap<UUID, DriverReportResult>()
+
+        StructuredTaskScope.open<Any?, Void?>(Joiner.awaitAll<Any?>()).use { scope ->
+            driverIds.forEach(Consumer { driverId ->
+                scope.fork<Any?>(Callable {
+                    log.debugf(
+                        "Driver report START: driverId=%s, thread=%s",
+                        driverId,
+                        threadInfo()
+                    )
+
+                    try {
+                        results[driverId] = fetchDriverReport(driverId)
+
+                        log.debugf(
+                            "Driver report SUCCESS: driverId=%s, thread=%s",
+                            driverId,
+                            threadInfo()
+                        )
+                    } catch (e: InterruptedException) {
+                        Thread.currentThread().interrupt()
+                        throw e
+                    }
+                    catch (e: Exception) {
+                        log.debugf(
+                            e,
+                            "Driver report FAILED: driverId=%s, thread=%s",
+                            driverId,
+                            threadInfo()
+                        )
+
+                        results[driverId] =
+                            DriverReportResult.failure(
+                                driverId,
+                                fullName = null,
+                                error = e
+                            )
+                    }
+
+                    null
+                })
+            })
+
+            log.debugf(
+                "buildReport waiting for %d driver tasks, thread=%s",
+                driverIds.size,
+                threadInfo()
+            )
+
+            scope.join()
+
+            log.debugf(
+                "buildReport all driver tasks completed: results=%d, thread=%s",
+                results.size,
+                threadInfo()
+            )
+        }
+
+        val totalSettlement = CurrencyTotalCalculator.sumByCurrency(
+            items = results.values
+                .flatMap { it.settlementDriverRevenue },
+            amount = { it.total },
+            currency = { it.currency }
+        )
+
+        val failureCount = results.values.count { !it.isSuccess() }
+        val successCount = results.values.count { it.isSuccess() }
+
+        log.debugf(
+            "buildReport END: results=%d, failures=%d, thread=%s",
+            results.size,
+            failureCount,
+            threadInfo()
+        )
+
+        return DriverReport(
+            failureCount = failureCount,
+            results = results.values.toList(),
+            totalSettlement = totalSettlement,
+            successCount = successCount,
+        )
+    }
+
+    @Throws(InterruptedException::class)
+    private fun fetchDriverReport(driverId: UUID): DriverReportResult {
+        log.debugf(
+            "fetchDriverReport START: driverId=%s, thread=%s",
+            driverId,
+            threadInfo()
+        )
+
+        StructuredTaskScope.open<Any?, Void?>(Joiner.awaitAll()).use { scope ->
+
+            val deliveriesTask = scope.fork<List<DeliveryItemResponse>> (
+                Callable {
+                    driverDeliveryService.getDeliveries(driverId)
+                }
+            )
+
+            val settlementTask = scope.fork<List<SettlementResponse>> (
+                Callable {
+                    driverSettlementService.getSettlements(driverId)
+                }
+            )
+
+            val driverTask = scope.fork<DriverResponse> (
+                Callable {
+                    driverDeliveryService.getDriver(driverId)
+                }
+            )
+
+            log.debugf(
+                "fetchDriverReport waiting for child tasks: driverId=%s, thread=%s",
+                driverId,
+                threadInfo()
+            )
+
+            scope.join()
+
+            log.debugf(
+                "fetchDriverReport child tasks completed: driverId=%s, thread=%s",
+                driverId,
+                threadInfo()
+            )
+
+            return buildReport(
+                driverId = driverId,
+                driver = driverTask.get(),
+                deliveries = deliveriesTask.get(),
+                settlements = settlementTask.get()
+            )
+        }
+    }
+
+    private fun buildReport(
+        driverId: UUID,
+        driver: DriverResponse,
+        deliveries: List<DeliveryItemResponse>,
+        settlements: List<SettlementResponse>
+    ): DriverReportResult {
+
+        log.debugf(
+            "buildDriverReport: driverId=%s, deliveries=%d, settlements=%d, thread=%s",
+            driverId,
+            deliveries.size,
+            settlements.size,
+            threadInfo()
+        )
+
+        return DriverReportResult(
+            driverId = driverId,
+            fullName = "${driver.firstName} ${driver.lastName}",
+            deliveriesCount = deliveries.size,
+            deliveriesTotalCost = CurrencyTotalCalculator.sumByCurrency(
+                deliveries,
+                amount = { it.price },
+                currency = { it.currency }
+            ),
+            settlementsCount = settlements.size,
+            settlementDriverRevenue = CurrencyTotalCalculator.sumByCurrency(
+                settlements,
+                amount = { it.driverAmount },
+                currency = { it.currency }
+            )
+        )
+    }
+
+    private fun threadInfo(): String {
+        val thread = Thread.currentThread()
+
+        return "threadId=${thread.threadId()}, virtual=${thread.isVirtual}"
+    }
+}

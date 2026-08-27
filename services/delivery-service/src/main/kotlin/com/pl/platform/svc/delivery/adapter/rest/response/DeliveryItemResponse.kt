@@ -6,13 +6,15 @@ import com.pl.platform.svc.delivery.domain.DeliveryStatus
 import java.math.BigDecimal
 import java.util.UUID
 
-data class DeliveryItemResponse(   val id: UUID,
-                                   var driverId: UUID?,
-                                   val pickupAddress: String,
-                                   val deliveryAddress: String,
-                                   val price: BigDecimal,
-                                   val status: DeliveryStatus,
-                                   val distanceKm: BigDecimal,)
+data class DeliveryItemResponse(
+    val id: UUID,
+    var driverId: UUID?,
+    val pickupAddress: String,
+    val deliveryAddress: String,
+    val price: BigDecimal,
+    val status: DeliveryStatus,
+    val distanceKm: BigDecimal,
+    val currency: String = "PLN")
 {
     companion object {
         fun from(deliver: Delivery): DeliveryItemResponse {
@@ -32,7 +34,9 @@ data class DeliveryItemResponse(   val id: UUID,
                 deliveryAddress = deliver.deliveryAddress,
                 price = deliver.price,
                 status = deliver.status.toDomain(),
-                distanceKm = deliver.distanceKm)
+                distanceKm = deliver.distanceKm,
+                currency = deliver.currency ?: "PLN")
+
         }
     }
 }

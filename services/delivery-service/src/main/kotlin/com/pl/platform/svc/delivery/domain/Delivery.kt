@@ -10,6 +10,7 @@ class Delivery private constructor(
     val deliveryAddress: String,
     var distanceKm: BigDecimal,
     val price: BigDecimal,
+    var currency: String,
     private var currentStatus: DeliveryStatus
 ) {
 
@@ -23,6 +24,7 @@ class Delivery private constructor(
             deliveryAddress: String,
             price: BigDecimal,
             distanceKm: BigDecimal,
+            currency: String= "PLN"
         ): Delivery {
             require(pickupAddress.isNotBlank()) {
                 "Pickup address must not be blank"
@@ -40,6 +42,7 @@ class Delivery private constructor(
                 currentStatus = DeliveryStatus.CREATED,
                 price = price,
                 distanceKm = distanceKm,
+                currency = currency
             )
         }
 
@@ -51,6 +54,7 @@ class Delivery private constructor(
             status: DeliveryStatus,
             price: BigDecimal,
             distanceKm: BigDecimal,
+            currency: String?
         ): Delivery =
             Delivery(
                 id = id,
@@ -60,6 +64,7 @@ class Delivery private constructor(
                 currentStatus = status,
                 price = price,
                 distanceKm = distanceKm,
+                currency = currency ?: "PLN"
             )
     }
 

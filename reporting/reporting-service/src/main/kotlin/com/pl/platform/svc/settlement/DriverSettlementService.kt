@@ -13,8 +13,8 @@ class DriverSettlementService(
 ) {
 
     fun getSettlements(driverId: UUID): List<SettlementResponse> {
-        var page = 0;
-        var data = mutableListOf<SettlementResponse>();
+        var page = 0
+        var data = mutableListOf<SettlementResponse>()
         while (true) {
             val response = client.getSettlements(driverId = driverId, page = page, search = null, deliveryId = null);
             data.addAll(response.content)

@@ -18,13 +18,16 @@ data class CreateDeliveryRequest(
     val deliveryAddress: String,
 
     @field:Max(15000)
-    val distanceKm: BigDecimal
+    val distanceKm: BigDecimal,
+
+    val currency: String?
 ) {
 
     fun toCommand(): CreateDeliveryCommand =
         CreateDeliveryCommand(
             pickupAddress = pickupAddress,
             deliveryAddress = deliveryAddress,
-            distanceKm = distanceKm
+            distanceKm = distanceKm,
+            currency = currency ?: "PLN"
         )
 }

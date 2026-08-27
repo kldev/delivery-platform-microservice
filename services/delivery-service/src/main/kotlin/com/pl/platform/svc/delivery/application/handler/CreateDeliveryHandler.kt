@@ -26,6 +26,7 @@ class CreateDeliveryHandler(
             deliveryAddress = command.deliveryAddress.trim(),
             price = pricingService.calculate(command.distanceKm),
             distanceKm = command.distanceKm,
+            currency = command.currency,
         )
 
         deliveryRepository.create(delivery)

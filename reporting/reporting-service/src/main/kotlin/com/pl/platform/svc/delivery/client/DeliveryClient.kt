@@ -1,8 +1,9 @@
 package com.pl.platform.svc.delivery.client
 
 import com.pl.platform.svc.common.PlatformResponseExceptionMapper
+import com.pl.platform.svc.common.RestClientResponseLoggingFilter
 import com.pl.platform.svc.common.SliceResponse
-import com.pl.platform.svc.delivery.client.model.*;
+import com.pl.platform.svc.delivery.client.model.*
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.PathParam
@@ -13,20 +14,21 @@ import java.util.UUID
 
 @RegisterRestClient(configKey = "delivery-client")
 @RegisterProvider(PlatformResponseExceptionMapper::class)
+@RegisterProvider(RestClientResponseLoggingFilter::class)
 @Path("/api")
 interface DeliveryClient {
     @GET
     @Path("/deliveries")
     fun getDeliveries(
         @QueryParam("status")
-        status:DeliveryStatus?,
+        status: DeliveryStatus?,
 
         @QueryParam("driverId")
         driverId: UUID?,
 
         @QueryParam("page")
         page: Int,
-        ): SliceResponse<DeliveryItemResponse>
+    ): SliceResponse<DeliveryItemResponse>
 
     @GET
     @Path("/drivers")
@@ -39,6 +41,6 @@ interface DeliveryClient {
     @Path("/drivers/{driverId}")
     fun getSingleDrivers(
         @PathParam("driverId")
-        driverId: UUID?
+        driverId: UUID
     ): DriverResponse
 }
