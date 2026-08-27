@@ -285,9 +285,7 @@ export function setup() {
     const drivers = response.json();
 
     if (drivers.length === 0) {
-        console.log('No drivers found. Creating 5 drivers...');
-
-        const phones = [
+         const phones = [
             '+48123456701',
             '+48123456702',
             '+48123456703',
@@ -300,7 +298,11 @@ export function setup() {
             '+48123456710',
         ];
 
-        for (let i = 0; i < 5; i++) {
+
+        console.log(`No drivers found. Creating ${phones.length} drivers...`);
+
+      
+        for (let i = 0; i < phones.length; i++) {
             const createDriverResponse = request(
                 'POST',
                 '/api/delivery/drivers',
@@ -327,7 +329,7 @@ export function setup() {
             }
         }
 
-        console.log('5 drivers created');
+        console.log(`{phones.length} drivers created`);
     } else {
         console.log(
             `Drivers already exist (${drivers.length}). Skipping creation.`,
@@ -352,7 +354,7 @@ export default function () {
     const currencies = ['PLN', 'EUR', 'GBP'];
 
     const currency = currencies[Math.floor(Math.random() * currencies.length)];
-    const distanceKm = Number((Math.random() * 50).toFixed(2));
+    const distanceKm = 20 + Number((Math.random() * 100).toFixed(2));
 
     const deliveryResponse = request(
         'POST',
