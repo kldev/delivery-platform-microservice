@@ -101,7 +101,7 @@ services:
     container_name: delivery
     mem_limit: 768m
     environment:      
-      SPRING_PROFILES_ACTIVE: dev
+      SPRING_PROFILES_ACTIVE: docker
       KAFKA_SERVERS: broker:19092
       PG_HOST: postgres   
       PORT: 8080   
@@ -258,7 +258,30 @@ services:
       postgres:
         condition: service_healthy
       delivery-svc:
-        condition: service_healthy                 
+        condition: service_healthy            
+
+  reporting-svc:
+    build:
+      context: reporting/reporting-service
+      dockerfile: ./Dockerfile
+    container_name: reporting
+    mem_limit: 768m
+    networks:
+      - inner-cluster-communication
+    environment:
+      KAFKA_SERVERS: broker:19092
+      PG_HOST: postgres
+      PORT: 8080
+      JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=60"
+      DELIVERY_URL: http://delivery:8080
+      SETTLEMENT_URL: http://settlement:8080
+    depends_on:
+      broker:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      delivery-svc:
+        condition: service_healthy              
 
   gateway:
     build:

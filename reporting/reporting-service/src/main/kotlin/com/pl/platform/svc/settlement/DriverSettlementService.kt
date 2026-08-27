@@ -20,6 +20,7 @@ class DriverSettlementService(
             data.addAll(response.content)
             if (!response.hasNext)
                 break;
+            page++
         }
         return data;
     }

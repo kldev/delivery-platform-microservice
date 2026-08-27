@@ -9,24 +9,13 @@ public class SwaggerAggregator(
 {
     private readonly HttpClient _httpClient = httpClientFactory.CreateClient("SwaggerClient");
 
-    private sealed record ServiceSwaggerInfo(string Name, string Prefix, string ClusterKey);
-
-    private static readonly ServiceSwaggerInfo[] Services =
-    [
-        new("Delivery", "/api/delivery", "delivery-cluster"),
-        new("Settlement", "/api/settlement", "settlement-cluster"),
-        new("Ledger", "/api/ledger", "ledger-cluster"),
-        new("Reconciliation", "/api/reconciliation", "reconciliation-cluster"),
-        new("Payment", "/api/payment", "payment-cluster"),
-        new("Notification", "/api/notification", "notification-cluster")
-    ];
-
+    
     /// <summary>
     /// Gets swagger spec for a single service with paths prefixed for Gateway.
     /// </summary>
     public async Task<JsonObject?> GetServiceSwaggerAsync(string serviceName)
     {
-        var service = Services.FirstOrDefault(s =>
+        var service = ScalarExtensions.Services.FirstOrDefault(s =>
             s.Name.Equals(serviceName, StringComparison.OrdinalIgnoreCase));
 
         if (service == null)
@@ -35,7 +24,7 @@ public class SwaggerAggregator(
             return null;
         }
 
-        var baseUrl = GetClusterAddress(service.ClusterKey);
+        var baseUrl = GetClusterAddress($"{service.Name}-cluster");
         
         if (string.IsNullOrEmpty(baseUrl))
         {
@@ -45,7 +34,7 @@ public class SwaggerAggregator(
 
         try
         {
-            var swaggerUrl = serviceName == "payment"?  $"{baseUrl}/openapi/v1.json" : $"{baseUrl}/api-spec";
+            var swaggerUrl = serviceName == "payment"?  $"{baseUrl}/openapi/v1.json" : $"{baseUrl}/api-spec?format=json";
             if (serviceName == "notification")
                 swaggerUrl = $"{baseUrl}/api-spec?format=json";
             
@@ -62,8 +51,8 @@ public class SwaggerAggregator(
                 {
                     // /api/sbu/list -> /api/identity/sbu/list
                     var newPath = path.StartsWith("/api/")
-                        ? service.Prefix + path[4..] // Remove "/api" and add prefix
-                        : service.Prefix + path;
+                        ? $"/api/{service.Name}" + path[4..] // Remove "/api" and add prefix
+                        : $"/{service.Name}" + path;
 
                     newPaths[newPath] = value?.DeepClone();
                 }
@@ -101,8 +90,8 @@ public class SwaggerAggregator(
             ["openapi"] = "3.0.1",
             ["info"] = new JsonObject
             {
-                ["title"] = "PBX Gateway API",
-                ["description"] = "Aggregated API documentation for all JD microservices",
+                ["title"] = "Delivery Gateway API",
+                ["description"] = "Aggregated API documentation for all microservices",
                 ["version"] = "v1"
             },
             ["paths"] = new JsonObject(),
@@ -115,7 +104,7 @@ public class SwaggerAggregator(
         var allPaths = aggregated["paths"]!.AsObject();
         var allSchemas = aggregated["components"]!["schemas"]!.AsObject();
 
-        foreach (var service in Services)
+        foreach (var service in ScalarExtensions.Services)
         {
             var doc = await GetServiceSwaggerAsync(service.Name);
             if (doc == null) continue;
@@ -130,7 +119,7 @@ public class SwaggerAggregator(
             }
 
             // Merge schemas with service prefix to avoid conflicts
-            if (doc["components"]?["schemas"] is JsonObject schemas)
+            if (doc["components"]?["schemas"] is not JsonObject schemas) continue;
             {
                 foreach (var (schemaName, value) in schemas)
                 {

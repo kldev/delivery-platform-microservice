@@ -16,6 +16,6 @@ interface IdempotencyJpaRepository :
         where idem.idempotencyKey = :key
     """)
     fun findByIdempotencyKey(
-        idempotencyKey: UUID
+        key: UUID
     ): IdempotencyJpaEntity?
 }

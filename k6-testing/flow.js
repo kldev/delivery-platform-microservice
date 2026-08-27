@@ -293,6 +293,11 @@ export function setup() {
             '+48123456703',
             '+48123456704',
             '+48123456705',
+            '+48123456706',
+            '+48123456707',
+            '+48123456708',
+            '+48123456709',
+            '+48123456710',
         ];
 
         for (let i = 0; i < 5; i++) {
@@ -344,14 +349,19 @@ export default function () {
     // ---------------------------------------------------------
     // 1. CREATE DELIVERY
     // ---------------------------------------------------------
+    const currencies = ['PLN', 'EUR', 'GBP'];
+
+    const currency = currencies[Math.floor(Math.random() * currencies.length)];
+    const distanceKm = Number((Math.random() * 50).toFixed(2));
 
     const deliveryResponse = request(
         'POST',
         '/api/delivery/deliveries',
         JSON.stringify({
             deliveryAddress: `Test Delivery ${suffix}`,
-            distanceKm: 50.0,
+            distanceKm,
             pickupAddress: `Test Pickup ${suffix}`,
+            currency,
         }),
     );
 

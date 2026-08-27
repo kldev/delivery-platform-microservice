@@ -1,6 +1,4 @@
-using System.Text.Json.Nodes;
 using Delivery.Gateway.Web.Swagger;
-using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -17,51 +15,12 @@ var builder = WebApplication.CreateBuilder(args);
 }
 var app = builder.Build();
 {
-    app.MapScalarApiReference("/scalar", options =>
-    {
-        options.Title = "Delivery Platform API";
 
-        options.AddDocument(
-            "delivery",
-            "Deliveries",
-            "/api-docs/delivery/swagger.json",
-            true);
-        
-        options.AddDocument(
-            "payment",
-            "Payments",
-            "/api-docs/payment/swagger.json",
-            true);
-        
-        options.AddDocument(
-            "ledger",
-            "Ledger",
-            "/api-docs/ledger/swagger.json",
-            true);
-        
-        options.AddDocument(
-            "settlement",
-            "Settlement",
-            "/api-docs/settlement/swagger.json",
-            true);
-        
-        options.AddDocument(
-            "reconciliation",
-            "Reconciliation",
-            "/api-docs/reconciliation/swagger.json",
-            true);
-        
-        options.AddDocument(
-            "notification",
-            "notification",
-            "/api-docs/notification/swagger.json",
-            true);
-    });
-
+    app.MapAppScalar();
     app.MapReverseProxy();
     
     app.MapGet("/", () => "UP");
-    app.MapGet("/docs", () => Results.Redirect("/scalar"));
+    //app.MapGet("/docs", () => Results.Redirect("/scalar"));
     
     app.MapSwaggerEndpoints();
     app.Run();
