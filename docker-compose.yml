@@ -106,7 +106,9 @@ services:
       PG_HOST: postgres   
       PORT: 8080   
       JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=60 -XX:InitialRAMPercentage=15"
-      RATE_LIMIT: 500              
+      RATE_LIMIT: 500
+      API_KEY: ${API_KEY:-}
+      RATE_LIMIT_ENABLE: ${RATE_LIMIT_ENABLE:-}              
     depends_on:
       broker:
         condition: service_healthy
@@ -253,6 +255,7 @@ services:
       JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=60"
       DELIVERY_URL: http://delivery:8080
       INTERVAL: 5s
+      API_KEY: ${API_KEY:-}    
     depends_on:
       broker:
         condition: service_healthy

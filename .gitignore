@@ -39,3 +39,4 @@ docs
 ### Kotlin ###
 .kotlin
 run-*
+.env*

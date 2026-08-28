@@ -7,13 +7,18 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
-
 @Component
+@ConditionalOnProperty(
+    name = ["rate.limit.enabled"],
+    havingValue = "true",
+    matchIfMissing = false
+)
 class RateLimitFilter(@Value($$"${rate.bucket.size:100}")
                             private val rateLimit: Long,
                             @Value($$"${rate.bucket.override.key}")
