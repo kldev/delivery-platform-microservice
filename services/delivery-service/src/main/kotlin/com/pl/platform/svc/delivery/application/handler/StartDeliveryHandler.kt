@@ -20,12 +20,12 @@ class StartDeliveryHandler(
         val delivery = repository.findById(command.deliveryId) ?: throw EntityNotFoundException(
             EntityType.DELIVERY,
             command.deliveryId
-        );
+        )
 
-        delivery.startTransit();
-        repository.update(delivery);
+        delivery.startTransit()
+        repository.update(delivery)
 
-        val event = DeliveryStartedEvent(deliveryId = delivery.id.value);
+        val event = DeliveryStartedEvent(deliveryId = delivery.id.value)
 
         outboxRepository.save(event)
     }

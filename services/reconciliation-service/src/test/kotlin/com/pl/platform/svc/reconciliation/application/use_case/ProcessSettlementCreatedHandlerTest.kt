@@ -234,7 +234,6 @@ class ProcessSettlementCreatedHandlerTest {
         amount: BigDecimal = BigDecimal("125.50"),
         currency: String = "EUR"
     ) = SettlementCreatedEvent(
-        eventId = eventId,
         settlementId = settlementId,
         driverId = UUID.randomUUID(),
         deliveryId = deliveryId,

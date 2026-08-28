@@ -19,13 +19,13 @@ class ConfirmDeliveryHandler(var repository: DeliveryRepository,
         val delivery = repository.findById(command.deliveryId) ?: throw EntityNotFoundException(
             EntityType.DELIVERY,
             command.deliveryId
-        );
+        )
 
-        delivery.confirm();
-        repository.update(delivery);
+        delivery.confirm()
+        repository.update(delivery)
 
         val event = DeliveryConfirmedEvent(deliveryId = delivery.id.value,
-            price = delivery.price);
+            price = delivery.price)
 
         outboxRepository.save(event)
     }

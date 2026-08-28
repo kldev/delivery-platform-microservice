@@ -20,7 +20,7 @@ class DeliveryTest {
             distanceKm = BigDecimal("50")
         )
 
-        assertThat(delivery.driverId).isNull();
+        assertThat(delivery.driverId).isNull()
         assertEquals("Opole", delivery.pickupAddress)
         assertEquals("Wrocław", delivery.deliveryAddress)
         assertEquals(DeliveryStatus.CREATED, delivery.status)

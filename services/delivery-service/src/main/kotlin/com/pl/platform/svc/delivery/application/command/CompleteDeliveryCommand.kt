@@ -2,5 +2,4 @@ package com.pl.platform.svc.delivery.application.command
 
 import com.pl.platform.svc.delivery.domain.DeliveryId
 
-data class CompleteDeliveryCommand(var deliveryId: DeliveryId) {
-}
+data class CompleteDeliveryCommand(var deliveryId: DeliveryId)

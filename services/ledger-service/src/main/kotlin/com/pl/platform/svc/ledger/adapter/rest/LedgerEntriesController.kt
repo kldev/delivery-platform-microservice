@@ -40,6 +40,6 @@ class LedgerEntriesController(
             Sort.by(Sort.Direction.DESC, "createdAt"))
 
 
-        return repository.search(query, pageable);
+        return repository.search(query, pageable)
     }
 }

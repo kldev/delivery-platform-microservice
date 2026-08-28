@@ -35,5 +35,5 @@ class SettlementsController(private val handler: GetSettlementsListHandler) {
                 driverId = driverId,
                 deliveryId = deliveryId
             )
-        );
+        )
 }

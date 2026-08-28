@@ -26,7 +26,7 @@ class CompleteDeliveryHandler(
 
         val driver = driverRepository.findById(DriverId(delivery.driverId!!))
             ?: throw EntityNotFoundException(
-                    EntityType.DRIVER, delivery.driverId!!);
+                    EntityType.DRIVER, delivery.driverId!!)
 
         delivery.deliver()
         deliveryRepository.update(delivery)

@@ -27,6 +27,6 @@ class DeliveryPricingService {
                     BigDecimal("50.00")
             }
 
-        return amount;
+        return amount
     }
 }

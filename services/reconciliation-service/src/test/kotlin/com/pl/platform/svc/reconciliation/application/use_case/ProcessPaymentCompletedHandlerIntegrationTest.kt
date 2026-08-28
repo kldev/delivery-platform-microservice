@@ -1,7 +1,7 @@
 package com.pl.platform.svc.reconciliation.application.use_case
 
+import com.pl.platform.common.messaging.event.payments.PaymentCompletedEvent
 import com.pl.platform.svc.BaseIntegrationTest
-import com.pl.platform.svc.integration.event.PaymentCompletedEvent
 import com.pl.platform.svc.messaging.adapter.persistence.ProcessedEventJpaEntity
 import com.pl.platform.svc.messaging.adapter.persistence.SpringDataProcessedEventRepository
 import com.pl.platform.svc.reconciliation.adapter.persistence.ReconciliationJpaEntity
@@ -31,9 +31,8 @@ class ProcessPaymentCompletedHandlerIntegrationTest : BaseIntegrationTest() {
     @Test
     fun `should create reconciliation when payment event is received`() {
         val event = PaymentCompletedEvent(
-            eventId = UUID.randomUUID(),
-            deliveryId = UUID.randomUUID(),
             paymentId = UUID.randomUUID(),
+            deliveryId = UUID.randomUUID(),
             externalTransactionId = "EXT-${UUID.randomUUID()}",
             amount = BigDecimal("125.50"),
             currency = "EUR"
@@ -88,7 +87,6 @@ class ProcessPaymentCompletedHandlerIntegrationTest : BaseIntegrationTest() {
         )
 
         val event = PaymentCompletedEvent(
-            eventId = UUID.randomUUID(),
             deliveryId = deliveryId,
             paymentId = UUID.randomUUID(),
             externalTransactionId = "EXT-123",
@@ -132,7 +130,6 @@ class ProcessPaymentCompletedHandlerIntegrationTest : BaseIntegrationTest() {
     @Test
     fun `should ignore already processed payment event`() {
         val event = PaymentCompletedEvent(
-            eventId = UUID.randomUUID(),
             deliveryId = UUID.randomUUID(),
             paymentId = UUID.randomUUID(),
             externalTransactionId = "EXT-123",

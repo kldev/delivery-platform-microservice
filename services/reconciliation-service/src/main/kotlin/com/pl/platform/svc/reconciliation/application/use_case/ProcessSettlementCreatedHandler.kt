@@ -41,7 +41,7 @@ class ProcessSettlementCreatedHandler(
                 settlementId = event.settlementId,
                 amount =  event.driverAmount,
                 currency = event.currency)
-            reconciliationRepository.update(updated);
+            reconciliationRepository.update(updated)
 
             logger.info("Process settlement reconciliation updated: {}", updated)
 

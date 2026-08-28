@@ -2,6 +2,7 @@ package com.pl.platform.svc.notification.scheduler
 
 import com.pl.platform.svc.notification.domain.NotificationStatus
 import com.pl.platform.svc.notification.port.BackgroundRepository
+import io.quarkus.arc.properties.IfBuildProperty
 import io.quarkus.logging.Log
 import io.quarkus.scheduler.Scheduled
 import io.smallrye.mutiny.Uni
@@ -9,6 +10,10 @@ import jakarta.enterprise.context.ApplicationScoped
 import java.util.function.Supplier
 
 
+@IfBuildProperty(
+    name = "notifications.consumer.enabled",
+    stringValue = "true"
+)
 @ApplicationScoped
 class NotificationScheduler(
     private val processor: NotificationProcessor,

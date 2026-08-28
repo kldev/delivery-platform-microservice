@@ -16,7 +16,7 @@ class CreateDeliveryHandlerTest {
 
     private val deliveryRepository = mockk<DeliveryRepository>()
     private val outboxRepository = mockk<OutboxRepository>()
-    private val pricingService = DeliveryPricingService();
+    private val pricingService = DeliveryPricingService()
 
     private val handler = CreateDeliveryHandler(
         deliveryRepository,

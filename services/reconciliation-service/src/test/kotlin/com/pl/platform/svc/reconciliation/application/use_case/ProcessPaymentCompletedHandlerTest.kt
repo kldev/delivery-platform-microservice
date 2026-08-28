@@ -1,20 +1,14 @@
 package com.pl.platform.svc.reconciliation.application.use_case
 
-import com.pl.platform.svc.integration.event.PaymentCompletedEvent
+import com.pl.platform.common.messaging.event.payments.PaymentCompletedEvent
 import com.pl.platform.svc.messaging.adapter.persistence.SpringDataProcessedEventRepository
 import com.pl.platform.svc.reconciliation.domain.Reconciliation
 import com.pl.platform.svc.reconciliation.domain.ReconciliationStatus
 import com.pl.platform.svc.reconciliation.port.ReconciliationRepository
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.runs
-import io.mockk.verify
+import io.mockk.*
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
-import java.util.UUID
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
+import java.util.*
 
 class ProcessPaymentCompletedHandlerTest {
 
@@ -184,20 +178,18 @@ class ProcessPaymentCompletedHandlerTest {
     }
 
     private fun paymentCompletedEvent(
-        eventId: UUID = UUID.randomUUID(),
         deliveryId: UUID = UUID.randomUUID(),
         paymentId: UUID = UUID.randomUUID(),
         amount: BigDecimal = BigDecimal("125.50"),
         currency: String = "EUR",
         externalTransactionId: String = "EXT-123"
     ) = PaymentCompletedEvent(
-        eventId = eventId,
         deliveryId = deliveryId,
         paymentId = paymentId,
         externalTransactionId = externalTransactionId,
         amount = amount,
         currency = currency,
 
-    )
+        )
 }
 

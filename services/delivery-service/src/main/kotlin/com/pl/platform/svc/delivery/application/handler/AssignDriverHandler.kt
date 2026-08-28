@@ -27,23 +27,23 @@ class AssignDriverHandler(
 
         val driverId = command.driverId ?: randomDriver()
 
-        delivery.assign(driverId);
+        delivery.assign(driverId)
         deliveryRepository.update(delivery)
 
         val event = DeliveryAssignedEvent(deliveryId = delivery.id.value,
-            driverId = driverId);
+            driverId = driverId)
 
         outboxRepository.save(event)
 
     }
 
     fun randomDriver() : UUID {
-        val all = driverRepository.getAll();
+        val all = driverRepository.getAll()
 
         if (all.isEmpty()) {
             throw IllegalStateException("No drivers found")
         }
 
-        return all[(random.nextInt(all.size))].id.value;
+        return all[(random.nextInt(all.size))].id.value
     }
 }

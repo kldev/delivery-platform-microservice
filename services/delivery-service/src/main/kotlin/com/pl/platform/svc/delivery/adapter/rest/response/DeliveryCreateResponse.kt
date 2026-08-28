@@ -9,5 +9,4 @@ data class DeliveryCreateResponse(
     val id: UUID,
     val price: BigDecimal,
     val status: DeliveryStatus
-) {
-}
+)

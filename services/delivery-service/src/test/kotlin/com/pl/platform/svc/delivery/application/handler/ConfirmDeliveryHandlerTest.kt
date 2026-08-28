@@ -26,7 +26,7 @@ class ConfirmDeliveryHandlerTest {
             deliveryRepository.update(any())
         } just Runs
 
-        val delivery = DeliveryTestFactory.create();
+        val delivery = DeliveryTestFactory.create()
 
         every {
             deliveryRepository.findById(delivery.id)

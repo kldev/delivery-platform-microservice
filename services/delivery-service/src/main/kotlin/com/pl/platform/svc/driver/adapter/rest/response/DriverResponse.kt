@@ -14,7 +14,7 @@ data class DriverResponse(val id: UUID,
                 driver.firstName,
                 driver.lastName,
                 driver.phoneNumber,
-                driver.email);
+                driver.email)
         }
     }
 }

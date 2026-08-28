@@ -4,7 +4,7 @@ import com.pl.platform.svc.driver.port.DriverRepository
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Profile("dev")
@@ -21,9 +21,9 @@ class DriverSeeder(private val driverRepository: DriverRepository) {
         val driverB = Driver.create(firstName = "Annie" , lastName = "Stockhouse",  phoneNumber = "+1530200221", "a.stock@fake.io")
         val driverC = Driver.create(firstName = "Chandler" , lastName = "Marius",  phoneNumber = "+15302001121", "c.marius@fake.io")
 
-        driverRepository.create(driverA);
-        driverRepository.create(driverB);
-        driverRepository.create(driverC);
+        driverRepository.create(driverA)
+        driverRepository.create(driverB)
+        driverRepository.create(driverC)
     }
 
 }

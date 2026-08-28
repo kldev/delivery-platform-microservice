@@ -25,7 +25,7 @@ class CreateSettlementHandler(
 
         settlementRepository.create(settlement)
 
-        val event = settlement.toCreatedEvent();
+        val event = settlement.toCreatedEvent()
         outboxRepository.save(event)
 
         val driverSettlementEvent = DriverSettlementCompletedEvent(currency = settlement.currency,

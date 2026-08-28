@@ -94,7 +94,7 @@ class DeliveryQueryController(
                 page, size,
                 Sort.by(Sort.Direction.DESC, "createdAt")
             )
-        );
+        )
 
 
     @GetMapping("status-duration")
@@ -157,6 +157,6 @@ class DeliveryQueryController(
                 page, size,
                 Sort.by(Sort.Direction.ASC, "statusFrom")
             )
-        );
+        )
 
 }

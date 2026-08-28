@@ -26,7 +26,7 @@ class PickupDeliveryHandlerTest {
             deliveryRepository.update(any())
         } just Runs
 
-        val delivery = DeliveryTestFactory.create();
+        val delivery = DeliveryTestFactory.create()
         delivery.confirm()
         delivery.assign(UUID.randomUUID())
 

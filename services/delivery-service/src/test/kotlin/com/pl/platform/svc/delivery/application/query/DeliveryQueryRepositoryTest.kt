@@ -14,7 +14,7 @@ import kotlin.test.Test
 class DeliveryQueryRepositoryTest : BaseIntegrationTest() {
 
     @Autowired
-    lateinit var repository: DeliveryQueryRepository;
+    lateinit var repository: DeliveryQueryRepository
 
     @Autowired
     lateinit var deliveryDatabaseFixture: DeliveryDatabaseFixture
@@ -33,8 +33,8 @@ class DeliveryQueryRepositoryTest : BaseIntegrationTest() {
     fun seedTest(){
         deliveryDatabaseFixture.create()
         deliveryDatabaseFixture.create()
-        val assigned = deliveryDatabaseFixture.create();
-        val driver = driverDatabaseFixture.create();
+        val assigned = deliveryDatabaseFixture.create()
+        val driver = driverDatabaseFixture.create()
 
         deliveryDatabaseFixture.changeStatus(assigned,
             DeliveryStatusJpa.ASSIGNED, driverId = driver)
@@ -68,7 +68,7 @@ class DeliveryQueryRepositoryTest : BaseIntegrationTest() {
     @Test
     fun shouldReturnSelectedDelivery() {
 
-        val deliveryId = deliveryDatabaseFixture.create();
+        val deliveryId = deliveryDatabaseFixture.create()
         val query = GetDeliveryQuery(status = null, deliveryId = deliveryId)
 
         val result = repository.search(query)

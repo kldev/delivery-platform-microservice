@@ -193,7 +193,6 @@ class ProcessSettlementCreatedHandlerIntegrationTest :
         amount: BigDecimal = BigDecimal("125.50"),
         currency: String = "EUR"
     ) = SettlementCreatedEvent(
-        eventId = eventId,
         settlementId = settlementId,
         deliveryId = deliveryId,
         deliveryAmount = amount.multiply(BigDecimal("1.25")),

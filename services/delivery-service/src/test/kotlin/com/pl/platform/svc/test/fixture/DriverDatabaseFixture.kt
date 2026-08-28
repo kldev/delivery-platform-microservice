@@ -25,7 +25,7 @@ class DriverDatabaseFixture(
             phoneNumber = phoneNumber,
         )
 
-        driverRepository.saveAndFlush(DriverJpaEntity.create(driver, Instant.now()));
+        driverRepository.saveAndFlush(DriverJpaEntity.create(driver, Instant.now()))
 
         return driver.id.value
     }

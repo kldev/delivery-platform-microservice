@@ -54,8 +54,8 @@ class PgNotificationQueryRepository(private val pool: Pool
             )
         }
 
-        val limit = query.limit.coerceAtMost(500);
-        parameters.addLong(limit.toLong() + 1);
+        val limit = query.limit.coerceAtMost(500)
+        parameters.addLong(limit.toLong() + 1)
         parameters.addLong(query.offset.toLong())
 
         val where =

@@ -69,7 +69,7 @@ class NotificationProcessor(
         notification: Notification,
         recipient: NotificationRecipient,
     ): Uni<Void> {
-        val sender = senders.get(notification.channel) ?: return handleUnsupportedChannel(notification);
+        val sender = senders.get(notification.channel) ?: return handleUnsupportedChannel(notification)
 
         return sender.send(
             notification = notification,

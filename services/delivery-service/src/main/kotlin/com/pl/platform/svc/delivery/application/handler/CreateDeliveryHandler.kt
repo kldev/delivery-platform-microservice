@@ -42,8 +42,7 @@ class CreateDeliveryHandler(
             delivery.id.value,
             price = delivery.price,
             status = delivery.status
-        );
-
+        )
 
 
     }

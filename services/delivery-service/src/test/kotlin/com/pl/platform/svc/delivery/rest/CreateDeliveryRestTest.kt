@@ -65,7 +65,7 @@ class CreateDeliveryRestTest : BaseRestIntegrationTest() {
         assertNotNull(response)
 
         assertNotNull(response.id)
-        assertThat(response.price).isGreaterThan(BigDecimal.ONE);
+        assertThat(response.price).isGreaterThan(BigDecimal.ONE)
 
         assertEquals(
             DeliveryStatus.CREATED,

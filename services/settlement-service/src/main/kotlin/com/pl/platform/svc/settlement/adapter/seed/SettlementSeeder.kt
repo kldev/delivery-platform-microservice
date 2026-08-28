@@ -23,7 +23,7 @@ class SettlementSeeder(
 
     private fun seed() {
 
-        if (settlementRepository.getAll().isNotEmpty()) return;
+        if (settlementRepository.getAll().isNotEmpty()) return
 
         logger.info("Seeding settlements")
 

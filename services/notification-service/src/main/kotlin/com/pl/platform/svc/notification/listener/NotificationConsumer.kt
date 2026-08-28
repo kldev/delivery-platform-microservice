@@ -1,5 +1,6 @@
 package com.pl.platform.svc.notification.listener
 
+import io.quarkus.arc.properties.IfBuildProperty
 import io.quarkus.logging.Log
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
@@ -7,6 +8,10 @@ import org.eclipse.microprofile.reactive.messaging.Incoming
 import org.eclipse.microprofile.reactive.messaging.Message
 
 @ApplicationScoped
+@IfBuildProperty(
+    name = "notifications.consumer.enabled",
+    stringValue = "true"
+)
 class NotificationConsumer(
     private val dispatcher: NotificationDispatcher
 ) {

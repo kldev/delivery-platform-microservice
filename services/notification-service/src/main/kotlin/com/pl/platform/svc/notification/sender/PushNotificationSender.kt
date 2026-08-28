@@ -19,6 +19,6 @@ class PushNotificationSender(
         recipient: NotificationRecipient,
     ): Uni<Void> {
         Log.info("Sending push notification ${recipient.fullName}")
-        return Uni.createFrom().voidItem();
+        return Uni.createFrom().voidItem()
     }
 }

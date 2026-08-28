@@ -26,14 +26,14 @@ class RateLimitFilter(@Value($$"${rate.bucket.size:100}")
     var buckets: Cache<String, Bucket> = Caffeine.newBuilder()
         .expireAfterWrite(1, TimeUnit.HOURS)
         .maximumSize(10_000)
-        .build();
+        .build()
 
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val clientKey = getClientIp(request) ?: "unknown-ip";
+        val clientKey = getClientIp(request) ?: "unknown-ip"
         val bucket = buckets.get(clientKey) { createBucket(it) }
 
         val probe = bucket.tryConsumeAndReturnRemaining(1)

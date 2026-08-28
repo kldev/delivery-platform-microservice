@@ -19,5 +19,5 @@ class LedgerAccountBalanceController(private val repository: LedgerAccountReposi
     fun getAll(): List<LedgerAccount> = repository.getAll()
 
     @GetMapping("{accountId}")
-    fun getOne(@PathVariable accountId: UUID) = repository.getById(accountId);
+    fun getOne(@PathVariable accountId: UUID) = repository.getById(accountId)
 }

@@ -3,7 +3,7 @@ import com.pl.platform.svc.driver.adapter.rest.response.DriverResponse
 import com.pl.platform.svc.driver.application.command.CreateDriverCommand
 import com.pl.platform.svc.driver.domain.Driver
 import com.pl.platform.svc.driver.port.DriverRepository
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component

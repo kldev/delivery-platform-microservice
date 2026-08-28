@@ -10,6 +10,6 @@ import java.util.UUID
 class GetAllDriversHandler(private val driverRepository: DriverRepository) {
     @Transactional(readOnly = true)
     fun handle(driverId: UUID?): List<DriverResponse> {
-        return driverRepository.getAll(driverId).map(DriverResponse::from);
+        return driverRepository.getAll(driverId).map(DriverResponse::from)
     }
 }

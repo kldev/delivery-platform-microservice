@@ -26,7 +26,7 @@ class AssignDriverHandlerTest {
 
     @Test
     fun `should assign random driver to delivery and outbox event`() {
-        val driver = DriverTestFactory.create();
+        val driver = DriverTestFactory.create()
         every {
             driverRepository.getAll()
         } returns ImmutableList.of(driver)
@@ -77,7 +77,7 @@ class AssignDriverHandlerTest {
 
     @Test
     fun `should assign driver to delivery and outbox event`() {
-        val driver = DriverTestFactory.create();
+        val driver = DriverTestFactory.create()
 
         val delivery = DeliveryTestFactory.create()
         delivery.confirm()

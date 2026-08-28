@@ -4,7 +4,7 @@ package com.pl.platform.svc.test.fixture
 import com.pl.platform.svc.driver.domain.Driver
 import java.security.SecureRandom
 
-class DriverTestFactory() {
+class DriverTestFactory {
     companion object {
         private val random = SecureRandom()
         fun fakeEmail(
