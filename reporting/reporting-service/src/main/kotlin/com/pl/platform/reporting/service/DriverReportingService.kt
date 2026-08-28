@@ -35,71 +35,18 @@ class DriverReportingService(
             threadInfo()
         )
 
-        val results = ConcurrentHashMap<UUID, DriverReportResult>()
-
-        StructuredTaskScope.open<Any?, Void?>(Joiner.awaitAll<Any?>()).use { scope ->
-            driverIds.forEach(Consumer { driverId ->
-                scope.fork<Any?>(Callable {
-                    log.debugf(
-                        "Driver report START: driverId=%s, thread=%s",
-                        driverId,
-                        threadInfo()
-                    )
-
-                    try {
-                        results[driverId] = fetchDriverReport(driverId)
-
-                        log.debugf(
-                            "Driver report SUCCESS: driverId=%s, thread=%s",
-                            driverId,
-                            threadInfo()
-                        )
-                    } catch (e: InterruptedException) {
-                        Thread.currentThread().interrupt()
-                        throw e
-                    } catch (e: Exception) {
-                        log.debugf(
-                            e,
-                            "Driver report FAILED: driverId=%s, thread=%s",
-                            driverId,
-                            threadInfo()
-                        )
-
-                        results[driverId] =
-                            DriverReportResult.failure(
-                                driverId,
-                                fullName = null,
-                            )
-                    }
-
-                    null
-                })
-            })
-
-            log.debugf(
-                "buildReport waiting for %d driver tasks, thread=%s",
-                driverIds.size,
-                threadInfo()
-            )
-
-            scope.join()
-
-            log.debugf(
-                "buildReport all driver tasks completed: results=%d, thread=%s",
-                results.size,
-                threadInfo()
-            )
+       val results = driverIds.map {  driverId ->
+               fetchDriverReport(driverId)
         }
-
         val totalSettlement = CurrencyTotalCalculator.sumByCurrency(
-            items = results.values
+            items = results
                 .flatMap { it.settlementDriverRevenue },
             amount = { it.total },
             currency = { it.currency }
         )
 
-        val failureCount = results.values.count { !it.success }
-        val successCount = results.values.count { it.success }
+        val failureCount = results.count { !it.success }
+        val successCount = results.count { it.success }
 
         log.debugf(
             "buildReport END: results=%d, failures=%d, thread=%s",
@@ -110,7 +57,7 @@ class DriverReportingService(
 
         return DriverReport(
             failureCount = failureCount,
-            results = results.values.toList(),
+            results = results.toList(),
             totalSettlement = totalSettlement,
             successCount = successCount,
         )

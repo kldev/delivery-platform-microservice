@@ -26,17 +26,15 @@ class CoroutineDriverReportingService(
     @Throws(InterruptedException::class)
     suspend fun buildReport(driverIds: List<UUID>): DriverReport {
        return coroutineScope {
+
             log.debugf(
                 "coroutineScope buildReport START: drivers=%d, thread=%s",
                 driverIds.size,
                 threadInfo()
             )
             val results = driverIds.map { driverId ->
-                async {
                     fetchDriverReport(driverId)
-                }
-
-            }.awaitAll()
+            }
 
 
             val totalSettlement = CurrencyTotalCalculator.sumByCurrency(
